@@ -1,0 +1,30 @@
+# Archivos de datos — no subir al repositorio
+data/
+*.parquet
+*.avro
+*.csv
+*.json
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDEs
+.vscode/
+.idea/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
