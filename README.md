@@ -25,7 +25,7 @@ Consulta [GITFLOW.md](GITFLOW.md) para entender cómo trabajar con este reposito
 
 | Semana | Tema | Estado |
 |--------|------|--------|
-| [Semana 01](#semana-01--control-de-versiones-con-git) | Control de versiones con Git | En curso |
+| [Semana 01](#semana-01--control-de-versiones-con-git) | Control de versiones con Git + Fundamentos DE + Databricks + Medallón | En curso |
 | [Semana 02](#semana-02) | — | Pendiente |
 | [Semana 03](#semana-03) | — | Pendiente |
 | [Semana 04](#semana-04) | — | Pendiente |
@@ -49,6 +49,10 @@ Se establecen las bases del uso del repositorio, las convenciones de ramas y com
 - [Actividad 01 — Mi primer flujo con Git](semana_01/actividades/actividad_01/README.md): crear una rama, realizar commits progresivos y abrir un Pull Request documentando los aprendizajes de la semana.
 - [Actividad 02 — El mundo de los datos: conceptos fundamentales](semana_01/actividades/actividad_02/README.md): investigar y documentar los conceptos clave del ecosistema de datos (ETL, ELT, batch, streaming, Data Warehouse, Data Lake, Lakehouse y más), entregando un documento completo vía Git.
 - [Actividad 03 — Formatos de archivos y primer contacto con Databricks](semana_01/actividades/actividad_03/README.md): leer y comparar archivos CSV, JSON, Parquet y Avro, perfilar el dataset de clientes, y practicar SQL (SELECT, GROUP BY, HAVING, WINDOW, UPDATE, DELETE) en Databricks Community Edition o Google Colab.
+- [Actividad 04 — Arquitectura Medallón con el dataset Customers](semana_01/actividades/actividad_04/README.md): diseñar e implementar las tres capas Bronze, Silver y Gold sobre el dataset de clientes en Databricks usando Delta Lake.
+
+**Proyecto:**
+- [Proyecto — Maven Fuzzy Factory: Pipeline completo de E-Commerce](semana_01/proyecto/README.md): proyecto integrador con 6 tablas reales de una tienda online. Modelo entidad-relación, detección de calidad de datos, pipeline medallón completo con JOINs, tabla desnormalizada y análisis de negocio (conversión, canales de marketing, rendimiento de productos).
 
 ---
 
