@@ -62,15 +62,17 @@ git checkout -b feature/semana01-git-maria
 
 ---
 
-### Paso 3 — Crear tu archivo de entrega
+### Paso 3 — Crear tu carpeta y archivo de entrega
 
-Dentro de la carpeta `semana_01/actividades/actividad_01/`, crea un archivo con tu nombre:
+Dentro de la carpeta `semana_01/actividades/actividad_01/` crea **una carpeta con tu nombre** y dentro de ella tu archivo de entrega:
 
 ```
-aprendizajes_<tu-nombre>.md
+semana_01/actividades/actividad_01/<tu-nombre>/aprendizajes_<tu-nombre>.md
 ```
 
-Ejemplo: `aprendizajes_maria.md`
+Ejemplo: `semana_01/actividades/actividad_01/maria/aprendizajes_maria.md`
+
+> Esta convención se usará en todas las actividades del bootcamp: cada Data Engineer entrega su trabajo dentro de su propia carpeta.
 
 El archivo debe tener al menos esta estructura inicial:
 
