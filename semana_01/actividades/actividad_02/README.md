@@ -191,15 +191,82 @@ No hay respuesta única ni correcta — se evalúa que el razonamiento sea coher
 
 ---
 
+### 11. Arquitectura de datos de extremo a extremo
+
+Dibuja (en texto o con una tabla) un flujo completo de arquitectura de datos que incluya al menos estas 5 etapas:
+
+```
+[Fuente de datos] → [Ingesta] → [Almacenamiento] → [Transformación] → [Consumo]
+```
+
+Para cada etapa indica:
+- Qué tipo de herramienta o tecnología se usa
+- Qué tipo de datos circulan
+- Un ejemplo concreto de herramienta (Kafka, S3, dbt, Power BI, etc.)
+
+No hay que ser exhaustivo — se valora que el flujo sea coherente y que los conceptos estén bien ubicados.
+
+Commit esperado:
+```bash
+git commit -m "docs: add end-to-end data architecture diagram"
+```
+
+---
+
+### 12. Roles del equipo de datos
+
+Investiga y diferencia los siguientes roles. Para cada uno responde: ¿qué hace día a día?, ¿con qué herramientas trabaja?, ¿en qué se diferencia del Data Engineer?
+
+| Rol | Responsabilidad principal | Herramientas típicas | Diferencia con Data Engineer |
+|-----|--------------------------|---------------------|------------------------------|
+| Data Engineer | | | — |
+| Data Analyst | | | |
+| Data Scientist | | | |
+| Analytics Engineer | | | |
+| MLOps Engineer | | | |
+
+Commit esperado:
+```bash
+git commit -m "docs: add data team roles comparison"
+```
+
+---
+
+### 13. Elige tu stack
+
+Se te presentan dos escenarios. Para cada uno, elige una arquitectura y justifica tu decisión en 5–10 líneas. No hay respuesta incorrecta, se evalúa el razonamiento.
+
+**Escenario A:**
+> Una startup de logística quiere analizar el historial de entregas del último año (10 millones de registros) para generar reportes semanales de rendimiento por ciudad. El equipo de datos tiene 2 personas y presupuesto ajustado.
+
+**Escenario B:**
+> Una plataforma de pagos necesita detectar transacciones fraudulentas en menos de 2 segundos desde que ocurren. Procesa 50,000 transacciones por minuto.
+
+Para cada escenario responde:
+- ¿Batch o streaming?
+- ¿Data Warehouse, Data Lake o Lakehouse?
+- ¿Qué herramientas elegirías?
+- ¿Por qué?
+
+Commit esperado:
+```bash
+git commit -m "docs: add stack selection exercise"
+```
+
+---
+
 ## Criterios de evaluación
 
 | Criterio | Descripción | Puntaje |
 |----------|-------------|---------|
-| Rama creada con el formato correcto | `feature/semana01-conceptos-<nombre>` | 10% |
-| Mínimo 4 commits con mensajes claros | Un commit por sección o grupo de secciones | 20% |
-| Todos los conceptos respondidos | Con definición, utilidad y ejemplo | 40% |
-| Tabla de conceptos adicionales completa | Todos los 10 conceptos de la tabla | 15% |
-| Caso práctico | Coherente y bien razonado | 15% |
+| Rama y carpeta con formato correcto | `feature/semana01-conceptos-<nombre>` + carpeta `<nombre>/` | 10% |
+| Mínimo 6 commits con mensajes claros | Un commit por sección o grupo de secciones | 15% |
+| Conceptos 1–8 respondidos | Con definición, utilidad y ejemplo | 25% |
+| Tabla de 10 conceptos adicionales completa | Todos los conceptos de la tabla | 15% |
+| Caso práctico | Coherente y bien razonado | 10% |
+| Diagrama de arquitectura | Flujo completo con herramientas | 10% |
+| Tabla de roles del equipo de datos | Todos los roles completados | 10% |
+| Ejercicio "Elige tu stack" | Ambos escenarios justificados | 5% |
 
 ---
 
