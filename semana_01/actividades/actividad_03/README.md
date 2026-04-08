@@ -17,7 +17,7 @@ Leer cuatro archivos del mismo dataset en distintos formatos (CSV, JSON, Parquet
 
 Los archivos están disponibles en Google Drive:
 
-**[Descargar archivos — semana_01_actividad_03/customers_files](https://drive.google.com/drive/folders/1NPcvkwEyU5t9euXay3Uzxo02LqY_Ptb9)**
+**[Descargar archivos — data_engineering_files/semana_01_actividad_03/customers_files](https://drive.google.com/drive/folders/1NPcvkwEyU5t9euXay3Uzxo02LqY_Ptb9)**
 
 Encontrarás 4 archivos, todos con el mismo dataset de clientes:
 
@@ -211,17 +211,38 @@ Al final de cada notebook, agrega una celda de texto (markdown) respondiendo:
 
 ---
 
-## Paso 3 — Práctica SQL
+## Paso 3 — Investigación: JOINs en PySpark
 
-En un quinto notebook llamado `sql_customers_<tu-nombre>.ipynb`, practica SQL sobre el dataset de clientes.
+Antes de escribir el notebook de SQL, investiga cómo funcionan los JOINs en PySpark. Los necesitarás en el proyecto de la semana. Documenta en una celda markdown de tu notebook SQL lo que encontraste:
 
-Puedes registrar el DataFrame como tabla temporal y usar SQL directamente:
+- ¿Qué tipos de JOIN existen en PySpark? (`inner`, `left`, `right`, `full`)
+- ¿Cuál es la sintaxis básica?
+- ¿En qué se diferencia de SQL tradicional?
 
-**En PySpark (Databricks):**
+Ejemplo de referencia:
 ```python
-df_spark = spark.createDataFrame(df)
-df_spark.createOrReplaceTempView("customers")
+# JOIN entre dos DataFrames en PySpark
+df_resultado = df_a.join(df_b, df_a["id"] == df_b["id"], how="left")
+```
 
+> Esta investigación no se evalúa con código — solo documenta lo que aprendiste. Lo pondrás en práctica en el proyecto.
+
+---
+
+## Paso 4 — Práctica SQL
+
+En un quinto notebook llamado `sql_customers_<tu-nombre>.ipynb`, practica SQL sobre el dataset de clientes usando **PySpark SQL**.
+
+Registra el DataFrame como tabla temporal y usa `spark.sql()` directamente:
+
+```python
+# Leer el archivo (usa el formato que prefieras)
+df = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load("/FileStore/customers.csv")
+
+# Registrar como vista temporal para usar SQL
+df.createOrReplaceTempView("customers")
+
+# Ejemplo de consulta
 result = spark.sql("""
     SELECT country, COUNT(*) as total
     FROM customers
@@ -232,14 +253,7 @@ result = spark.sql("""
 result.show()
 ```
 
-**En pandas (Colab):**
-```python
-# Instala si no tienes: pip install pandasql
-from pandasql import sqldf
-
-query = "SELECT country, COUNT(*) as total FROM df GROUP BY country ORDER BY total DESC LIMIT 5"
-sqldf(query, locals())
-```
+> **Nota:** En Databricks, `spark` ya está disponible sin necesidad de crear una sesión. Si usas Google Colab, necesitas crear la sesión: `from pyspark.sql import SparkSession; spark = SparkSession.builder.getOrCreate()`
 
 ### Consultas a desarrollar
 
@@ -253,8 +267,8 @@ Escribe una query SQL para cada uno de estos ejercicios:
 | 4 | Top 5 países con más clientes | `ORDER BY` + `LIMIT` |
 | 5 | Nombre más frecuente en el dataset | `GROUP BY` + `ORDER BY` |
 | 6 | Ranking de clientes por país usando ventana | `WINDOW` / `ROW_NUMBER()` |
-| 7 | Actualizar el país de un cliente específico | `UPDATE` (solo si usas PySpark Delta o pandas) |
-| 8 | Eliminar registros donde la ciudad es nula | `DELETE` / `dropna()` en pandas |
+| 7 | Actualizar el país de un cliente específico | `UPDATE` en Delta: `spark.sql("UPDATE customers SET country = ... WHERE ...")` |
+| 8 | Eliminar registros donde la ciudad es nula | `DELETE` en Delta: `spark.sql("DELETE FROM customers WHERE city IS NULL")` |
 
 > **Pista para window functions:**
 > ```sql

@@ -103,7 +103,7 @@ El archivo debe tener al menos esta estructura inicial:
 Una vez creado el archivo con la estructura básica (aunque todavía vacío o incompleto):
 
 ```bash
-git add semana_01/actividades/actividad_01/aprendizajes_<tu-nombre>.md
+git add semana_01/actividades/actividad_01/<tu-nombre>/aprendizajes_<tu-nombre>.md
 git commit -m "feat: create learning log for week 01 - <tu-nombre>"
 ```
 

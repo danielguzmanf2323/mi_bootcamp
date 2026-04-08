@@ -12,7 +12,7 @@
 
 Estudia el material de la semana sobre Arquitectura Medallón:
 
-- Video y curso disponibles en el canal del bootcamp — revísalos antes de abrir Databricks.
+- Video y curso disponibles en las fuentes citadas al final del documento — revísalos antes de abrir Databricks.
 
 Preguntas que debes poder responder después de estudiar el material:
 
@@ -26,6 +26,8 @@ Preguntas que debes poder responder después de estudiar el material:
 ## Contexto
 
 Ya leíste el dataset `customers`, lo perfilaste y le hiciste SQL. Ahora vas a organizarlo como lo haría un equipo de Data Engineering real: en tres capas bien definidas, con una razón clara para cada transformación.
+
+En la carpeta `data_engineering_files/semana_01_actividad_04` del Drive del bootcamp encontrarás el mismo dataset customers, pero con 2 millones de registros.
 
 Al final de esta actividad tendrás tres tablas en Databricks — `bronze_customers`, `silver_customers` y `gold_customers` — y un documento que explica cada decisión que tomaste.
 
@@ -83,8 +85,8 @@ Ejemplo de estructura esperada en el documento:
 
 ```markdown
 ## Bronze — customers_raw
-- Fuente: customers.csv
-- Columnas: customer_id, company_name, contact_name, country, city, phone
+- Fuente: customers-2000000.csv
+- Columnas: index, Customer_id, First_Name, Last_Name, Company, City, Country, Phone_1, Phone_2, Email, Subscription_Date, Website
 - Sin transformaciones. Se guarda tal como llega.
 
 ## Silver — customers_clean
@@ -309,3 +311,4 @@ semana_01/actividades/actividad_04/<tu-nombre>/
 - [Actividad 03](../actividad_03/README.md) — perfilamiento del dataset customers
 - [Documentación Delta Lake](https://docs.delta.io/latest/index.html)
 - [Databricks — Medallion Architecture](https://www.databricks.com/glossary/medallion-architecture)
+- [youtube - databricks end to end project](https://www.youtube.com/watch?v=GjbyQO44af8)
