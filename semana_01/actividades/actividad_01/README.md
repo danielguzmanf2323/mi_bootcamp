@@ -30,6 +30,7 @@ https://m.youtube.com/watch?v=AYbgqmyg7dk&pp=0gcJCdoKAYcqIYzv
 
 tener instalado visual studio code en la laptop
 tener instalado GIT
+(en el caso de inetum, recuerde elevar permisos para hacer instalación de software)
 
 ### Paso 1 — Clonar y preparar el entorno
 
