@@ -35,17 +35,17 @@ Encontrarás 4 archivos, todos con el mismo dataset de clientes:
 ### Opción A: Databricks Community Edition (recomendado)
 
 1. Crea una cuenta gratuita en [https://community.cloud.databricks.com](https://community.cloud.databricks.com)
-2. Una vez dentro, ve a **Workspace** y crea un cluster (Single Node, runtime más reciente)
+2. Una vez dentro, ve a **Workspace** y verifica que puedes usar un cluster serverless
 3. Para conectar el repositorio del bootcamp:
-   - Ve a **Repos** en el panel lateral
-   - Clic en **Add Repo**
+   - Ve a **Workspace** en el panel lateral
+   - Clic en **create** y **git folder**
    - Ingresa la URL: `https://github.com/jobrrerac/inetum_data_engineer_bootcamp.git`
    - Databricks clonará el repositorio directamente
 
    > **Pista:** En Databricks puedes hacer `git pull` y cambiar de rama desde la interfaz de Repos, sin necesidad de terminal.
 
 4. Sube los 4 archivos de datos a un **Volume** en Databricks:
-   - Ve a **Catalog** → **Create Volume** (o usa el default `dbfs:/FileStore/`)
+   - Ve a **Catalog** → **Create Volume**
    - Sube los 4 archivos desde tu máquina
    - La ruta para leerlos será algo como: `/dbfs/FileStore/customers.csv`
 

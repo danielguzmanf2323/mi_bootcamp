@@ -126,7 +126,59 @@ Se espera un mínimo de **3 commits** en la rama.
 
 ---
 
-### Paso 6 — Subir la rama al repositorio remoto
+### Paso 6 — Investigar y documentar comandos adicionales
+
+Agrega una sección en tu archivo `aprendizajes_<tu-nombre>.md` llamada **"Comandos que investigué"** y documenta los siguientes cuatro comandos: qué hacen, cuándo usarlos y un ejemplo concreto de uso.
+
+| Comando | ¿Para qué sirve? |
+|---------|------------------|
+| `git stash` | Guardar cambios temporalmente sin commitear |
+| `git diff` | Ver qué cambió antes de hacer commit |
+| `git log --oneline --graph` | Ver el historial de commits de forma visual |
+| `git revert <commit>` | Deshacer un commit sin borrar el historial |
+
+Para cada uno:
+1. Lee la documentación o busca un tutorial corto
+2. Pruébalo en tu rama
+3. Escribe en el documento: qué hiciste y qué pasó
+
+Commit esperado:
+```bash
+git commit -m "docs: add additional git commands research"
+```
+
+---
+
+### Paso 7 — Deshacer cambios de forma segura
+
+Una de las habilidades más importantes en Git es saber deshacer sin romper nada. Investiga y documenta en tu archivo los siguientes tres escenarios. Para cada uno: explica qué hace el comando, pruébalo y describe el resultado.
+
+**Escenario A — Descartar cambios que aún no están en staging:**
+```bash
+git restore nombre_del_archivo.md
+```
+> Pista: Modifica una línea de tu archivo, verifica con `git status`, luego ejecútalo y observa qué pasa.
+
+**Escenario B — Deshacer el último commit pero conservar los cambios:**
+```bash
+git reset --soft HEAD~1
+```
+> Pista: Haz un commit de prueba con contenido temporal, luego ejecuta este comando. ¿Qué quedó en staging?
+
+**Escenario C — Corregir el mensaje del último commit antes de hacer push:**
+```bash
+git commit --amend -m "mensaje corregido"
+```
+> Pista: Haz un commit con un mensaje malo a propósito, luego corrígelo con este comando.
+
+Documenta en tu archivo qué aprendiste de cada escenario. Commit esperado:
+```bash
+git commit -m "docs: add undo strategies in git"
+```
+
+---
+
+### Paso 8 — Subir la rama al repositorio remoto
 
 ```bash
 git push origin feature/semana01-git-<tu-nombre>
@@ -134,7 +186,7 @@ git push origin feature/semana01-git-<tu-nombre>
 
 ---
 
-### Paso 7 — Abrir un Pull Request
+### Paso 9 — Abrir un Pull Request
 
 1. Ve al repositorio en GitHub.
 2. Abre un Pull Request desde tu rama `feature/semana01-git-<tu-nombre>` hacia `develop`.
@@ -147,7 +199,7 @@ git push origin feature/semana01-git-<tu-nombre>
 4. En la descripción del PR incluye:
    - Qué hiciste en esta actividad
    - Qué fue lo más difícil
-   - Un comando de Git que te pareció importante
+   - Un comando de Git que te pareció más útil y por qué
 
 ---
 
@@ -155,10 +207,11 @@ git push origin feature/semana01-git-<tu-nombre>
 
 | Criterio | Descripción | Puntaje |
 |----------|-------------|---------|
-| Rama creada con el formato correcto | `feature/semana01-git-<nombre>` | 20% |
-| Mínimo 3 commits con mensajes claros | Formato Conventional Commits | 30% |
-| Documento completo y en sus propias palabras | Contenido del archivo `.md` | 30% |
-| PR abierto correctamente hacia `develop` | Título y descripción completos | 20% |
+| Rama y carpeta con formato correcto | `feature/semana01-git-<nombre>` + carpeta `<nombre>/` | 15% |
+| Mínimo 5 commits con mensajes claros | Formato Conventional Commits | 25% |
+| Secciones base del documento completas | En sus propias palabras | 20% |
+| Sección de comandos adicionales documentada | Con ejemplo y resultado real | 20% |
+| Sección de estrategias para deshacer | Los 3 escenarios documentados | 20% |
 
 ---
 
