@@ -84,7 +84,7 @@ Para cada concepto responde: **¿qué es?**, **¿para qué sirve?** y **da un ej
 
 ---
 
-### 1. ETL — Extract, Transform, Load
+### 1. ETL — Extract, Transform, Load `[Requerido]`
 
 - ¿Qué significa cada letra?
 - ¿En qué orden ocurren los pasos?
@@ -93,7 +93,7 @@ Para cada concepto responde: **¿qué es?**, **¿para qué sirve?** y **da un ej
 
 ---
 
-### 2. ELT — Extract, Load, Transform
+### 2. ELT — Extract, Load, Transform `[Requerido]`
 
 - ¿En qué se diferencia del ETL?
 - ¿Cuándo conviene usarlo?
@@ -102,7 +102,7 @@ Para cada concepto responde: **¿qué es?**, **¿para qué sirve?** y **da un ej
 
 ---
 
-### 3. Batch Processing
+### 3. Batch Processing `[Requerido]`
 
 - ¿Qué significa procesar datos en batch?
 - ¿Cada cuánto tiempo se ejecuta un proceso batch típico?
@@ -111,7 +111,7 @@ Para cada concepto responde: **¿qué es?**, **¿para qué sirve?** y **da un ej
 
 ---
 
-### 4. Streaming
+### 4. Streaming `[Requerido]`
 
 - ¿Qué es el procesamiento en tiempo real?
 - ¿Qué diferencia hay entre "near real-time" y "real-time"?
@@ -120,7 +120,7 @@ Para cada concepto responde: **¿qué es?**, **¿para qué sirve?** y **da un ej
 
 ---
 
-### 5. Data Warehouse
+### 5. Data Warehouse `[Requerido]`
 
 - ¿Qué es y para qué sirve?
 - ¿Qué tipo de datos almacena?
@@ -129,7 +129,7 @@ Para cada concepto responde: **¿qué es?**, **¿para qué sirve?** y **da un ej
 
 ---
 
-### 6. Data Lake
+### 6. Data Lake `[Requerido]`
 
 - ¿Qué lo diferencia de un Data Warehouse?
 - ¿Qué tipo de archivos se almacenan? (CSV, Parquet, Avro, JSON, imágenes, logs...)
@@ -138,7 +138,7 @@ Para cada concepto responde: **¿qué es?**, **¿para qué sirve?** y **da un ej
 
 ---
 
-### 7. Data Lakehouse
+### 7. Data Lakehouse `[Requerido]`
 
 - ¿Qué problema viene a resolver?
 - ¿Qué combina del Data Lake y del Data Warehouse?
@@ -147,7 +147,7 @@ Para cada concepto responde: **¿qué es?**, **¿para qué sirve?** y **da un ej
 
 ---
 
-### 8. Pipeline de datos
+### 8. Pipeline de datos `[Requerido]`
 
 - ¿Qué es un pipeline de datos?
 - ¿Qué etapas puede tener?
@@ -158,18 +158,23 @@ Para cada concepto responde: **¿qué es?**, **¿para qué sirve?** y **da un ej
 
 ### 9. Otros conceptos — investiga y explica brevemente cada uno
 
-| Concepto | ¿Qué es? | Ejemplo o herramienta asociada |
-|----------|----------|-------------------------------|
-| Data Mesh | | |
-| Data Catalog | | |
-| Linaje de datos (Data Lineage) | | |
-| Schema-on-read vs Schema-on-write | | |
-| Particionado de datos | | |
-| Data Mart | | |
-| Idempotencia en pipelines | | |
-| SLA de datos | | |
-| CDC — Change Data Capture | | |
-| Formato columnar vs fila (Parquet vs CSV) | | |
+Cada concepto está marcado con su nivel de prioridad:
+- `[Requerido]` — base mínima esperada para continuar con las siguientes semanas
+- `[Recomendado]` — importante para el trabajo real, investígalo aunque sea brevemente
+- `[Opcional]` — profundiza si tienes tiempo o curiosidad
+
+| Concepto | ¿Qué es? | Ejemplo o herramienta asociada | Nivel |
+|----------|----------|-------------------------------|-------|
+| Data Mart | | | `[Requerido]` |
+| Particionado de datos | | | `[Requerido]` |
+| Formato columnar vs fila (Parquet vs CSV) | | | `[Requerido]` |
+| Data Catalog | | | `[Recomendado]` |
+| Linaje de datos (Data Lineage) | | | `[Recomendado]` |
+| Schema-on-read vs Schema-on-write | | | `[Recomendado]` |
+| SLA de datos | | | `[Recomendado]` |
+| Idempotencia en pipelines | | | `[Recomendado]` |
+| CDC — Change Data Capture | | | `[Opcional]` |
+| Data Mesh | | | `[Opcional]` |
 
 ---
 

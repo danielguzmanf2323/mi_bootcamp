@@ -16,7 +16,7 @@ Tu misión como Data Engineer: entender el modelo de datos, detectar problemas d
 
 Los archivos están disponibles en Google Drive:
 
-**[Descargar dataset — semana_01_proyecto/maven_fuzzy_factory](https://drive.google.com/drive/folders/1NPcvkwEyU5t9euXay3Uzxo02LqY_Ptb9)**
+**[Descargar dataset — data_engineering_files/semana_01_proyecto/maven_fuzzy_factory](https://drive.google.com/drive/folders/1NPcvkwEyU5t9euXay3Uzxo02LqY_Ptb9)**
 
 ---
 
