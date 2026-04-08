@@ -47,6 +47,7 @@ Se establecen las bases del uso del repositorio, las convenciones de ramas y com
 
 **Actividades:**
 - [Actividad 01 — Mi primer flujo con Git](semana_01/actividades/actividad_01/README.md): crear una rama, realizar commits progresivos y abrir un Pull Request documentando los aprendizajes de la semana.
+- [Actividad 02 — El mundo de los datos: conceptos fundamentales](semana_01/actividades/actividad_02/README.md): investigar y documentar los conceptos clave del ecosistema de datos (ETL, ELT, batch, streaming, Data Warehouse, Data Lake, Lakehouse y más), entregando un documento completo vía Git.
 
 ---
 
