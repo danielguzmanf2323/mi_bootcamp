@@ -48,6 +48,7 @@ Se establecen las bases del uso del repositorio, las convenciones de ramas y com
 **Actividades:**
 - [Actividad 01 — Mi primer flujo con Git](semana_01/actividades/actividad_01/README.md): crear una rama, realizar commits progresivos y abrir un Pull Request documentando los aprendizajes de la semana.
 - [Actividad 02 — El mundo de los datos: conceptos fundamentales](semana_01/actividades/actividad_02/README.md): investigar y documentar los conceptos clave del ecosistema de datos (ETL, ELT, batch, streaming, Data Warehouse, Data Lake, Lakehouse y más), entregando un documento completo vía Git.
+- [Actividad 03 — Formatos de archivos y primer contacto con Databricks](semana_01/actividades/actividad_03/README.md): leer y comparar archivos CSV, JSON, Parquet y Avro, perfilar el dataset de clientes, y practicar SQL (SELECT, GROUP BY, HAVING, WINDOW, UPDATE, DELETE) en Databricks Community Edition o Google Colab.
 
 ---
 

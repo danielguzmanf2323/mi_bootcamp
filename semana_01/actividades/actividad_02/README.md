@@ -49,6 +49,16 @@ git push origin feature/semana01-conceptos-<tu-nombre>
 
 ## Estructura del archivo de entrega
 
+Dentro de `semana_01/actividades/actividad_02/` crea **una carpeta con tu nombre** y dentro de ella el archivo:
+
+```
+semana_01/actividades/actividad_02/<tu-nombre>/conceptos_<tu-nombre>.md
+```
+
+Ejemplo: `semana_01/actividades/actividad_02/maria/conceptos_maria.md`
+
+> Esta convención se aplica en todas las actividades del bootcamp.
+
 Crea el archivo `conceptos_<tu-nombre>.md` con la siguiente estructura base.
 Puedes ampliar cada sección todo lo que quieras.
 
