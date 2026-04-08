@@ -24,6 +24,9 @@ Eres nuevo en el equipo de Data Engineering. Tu primer tarea es documentar, en t
 antes de iniciar, ver los siguientes tutoriales en youtube:
 https://www.youtube.com/watch?v=ppiARvOnP6M
 https://www.youtube.com/watch?v=XpulbHt5zZ0
+https://m.youtube.com/watch?v=jGehuhFhtnE&pp=0gcJCdoKAYcqIYzv
+https://m.youtube.com/watch?v=AYbgqmyg7dk&pp=0gcJCdoKAYcqIYzv
+
 
 tener instalado visual studio code en la laptop
 tener instalado GIT
