@@ -56,11 +56,25 @@ Tecnologías: PySpark, Delta Lake, Databricks Community Edition
 
 ---
 
-### Semanas 03–12 — Próximamente
+### Semana 03 — SQL Avanzado sobre tablas Delta
+
+Dataset: Mismo dataset financiero de semana 02 — consumo de tablas `silver.*` y `gold.*` ya construidas  
+Tecnologías: Spark SQL, Delta Lake, Databricks Community Edition
+
+| Actividad | Tema | Descripción |
+|-----------|------|-------------|
+| [Actividad 01](semana_03/actividades/actividad_01/README.md) | SQL básico en Databricks | SELECT, WHERE, GROUP BY, HAVING, CASE WHEN, funciones de fecha sobre tablas Delta |
+| [Actividad 02](semana_03/actividades/actividad_02/README.md) | JOINs en SQL | INNER, LEFT, múltiples JOINs encadenados, subqueries (WHERE/FROM/EXISTS), PySpark vs SQL |
+| [Actividad 03](semana_03/actividades/actividad_03/README.md) | SQL avanzado | CTEs encadenadas, window functions (ROW_NUMBER, RANK, LAG, LEAD, NTILE), QUALIFY |
+| [Actividad 04](semana_03/actividades/actividad_04/README.md) | Vistas y plan de ejecución | CREATE VIEW, EXPLAIN, mapa completo SQL↔PySpark |
+| [Proyecto](semana_03/proyecto/README.md) | Capa analítica para fraude | 3 vistas Gold + 3 nuevas tablas Gold en SQL + informe de 5 hallazgos |
+
+---
+
+### Semanas 04–12 — Próximamente
 
 | Semana | Tema principal | Tecnologías |
 |--------|----------------|-------------|
-| 03 | SQL avanzado | Spark SQL, Databricks |
 | 04 | Ingesta de datos | TBD |
 | 05 | dbt (data build tool) | dbt, Delta Lake |
 | 06 | Orquestación con Airflow | Apache Airflow |
