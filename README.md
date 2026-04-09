@@ -76,11 +76,27 @@ Tecnologías: Spark SQL, Delta Lake, Databricks Community Edition
 
 ---
 
-### Semanas 04–12 — Próximamente
+### Semana 04 — Pipelines metadata-driven · Databricks Enterprise
+
+> **Prerequisito de infraestructura:** Databricks Enterprise con Unity Catalog y Volumes habilitados.  
+> Dataset: Financial Transactions (mismo de semanas 02–03). Archivos en `/Volumes/main/landing/raw/`.
+
+| Actividad | Tema | Contenido |
+|-----------|------|------------|
+| [Actividad 01](semana_04/actividades/actividad_01/README.md) | `dbutils.widgets` | 4 tipos de widget, reemplazar hardcoded values, `dbutils.notebook.run()` con argumentos |
+| [Actividad 02](semana_04/actividades/actividad_02/README.md) | Notebook Bronze genérico | Un notebook único multi-formato (csv/json/parquet), auditable, con `dbutils.notebook.exit()` |
+| [Actividad 03](semana_04/actividades/actividad_03/README.md) | YAML como configuración | PyYAML, leer `bronze_config.yml` del repo, loop sin hardcode, manejo de errores por fuente |
+| [Actividad 04](semana_04/actividades/actividad_04/README.md) | Silver metadata-driven + Jobs | `expr()` con Spark SQL, transformaciones declarativas desde `silver_config.yml`, Job con tasks encadenadas |
+| [Proyecto](semana_04/proyecto/README.md) | Pipeline end-to-end | Widget maestro dev/prod, 3 capas (Bronze→Silver→Gold), Job de 3 tasks, análisis de fraude |
+
+**Configs de referencia:** [`semana_04/configs/bronze_config.yml`](semana_04/configs/bronze_config.yml) · [`semana_04/configs/silver_config.yml`](semana_04/configs/silver_config.yml)
+
+---
+
+### Semanas 05–12 — Próximamente
 
 | Semana | Tema principal | Tecnologías |
 |--------|----------------|-------------|
-| 04 | Databricks Jobs y orquestación — `dbutils.widgets`, Jobs parametrizados, scheduling | Databricks Enterprise |
 | 05 | Declarative Pipelines (DLT), Data Quality Expectations, Unity Catalog | Databricks Enterprise |
 | 06 | dbt (data build tool) | dbt, Delta Lake |
 | 07 | Ingesta de datos (APIs, JDBC, streaming básico) | Databricks, Spark Structured Streaming |
