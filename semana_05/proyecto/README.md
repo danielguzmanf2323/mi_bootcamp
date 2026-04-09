@@ -11,10 +11,10 @@
 ## Contexto
 
 Las 4 actividades de esta semana te dieron todas las piezas:
-- `@dlt.table` con pipeline parameters
+- `@dp.materialized_view()` y `@dp.table()` con pipeline parameters
 - Auto Loader incremental con `cloudFiles`  
 - Quality Expectations (warn / drop / fail) y quarantine pattern
-- `dlt.apply_changes()` para SCD1 y SCD2
+- `dp.create_auto_cdc_flow()` para SCD1 y SCD2
 - Pipeline de 3 notebooks con notificaciones configuradas
 
 Este proyecto integra todo eso sobre un **escenario diferente** al de las actividades: datos de un sistema de *e-commerce bancario* donde los clientes compran en comercios usando sus tarjetas. El dataset es el mismo que conoces (Financial Transactions de Caixabank Tech), pero el escenario simula una ingesta real con:
@@ -168,14 +168,14 @@ El `01_bronze_ingesta.py` ya lo tienes de referencia en la Actividad 04. **Adapt
 La tabla Silver de transacciones debe incluir el campo `is_fraud`. El join con `bronze_fraud_labels` puede hacerse aquí:
 
 ```python
-@dlt.expect_all_or_drop({
+@dp.expect_all_or_drop({
     "amount_presente":   "amount IS NOT NULL",
     "user_id_valido":    "client_id IS NOT NULL AND client_id > 0",
     "fecha_presente":    "date IS NOT NULL",
     "mcc_code_presente": "mcc_code IS NOT NULL",
 })
-@dlt.expect("is_fraud_presente", "is_fraud IS NOT NULL")  # warn, no drop — puede llegar tarde
-@dlt.table(
+@dp.expect("is_fraud_presente", "is_fraud IS NOT NULL")  # warn, no drop — puede llegar tarde
+@dp.table(
     name="silver_transactions",
     comment="Transacciones limpias con etiqueta de fraude y features temporales",
     table_properties={"quality": "silver"},
@@ -187,7 +187,7 @@ def silver_transactions():
     )
 
     df_tx = (
-        dlt.read_stream("bronze_transactions")
+        spark.readStream.table("bronze_transactions")
         .withColumnRenamed("id", "transaction_id")
         .withColumnRenamed("client_id", "user_id")
         .withColumn("amount",
@@ -202,7 +202,7 @@ def silver_transactions():
         .drop("date")
     )
 
-    df_fraud = dlt.read("bronze_fraud_labels").select("id", "is_fraud")
+    df_fraud = spark.read.table("bronze_fraud_labels").select("id", "is_fraud")
 
     return (
         df_tx
@@ -219,20 +219,20 @@ def silver_transactions():
 
 ```python
 # 03_gold_reportes.py
-import dlt
+from pyspark import pipelines as dp
 from pyspark.sql.functions import (
     col, to_date, count, sum as spark_sum, avg,
     round as spark_round, current_timestamp
 )
 
-@dlt.table(
+@dp.materialized_view(
     name="gold_fraude_por_categoria",
     comment="Fraude diario por categoría MCC — para dashboard de riesgo",
     table_properties={"quality": "gold"},
 )
 def gold_fraude_por_categoria():
-    df_tx  = dlt.read("silver_transactions")
-    df_mcc = dlt.read("bronze_mcc_codes")
+    df_tx  = spark.read.table("silver_transactions")
+    df_mcc = spark.read.table("bronze_mcc_codes")
 
     return (
         df_tx
@@ -251,7 +251,7 @@ def gold_fraude_por_categoria():
         .withColumn("_generated_at", current_timestamp())
     )
 
-@dlt.table(
+@dp.materialized_view(
     name="gold_perfil_tarjeta",
     comment="Métricas agregadas por tipo de tarjeta — para análisis de producto",
     table_properties={"quality": "gold"},
@@ -259,10 +259,10 @@ def gold_fraude_por_categoria():
 def gold_perfil_tarjeta():
     from pyspark.sql.functions import countDistinct
 
-    df_tx    = dlt.read("silver_transactions")
+    df_tx    = spark.read.table("silver_transactions")
     # Usar solo usuarios vigentes de SCD2
-    df_users = dlt.read("silver_users").filter(col("__CURRENT") == True)
-    df_cards = spark.table("bronze.cards")  # catálogo de tarjetas — no está en DLT, leer directo
+    df_users = spark.read.table("silver_users").filter(col("__CURRENT") == True)
+    df_cards = spark.table("bronze.cards")  # catálogo de tarjetas — no está en el pipeline, leer directo
 
     return (
         df_tx
@@ -322,13 +322,13 @@ Escribe `analisis_calidad.md` respondiendo:
 
 ```bash
 git add semana_05/proyecto/<tu-nombre>/
-git commit -m "feat: full DLT production pipeline - CDC, SCD2, quality, gold - semana 05 - <tu-nombre>"
+git commit -m "feat: full declarative production pipeline - CDC, SCD2, quality, gold - semana 05 - <tu-nombre>"
 git push origin feature/semana05-dlt-<tu-nombre>
 ```
 
 PR hacia `develop`:
 ```
-[Semana 05 Proyecto] Pipeline DLT producción completa — <Tu Nombre>
+[Semana 05 Proyecto] Pipeline declarativa de producción completa — <Tu Nombre>
 ```
 
 El PR debe incluir:
@@ -358,12 +358,13 @@ El PR debe incluir:
 
 En el PR, incluye un párrafo respondiendo:
 
-> "Llevas 5 semanas en Databricks — de leer un CSV con pandas a un pipeline DLT con CDC, SCD2 y notificaciones. ¿Qué concepto de la semana 05 te costó más entender? ¿Cuándo tiene sentido usar un Job (semana 04) vs un DLT Pipeline (semana 05)? ¿Qué harías diferente si empezaras otra vez desde semana 01?"
+> "Llevas 5 semanas en Databricks — de leer un CSV con pandas a un pipeline declarativo con CDC, SCD2 y notificaciones. ¿Qué concepto de la semana 05 te costó más entender? ¿Cuándo tiene sentido usar un Job (semana 04) vs un pipeline declarativo (semana 05)? ¿Qué harías diferente si empezaras otra vez desde semana 01?"
 
 ---
 
 ## Referencias
 
-- [Delta Live Tables best practices](https://docs.databricks.com/en/delta-live-tables/best-practices.html)
-- [DLT — Pipeline settings export](https://docs.databricks.com/en/delta-live-tables/settings.html)
+- [Lakeflow Spark Declarative Pipelines — best practices](https://learn.microsoft.com/en-us/azure/databricks/dlt/best-practices)
+- [Lakeflow Pipelines — Pipeline settings export](https://learn.microsoft.com/en-us/azure/databricks/dlt/settings)
 - [Auto Loader schema evolution](https://docs.databricks.com/en/ingestion/auto-loader/schema.html)
+- [What happened to @dlt?](https://learn.microsoft.com/en-us/azure/databricks/dlt/what-happened-to-dlt)

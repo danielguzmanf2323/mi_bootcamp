@@ -1,7 +1,7 @@
-# Actividad 04 — Semana 05: Pipeline DLT completa + Notificaciones de fallo
+# Actividad 04 — Semana 05: Pipeline Declarativa completa + Notificaciones de fallo
 
 **Semana:** 05  
-**Tema:** Unificar Bronze→Silver→Gold en un pipeline DLT + alertas cuando algo falla  
+**Tema:** Unificar Bronze→Silver→Gold en un pipeline declarativo + alertas cuando algo falla  
 **Nivel:** Avanzado  
 **Modalidad:** Individual  
 **Entorno:** Databricks Enterprise  
@@ -12,11 +12,11 @@
 ## Contexto
 
 En las 3 actividades anteriores construiste piezas separadas:
-- **Act 01:** `@dlt.table` básico, pipeline parameters, Silver con `dlt.read()`
+- **Act 01:** `@dp.materialized_view()` básico, pipeline parameters, Silver con `spark.read.table()`
 - **Act 02:** Auto Loader con `cloudFiles`, Quality Expectations, quarantine pattern
-- **Act 03:** `dlt.apply_changes()` para SCD1 y SCD2
+- **Act 03:** `dp.create_auto_cdc_flow()` para SCD1 y SCD2
 
-Esta actividad las une en **un único pipeline DLT** que va de extremo a extremo: Bronze → Silver (con CDC) → Gold, con calidad en cada capa.
+Esta actividad las une en **un único pipeline declarativo** que va de extremo a extremo: Bronze → Silver (con CDC) → Gold, con calidad en cada capa.
 
 El segundo objetivo es igual de importante: **cuando el pipeline falla en producción a las 3am, alguien tiene que enterarse.** Configuras las notificaciones para que lleguen por email (o webhook) automáticamente.
 
@@ -24,10 +24,10 @@ El segundo objetivo es igual de importante: **cuando el pipeline falla en produc
 
 ## Material de estudio previo
 
-- ¿Cómo se estruturan múltiples notebooks en un solo DLT Pipeline?
+- ¿Cómo se estructuran múltiples notebooks en un solo pipeline declarativo?
 - ¿Cuáles son los eventos de pipeline que pueden disparar una notificación? (`on_update_success`, `on_update_failure`, etc.)
 - ¿Qué es un webhook en el contexto de notificaciones de Databricks?
-- ¿Qué es el modo `development` vs `production` de un DLT Pipeline?
+- ¿Qué es el modo `development` vs `production` de un pipeline declarativo?
 
 ---
 
@@ -46,7 +46,7 @@ semana_05/actividades/actividad_04/<tu-nombre>/
 
 ## Parte 1 — Estructura del pipeline completo
 
-Un DLT Pipeline puede incluir múltiples notebooks. Databricks los ejecuta como si fueran uno solo — las tablas definidas en un notebook pueden ser leídas por otro con `dlt.read()`.
+Un pipeline declarativo puede incluir múltiples notebooks. Databricks los ejecuta como si fueran uno solo — las tablas definidas en un notebook pueden ser leídas por otro con `spark.read.table()` o `spark.readStream.table()`.
 
 Estructura que construirás:
 
@@ -65,12 +65,12 @@ El pipeline en Databricks apuntará a los 3 notebooks. DLT resuelve las dependen
 
 ```python
 # 01_bronze.py
-import dlt
+from pyspark import pipelines as dp
 from pyspark.sql.functions import current_timestamp, lit, input_file_name
 
 volumes_base = spark.conf.get("pipelines.parameter.volumes_path", "/Volumes/main/landing/raw")
 
-@dlt.table(
+@dp.table(
     name="bronze_transactions",
     comment="Transacciones financieras — Auto Loader incremental",
     table_properties={"quality": "bronze"},
@@ -83,13 +83,13 @@ def bronze_transactions():
         .option("cloudFiles.inferColumnTypes", "true")
         .option("header", "true")
         .option("cloudFiles.schemaLocation",
-                f"/pipelines/checkpoints/{dlt.current_table_name()}/schema")
+                "/pipelines/checkpoints/bronze_transactions/schema")
         .load(f"{volumes_base}/transactions/")
         .withColumn("_ingested_at", current_timestamp())
         .withColumn("_source_file", input_file_name())
     )
 
-@dlt.table(
+@dp.table(
     name="bronze_users_cdc",
     comment="Feed CDC de usuarios — cambios de atributos de clientes",
     table_properties={"quality": "bronze"},
@@ -100,12 +100,12 @@ def bronze_users_cdc():
         .format("cloudFiles")
         .option("cloudFiles.format", "delta")
         .option("cloudFiles.schemaLocation",
-                f"/pipelines/checkpoints/{dlt.current_table_name()}/schema")
+                "/pipelines/checkpoints/bronze_users_cdc/schema")
         .load("/Volumes/main/landing/raw/users_cdc/")
         .withColumn("_ingested_at", current_timestamp())
     )
 
-@dlt.table(
+@dp.materialized_view(
     name="bronze_mcc_codes",
     comment="Catálogo MCC — carga completa (tabla pequeña, no incremental)",
     table_properties={"quality": "bronze"},
@@ -126,28 +126,28 @@ def bronze_mcc_codes():
 
 ```python
 # 02_silver.py
-import dlt
+from pyspark import pipelines as dp
 from pyspark.sql.functions import (
     col, regexp_replace, to_timestamp, hour, month, year,
     dayofweek, abs as spark_abs, current_timestamp, lit
 )
 
-# ─── Silver transactions (con Expectations) ───────────────────────────────────
+# ─── Silver transactions (con Expectations) ─────────────────────────────────────────────
 
-@dlt.expect_all_or_drop({
+@dp.expect_all_or_drop({
     "amount_presente":    "amount IS NOT NULL",
     "user_id_valido":     "client_id IS NOT NULL AND client_id > 0",
     "fecha_presente":     "date IS NOT NULL",
     "mcc_code_presente":  "mcc_code IS NOT NULL",
 })
-@dlt.table(
+@dp.table(
     name="silver_transactions",
     comment="Transacciones limpias con features calculadas",
     table_properties={"quality": "silver"},
 )
 def silver_transactions():
     return (
-        dlt.read_stream("bronze_transactions")
+        spark.readStream.table("bronze_transactions")
         .withColumnRenamed("id", "transaction_id")
         .withColumnRenamed("client_id", "user_id")
         .withColumn("amount",
@@ -163,36 +163,36 @@ def silver_transactions():
         .withColumn("_processed_at", current_timestamp())
     )
 
-# ─── Silver users SCD2 ────────────────────────────────────────────────────────
+# ─── Silver users SCD2 ─────────────────────────────────────────────────────────────────────
 
-dlt.create_streaming_table(
+dp.create_streaming_table(
     name="silver_users",
     comment="Dimensión de clientes — SCD2 (historial completo de cambios)",
     table_properties={"quality": "silver"},
 )
 
-dlt.apply_changes(
+dp.create_auto_cdc_flow(
     target="silver_users",
     source="bronze_users_cdc",
     keys=["user_id"],
     sequence_by=col("updated_at"),
     apply_as_deletes=col("operacion") == "DELETE",
     except_column_list=["operacion", "updated_at"],
-    stored_as_scd_type="2",
+    stored_as_scd_type=2,
 )
 
-# ─── Tabla de cuarentena ──────────────────────────────────────────────────────
+# ─── Tabla de cuarentena ────────────────────────────────────────────────────────────────────
 
 def get_tx_con_flag():
     return (
-        dlt.read_stream("bronze_transactions")
+        spark.readStream.table("bronze_transactions")
         .withColumn("es_valida",
             col("amount").isNotNull() &
             col("client_id").isNotNull()
         )
     )
 
-@dlt.table(
+@dp.table(
     name="cuarentena_transactions",
     comment="Filas rechazadas — investigación de calidad",
     table_properties={"quality": "quarantine"},
@@ -206,25 +206,27 @@ def cuarentena_transactions():
     )
 ```
 
+
+
 ---
 
 ## Parte 4 — Gold (03_gold.py)
 
 ```python
 # 03_gold.py
-import dlt
+from pyspark import pipelines as dp
 from pyspark.sql.functions import (
     col, to_date, count, sum as spark_sum, avg, round as spark_round, lit
 )
 
-@dlt.table(
+@dp.materialized_view(
     name="gold_reporte_fraude_diario",
     comment="Reporte Gold: tasa de fraude por día — para dashboards de riesgo",
     table_properties={"quality": "gold"},
 )
 def gold_reporte_fraude_diario():
-    # dlt.read (no readStream) porque la tabla Silver ya hace la agregación completa
-    df = dlt.read("silver_transactions")
+    # spark.read.table (no readStream) porque la tabla Silver ya hace la agregación completa
+    df = spark.read.table("silver_transactions")
 
     if "is_fraud" not in df.columns:
         df = df.withColumn("is_fraud", lit(0))
@@ -243,7 +245,7 @@ def gold_reporte_fraude_diario():
         .withColumn("_generated_at", col("fecha"))  # para particionado futuro
     )
 
-@dlt.table(
+@dp.materialized_view(
     name="gold_usuarios_activos",
     comment="Usuarios con actividad reciente — join Silver transactions + Silver users",
     table_properties={"quality": "gold"},
@@ -251,9 +253,9 @@ def gold_reporte_fraude_diario():
 def gold_usuarios_activos():
     from pyspark.sql.functions import max as spark_max, count as spark_count
 
-    df_tx    = dlt.read("silver_transactions")
+    df_tx    = spark.read.table("silver_transactions")
     # Para users SCD2, filtrar solo el estado actual
-    df_users = dlt.read("silver_users").filter(col("__CURRENT") == True)
+    df_users = spark.read.table("silver_users").filter(col("__CURRENT") == True)
 
     return (
         df_tx
@@ -273,14 +275,14 @@ def gold_usuarios_activos():
 
 En la interfaz de Databricks:
 
-1. **Workflows → Delta Live Tables → Create Pipeline**
+1. **Workflows → Lakeflow Pipelines → Create Pipeline**
 
 2. Configura:
 
 | Campo | Valor |
 |-------|-------|
 | Pipeline name | `financial_pipeline_completo_<tu-nombre>` |
-| Product edition | Advanced (necesario para SCD2 y apply_changes) |
+| Product edition | Advanced (necesario para SCD2 y create_auto_cdc_flow) |
 | Notebook libraries | Agregar los 3 notebooks en orden: 01, 02, 03 |
 | Target schema | `pipeline_<tu-nombre>` |
 | Compute | Serverless |
@@ -319,14 +321,14 @@ En la configuración del pipeline, sección **Notifications**:
 
 ### 6.2 Simular un fallo para ver la notificación
 
-Modifica temporalmente la tabla `silver_transactions` para agregar un `@dlt.expect_or_fail` que fallará deliberadamente:
+Modifica temporalmente una tabla para agregar un `@dp.expect_or_fail` que fallará deliberadamente:
 
 ```python
 # TEMPORAL — solo para probar la notificación
-@dlt.expect_or_fail("test_fallo_deliberado", "1 = 0")  # siempre falla
-@dlt.table(name="tabla_que_fallara_a_proposito")
+@dp.expect_or_fail("test_fallo_deliberado", "1 = 0")  # siempre falla
+@dp.table(name="tabla_que_fallara_a_proposito")
 def tabla_que_fallara_a_proposito():
-    return dlt.read("bronze_transactions").limit(1)
+    return spark.readStream.table("bronze_transactions").limit(1)
 ```
 
 Ejecuta el pipeline. Debería fallar y mandarte un email.
@@ -384,13 +386,13 @@ Cambia el pipeline a **Production mode** y vuélvelo a ejecutar. Documenta qué 
 
 ```bash
 git add semana_05/actividades/actividad_04/<tu-nombre>/
-git commit -m "feat: full DLT pipeline bronze->silver(SCD2)->gold + notifications - <tu-nombre>"
+git commit -m "feat: full declarative pipeline bronze->silver(SCD2)->gold + notifications - <tu-nombre>"
 git push origin feature/semana05-dlt-<tu-nombre>
 ```
 
 PR hacia `develop`:
 ```
-[Semana 05] Pipeline DLT completo + Notificaciones — <Tu Nombre>
+[Semana 05] Pipeline Declarativa completa + Notificaciones — <Tu Nombre>
 ```
 
 Incluye en el PR:
@@ -415,6 +417,7 @@ Incluye en el PR:
 
 ## Referencias
 
-- [DLT Pipeline notifications](https://docs.databricks.com/en/delta-live-tables/settings.html#configure-pipeline-notifications)
-- [DLT development and production modes](https://docs.databricks.com/en/delta-live-tables/updates.html)
+- [Lakeflow Pipelines — notifications](https://learn.microsoft.com/en-us/azure/databricks/dlt/settings#configure-pipeline-notifications)
+- [Lakeflow Pipelines — development and production modes](https://learn.microsoft.com/en-us/azure/databricks/dlt/updates)
 - [Databricks Secrets — dbutils.secrets](https://docs.databricks.com/en/security/secrets/index.html)
+- [What happened to @dlt?](https://learn.microsoft.com/en-us/azure/databricks/dlt/what-happened-to-dlt)

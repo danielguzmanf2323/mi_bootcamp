@@ -1,10 +1,10 @@
-# Actividad 03 — Semana 05: APPLY CHANGES INTO — CDC, SCD1 y SCD2 automáticos
+# Actividad 03 — Semana 05: CREATE AUTO CDC FLOW — CDC, SCD1 y SCD2 automáticos
 
 **Semana:** 05  
-**Tema:** CDC y dimensiones de cambio lento con `dlt.apply_changes()`  
+**Tema:** CDC y dimensiones de cambio lento con `dp.create_auto_cdc_flow()`  
 **Nivel:** Avanzado  
 **Modalidad:** Individual  
-**Entorno:** Databricks Enterprise (DLT Advanced edition para SCD2)  
+**Entorno:** Databricks Enterprise  
 **Prerequisito:** Actividades 01 y 02 completadas
 
 ---
@@ -23,7 +23,7 @@ WHEN NOT MATCHED THEN INSERT *
 
 32 líneas de SQL + lógica Python para detectar qué cambió + orquestación con el Job. Correcto, funcional, pero frágil: si cambia el esquema, editas el MERGE. Si necesitas SCD2 (guardar historial), reescribes todo.
 
-`dlt.apply_changes()` hace CDC (Change Data Capture) de forma declarativa. Le dices: "esta es la clave, este campo indica el orden de los cambios, quiero SCD1 o SCD2." DLT hace el resto, incluyendo el historial con fechas de vigencia en SCD2.
+`dp.create_auto_cdc_flow()` hace CDC (Change Data Capture) de forma declarativa. Le dices: "esta es la clave, este campo indica el orden de los cambios, quiero SCD1 o SCD2." El pipeline hace el resto, incluyendo el historial con fechas de vigencia en SCD2.
 
 ---
 
@@ -33,7 +33,7 @@ WHEN NOT MATCHED THEN INSERT *
 - ¿Qué es SCD1? ¿Qué información se pierde con SCD1?
 - ¿Qué es SCD2? ¿Qué columnas agrega SCD2 a la tabla (_start, _end, _current)?
 - ¿Qué tipos de operaciones CDC existen? (INSERT, UPDATE, DELETE)
-- ¿Por qué `dlt.apply_changes()` requiere *primero* `dlt.create_streaming_table()`?
+- ¿Por qué `dp.create_auto_cdc_flow()` requiere *primero* `dp.create_streaming_table()`?
 
 ---
 
@@ -117,33 +117,33 @@ print("Feed CDC guardado en bronze.users_cdc_feed")
 
 ## Parte 2 — SCD1 con apply_changes (sobrescribir, sin historial)
 
-Crea un notebook DLT `cdc_scd_<tu-nombre>.py`:
+Crea un notebook declarativo `cdc_scd_<tu-nombre>.py`:
 
 ```python
-import dlt
+from pyspark import pipelines as dp
 from pyspark.sql.functions import col
 
-# Paso 1: declarar la tabla *antes* de apply_changes (OBLIGATORIO)
-# DLT necesita saber que esta tabla existe antes de definir cómo se llena
-dlt.create_streaming_table(
+# Paso 1: declarar la tabla *antes* de create_auto_cdc_flow (OBLIGATORIO)
+# El pipeline necesita saber que esta tabla existe antes de definir cómo se llena
+dp.create_streaming_table(
     name="silver_users_scd1",
     comment="Dimensión de usuarios — SCD1: solo el valor más reciente",
     table_properties={"quality": "silver"},
 )
 
 # Paso 2: aplicar los cambios CDC sobre esa tabla
-dlt.apply_changes(
+dp.create_auto_cdc_flow(
     target="silver_users_scd1",                # tabla destino (declarada arriba)
     source="bronze.users_cdc_feed",            # fuente de cambios CDC
     keys=["user_id"],                          # columna(s) que identifican únicamente la fila
     sequence_by=col("updated_at"),             # campo que ordena los cambios (el más reciente gana)
     apply_as_deletes=col("operacion") == "DELETE",  # filas con DELETE se eliminan del destino
     except_column_list=["operacion", "updated_at"], # estas columnas no van a la tabla final
-    stored_as_scd_type="1",                    # SCD1: sobrescribir (no guardar historial)
+    stored_as_scd_type=1,                      # SCD1: sobrescribir (no guardar historial)
 )
 ```
 
-> `sequence_by` es crítico: si llegan dos cambios para el mismo `user_id`, DLT aplica el que tiene el `updated_at` más reciente — en el orden correcto, sin importar en qué orden llegaron al stream.
+> `sequence_by` es crítico: si llegan dos cambios para el mismo `user_id`, el pipeline aplica el que tiene el `updated_at` más reciente — en el orden correcto, sin importar en qué orden llegaron al stream.
 
 Ejecuta el pipeline y verifica:
 
@@ -168,20 +168,20 @@ La diferencia con SCD1 es una sola línea: `stored_as_scd_type="2"`. DLT agrega 
 
 ```python
 # Declarar la tabla SCD2
-dlt.create_streaming_table(
+dp.create_streaming_table(
     name="silver_users_scd2",
     comment="Dimensión de usuarios — SCD2: historial completo de cambios",
     table_properties={"quality": "silver"},
 )
 
-dlt.apply_changes(
+dp.create_auto_cdc_flow(
     target="silver_users_scd2",
     source="bronze.users_cdc_feed",
     keys=["user_id"],
     sequence_by=col("updated_at"),
     apply_as_deletes=col("operacion") == "DELETE",
     except_column_list=["operacion", "updated_at"],
-    stored_as_scd_type="2",               # SCD2: cada cambio crea una fila nueva con fechas
+    stored_as_scd_type=2,               # SCD2: cada cambio crea una fila nueva con fechas
     # track_history_column_list — opcional: solo rastrear cambios en estas columnas
     # Si no se especifica, cualquier cambio en cualquier columna genera una nueva versión
 )
@@ -220,11 +220,11 @@ Documenta qué ves:
 Una tabla SCD2 contiene historial. Para analítica, normalmente quieres solo el estado actual. La vista estándar:
 
 ```python
-@dlt.view(name="v_usuarios_actuales")
+@dp.temporary_view(name="v_usuarios_actuales")
 def v_usuarios_actuales():
     """Vista que filtra solo la versión vigente de cada usuario en SCD2."""
     return (
-        dlt.read("silver_users_scd2")
+        spark.read.table("silver_users_scd2")
         .filter(col("__CURRENT") == True)
         .drop("__START_AT", "__END_AT", "__CURRENT")
     )
@@ -246,15 +246,15 @@ print(f"Un registro por usuario: {n_usuarios == n_distintos}")
 Completa esta tabla en una celda markdown:
 
 ```markdown
-| Aspecto | MERGE INTO (semana 04) | apply_changes (DLT) |
-|---------|------------------------|---------------------|
+| Aspecto | MERGE INTO (semana 04) | create_auto_cdc_flow (SDP) |
+|---------|------------------------|----------------------------|
 | Líneas de código para SCD1 | ~15 SQL + Python | ~10 Python |
 | Líneas de código para SCD2 | ~40+ SQL | ~12 Python |
 | Columnas de historial (__START, __END, __CURRENT) | Manual — tú las agregas | Automático |
 | Manejo de DELETE | Manual — necesitas lógica | `apply_as_deletes=` |
 | Desduplicación de cambios en el mismo timestamp | Manual | Automático (sequence_by) |
 | Linaje visible en UI | No | Sí |
-| Restart si falla a mitad | Reprocesa todo | DLT retoma desde donde quedó |
+| Restart si falla a mitad | Reprocesa todo | El pipeline retoma desde donde quedó |
 ```
 
 ---
@@ -263,13 +263,13 @@ Completa esta tabla en una celda markdown:
 
 ```bash
 git add semana_05/actividades/actividad_03/<tu-nombre>/
-git commit -m "feat: CDC simulation + SCD1 + SCD2 with apply_changes - <tu-nombre>"
+git commit -m "feat: CDC simulation + SCD1 + SCD2 with create_auto_cdc_flow - <tu-nombre>"
 git push origin feature/semana05-dlt-<tu-nombre>
 ```
 
 PR hacia `develop`:
 ```
-[Semana 05] APPLY CHANGES INTO — SCD1 y SCD2 — <Tu Nombre>
+[Semana 05] CREATE AUTO CDC FLOW — SCD1 y SCD2 — <Tu Nombre>
 ```
 
 Incluye en el PR:
@@ -284,15 +284,16 @@ Incluye en el PR:
 | Criterio | Descripción | Puntaje |
 |----------|-------------|---------|
 | Feed CDC simulado correctamente | INSERT + UPDATE + DELETE presentes | 20% |
-| SCD1 con `apply_changes` funcionando | City=Barcelona en 300 usuarios, 50 deletados | 25% |
+| SCD1 con `create_auto_cdc_flow` funcionando | City=Barcelona en 300 usuarios, 50 deletados | 25% |
 | SCD2 con historial visible | Columnas `__START_AT`, `__END_AT`, `__CURRENT` presentes | 30% |
 | Vista de estado actual (`__CURRENT = True`) | 1 registro por user_id sin columnas SCD2 | 15% |
-| Tabla comparativa MERGE vs apply_changes | Completada con observaciones propias | 10% |
+| Tabla comparativa MERGE vs create_auto_cdc_flow | Completada con observaciones propias | 10% |
 
 ---
 
 ## Referencias
 
-- [DLT — apply_changes() Python reference](https://docs.databricks.com/en/delta-live-tables/python-ref.html#apply_changes)
-- [SCD Type 1 and Type 2 in DLT](https://docs.databricks.com/en/delta-live-tables/cdc.html)
-- [CDC con Auto Loader + apply_changes](https://docs.databricks.com/en/delta-live-tables/tutorial-cdc.html)
+- [Lakeflow Pipelines — create_auto_cdc_flow() Python reference](https://learn.microsoft.com/en-us/azure/databricks/dlt/python-ref#create_auto_cdc_flow)
+- [SCD Type 1 and Type 2 en pipelines declarativos](https://learn.microsoft.com/en-us/azure/databricks/dlt/cdc)
+- [CDC con Auto Loader + create_auto_cdc_flow](https://learn.microsoft.com/en-us/azure/databricks/dlt/tutorial-cdc)
+- [What happened to @dlt?](https://learn.microsoft.com/en-us/azure/databricks/dlt/what-happened-to-dlt)
