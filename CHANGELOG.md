@@ -21,7 +21,17 @@ El formato de cada entrada sigue: **qué cambió**, **por qué**, **impacto en c
 
 ### Semanas pendientes de desarrollo
 
-- Semanas 04-12: estructura de carpetas creada, contenido pendiente
+- Semana 04: Databricks Jobs + `dbutils.widgets` — contenido pendiente
+- Semana 05: Declarative Pipelines (DLT) + Unity Catalog — contenido pendiente
+- Semanas 06-12: estructura de carpetas creada, tema definido, contenido pendiente
+
+### Decisión de diseño: semanas 04-05 se quedan en Databricks
+
+**Decisión (Abril 2026):** semanas 04 y 05 no saltan a otra herramienta — profundizan en Databricks con capacidades de producción.
+
+**Motivo:** Los estudiantes dominan PySpark y SQL sobre Databricks. El siguiente salto natural es operar esa misma plataforma como lo hace un DE en producción: Jobs orquestados, pipelines con calidad de datos declarativa y gobernanza con Unity Catalog. Cambiar de herramienta antes de explotar estas capacidades sería desperdiciar el contexto que ya construyeron.
+
+**Prerequisito no resuelto:** Databricks Enterprise. CE no tiene Jobs ni Unity Catalog. Confirmar acceso de workspace Enterprise antes de iniciar semana 04.
 
 ### Dataset financiero — decisión de selección
 
