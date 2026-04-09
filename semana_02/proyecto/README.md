@@ -57,15 +57,18 @@ Reutiliza y mejora lo que construiste en la Actividad 04. Requisitos adicionales
 
 ### Bronze
 - Los 5 archivos ingestados como tablas Delta sin transformaciones.
+- **Crear los schemas al inicio del notebook:** `spark.sql("CREATE SCHEMA IF NOT EXISTS bronze")` (y lo mismo para `silver` y `gold`).
+- Guarda cada tabla con nombre calificado: `saveAsTable("bronze.transactions")`, `saveAsTable("bronze.users")`, etc.
 - Agrega una columna `_ingested_at` con el timestamp de ingesta usando `F.current_timestamp()`.
 - Documenta el conteo de filas de cada tabla.
 
 ### Silver
-- Reads desde Bronze exclusivamente.
+- Reads desde Bronze exclusivamente (`spark.table("bronze.transactions")`, etc.).
 - Limpieza completa: tipos, nombres estandarizados, nulls documentados.
-- JOIN de las 5 tablas → `silver_transactions` con todas las dimensiones.
+- JOIN de las 5 tablas → `silver.transactions` con todas las dimensiones.
 - Columnas derivadas de fecha: `hora`, `dia_semana`, `es_fin_de_semana`, `mes`, `anio`.
 - Columna `amount_abs` para manejar montos negativos.
+- Guarda con `saveAsTable("silver.transactions")`.
 - Documenta: ¿cuántos registros se pierden en cada JOIN? ¿Por qué?
 
 Commit esperado:
@@ -79,7 +82,7 @@ git commit -m "feat: bronze and silver layers for fraud project"
 
 Construye las siguientes tablas Gold. Cada una responde una pregunta de negocio específica.
 
-### Tabla 1: `gold_resumen_fraude`
+### Tabla 1: `gold.resumen_fraude`
 
 Resumen general del dataset:
 
@@ -94,12 +97,12 @@ df_resumen = df_silver.agg(
         F.sum(F.when(F.col("is_fraud") == 1, F.col("amount_abs"))) / F.sum("amount_abs") * 100, 4
     ).alias("pct_monto_fraudulento")
 )
-df_resumen.write.format("delta").mode("overwrite").saveAsTable("gold_resumen_fraude")
+df_resumen.write.format("delta").mode("overwrite").saveAsTable("gold.resumen_fraude")
 ```
 
 ---
 
-### Tabla 2: `gold_fraude_por_dimension`
+### Tabla 2: `gold.fraude_por_dimension`
 
 Una tabla que consolida la tasa de fraude por múltiples dimensiones analíticas:
 
@@ -117,7 +120,7 @@ Puedes hacer 5 tablas separadas o una tabla unificada con una columna `dimension
 
 ---
 
-### Tabla 3: `gold_fraude_por_monto`
+### Tabla 3: `gold.fraude_por_monto`
 
 ¿El fraude se concentra en montos altos o bajos?
 
@@ -140,7 +143,7 @@ df_gold_monto = df_silver_buckets.groupBy("rango_monto") \
         F.avg("amount_abs").alias("monto_promedio")
     )
 
-df_gold_monto.write.format("delta").mode("overwrite").saveAsTable("gold_fraude_por_monto")
+df_gold_monto.write.format("delta").mode("overwrite").saveAsTable("gold.fraude_por_monto")
 ```
 
 ---
@@ -150,7 +153,7 @@ df_gold_monto.write.format("delta").mode("overwrite").saveAsTable("gold_fraude_p
 Construye una tabla Gold que permita identificar usuarios con comportamiento atípico.
 
 ```
-gold_perfil_usuario
+gold.perfil_usuario
 ```
 
 Columnas esperadas:

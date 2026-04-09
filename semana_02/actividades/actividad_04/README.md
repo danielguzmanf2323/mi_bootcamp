@@ -40,6 +40,8 @@ Archivos:
 - ¿Por qué cada capa lee de la capa anterior y no del archivo fuente?
 - ¿Qué ventajas tiene guardar como Delta Lake en lugar de CSV/Parquet?
 - ¿Qué es `saveAsTable` y cómo difiere de `write.parquet`?
+- ¿Qué es un schema (base de datos) en Databricks? ¿Cómo se crea con `CREATE SCHEMA`?
+- ¿Cuál es la diferencia entre `saveAsTable("tabla")` y `saveAsTable("schema.tabla")`?
 
 ---
 
@@ -68,22 +70,22 @@ Antes de escribir código, documenta en una celda markdown (en `bronze_<tu-nombr
 
 ```
 FUENTES
-  transactions_data.csv  →  Bronze: bronze_transactions
-  users_data.csv         →  Bronze: bronze_users
-  cards_data.csv         →  Bronze: bronze_cards
-  mcc_codes.json         →  Bronze: bronze_mcc
-  train_fraud_labels.json→  Bronze: bronze_fraud_labels
+  transactions_data.csv   →  bronze.transactions
+  users_data.csv          →  bronze.users
+  cards_data.csv          →  bronze.cards
+  mcc_codes.json          →  bronze.mcc_codes
+  train_fraud_labels.json →  bronze.fraud_labels
 
 BRONZE → SILVER
-  bronze_transactions + bronze_users + bronze_cards + bronze_mcc + bronze_fraud_labels
+  bronze.transactions + bronze.users + bronze.cards + bronze.mcc_codes + bronze.fraud_labels
     → limpieza de tipos, estandarización de columnas
-    → silver_transactions (tabla maestra enriquecida)
+    → silver.transactions (tabla maestra enriquecida)
 
 SILVER → GOLD
-  silver_transactions → gold_fraude_por_categoria (fraude por MCC)
-  silver_transactions → gold_fraude_por_tarjeta (fraude por card_type)
-  silver_transactions → gold_fraude_temporal (fraude por hora/día/mes)
-  silver_transactions → gold_usuarios_riesgo (usuarios con mayor tasa de fraude)
+  silver.transactions → gold.fraude_por_categoria  (fraude por MCC)
+  silver.transactions → gold.fraude_por_tarjeta    (fraude por card_type)
+  silver.transactions → gold.fraude_temporal       (fraude por hora/día/mes)
+  silver.transactions → gold.usuarios_riesgo       (usuarios con mayor tasa de fraude)
 ```
 
 ---
@@ -94,9 +96,14 @@ SILVER → GOLD
 
 ```python
 # BRONZE — Ingesta sin transformaciones
-# Objetivo: guardar cada archivo fuente como tabla Delta en la zona Bronze
+# Objetivo: guardar cada archivo fuente como tabla Delta en el schema Bronze
 
 from pyspark.sql import functions as F
+
+# Crear schemas si no existen (solo necesitas hacerlo una vez)
+spark.sql("CREATE SCHEMA IF NOT EXISTS bronze")
+spark.sql("CREATE SCHEMA IF NOT EXISTS silver")
+spark.sql("CREATE SCHEMA IF NOT EXISTS gold")
 
 # 1. transactions
 df_bronze_tx = spark.read.format("csv") \
@@ -104,8 +111,8 @@ df_bronze_tx = spark.read.format("csv") \
     .option("inferSchema", "true") \
     .load("/FileStore/transactions_data.csv")
 
-df_bronze_tx.write.format("delta").mode("overwrite").saveAsTable("bronze_transactions")
-print(f"Bronze transactions: {df_bronze_tx.count():,} filas | {len(df_bronze_tx.columns)} columnas")
+df_bronze_tx.write.format("delta").mode("overwrite").saveAsTable("bronze.transactions")
+print(f"bronze.transactions: {df_bronze_tx.count():,} filas | {len(df_bronze_tx.columns)} columnas")
 
 # 2. users
 df_bronze_users = spark.read.format("csv") \
@@ -113,7 +120,8 @@ df_bronze_users = spark.read.format("csv") \
     .option("inferSchema", "true") \
     .load("/FileStore/users_data.csv")
 
-df_bronze_users.write.format("delta").mode("overwrite").saveAsTable("bronze_users")
+df_bronze_users.write.format("delta").mode("overwrite").saveAsTable("bronze.users")
+print(f"bronze.users: {df_bronze_users.count():,} filas")
 
 # 3. cards
 df_bronze_cards = spark.read.format("csv") \
@@ -121,18 +129,21 @@ df_bronze_cards = spark.read.format("csv") \
     .option("inferSchema", "true") \
     .load("/FileStore/cards_data.csv")
 
-df_bronze_cards.write.format("delta").mode("overwrite").saveAsTable("bronze_cards")
+df_bronze_cards.write.format("delta").mode("overwrite").saveAsTable("bronze.cards")
+print(f"bronze.cards: {df_bronze_cards.count():,} filas")
 
 # 4. mcc_codes (JSON)
 df_bronze_mcc = spark.read.option("multiLine", "true").json("/FileStore/mcc_codes.json")
-df_bronze_mcc.write.format("delta").mode("overwrite").saveAsTable("bronze_mcc")
+df_bronze_mcc.write.format("delta").mode("overwrite").saveAsTable("bronze.mcc_codes")
+print(f"bronze.mcc_codes: {df_bronze_mcc.count():,} filas")
 
 # 5. fraud_labels (JSON)
 df_bronze_fraud = spark.read.option("multiLine", "true").json("/FileStore/train_fraud_labels.json")
-df_bronze_fraud.write.format("delta").mode("overwrite").saveAsTable("bronze_fraud_labels")
+df_bronze_fraud.write.format("delta").mode("overwrite").saveAsTable("bronze.fraud_labels")
+print(f"bronze.fraud_labels: {df_bronze_fraud.count():,} filas")
 
-print("Bronze completo. Tablas disponibles:")
-spark.sql("SHOW TABLES LIKE 'bronze*'").show()
+print("\nBronze completo. Tablas disponibles:")
+spark.sql("SHOW TABLES IN bronze").show()
 ```
 
 Commit esperado:
@@ -151,11 +162,11 @@ git commit -m "feat: bronze layer - ingest all 5 financial tables as delta"
 # Lee SIEMPRE desde las tablas Bronze, nunca desde los archivos fuente
 
 # Cargar desde Bronze
-df_tx       = spark.table("bronze_transactions")
-df_users    = spark.table("bronze_users")
-df_cards    = spark.table("bronze_cards")
-df_mcc      = spark.table("bronze_mcc")
-df_fraud    = spark.table("bronze_fraud_labels")
+df_tx       = spark.table("bronze.transactions")
+df_users    = spark.table("bronze.users")
+df_cards    = spark.table("bronze.cards")
+df_mcc      = spark.table("bronze.mcc_codes")
+df_fraud    = spark.table("bronze.fraud_labels")
 
 # --- Limpieza de transactions ---
 df_tx_clean = df_tx \
@@ -199,8 +210,8 @@ dup_count = df_silver.groupBy("transaction_id").count().filter(F.col("count") > 
 print(f"Transacciones duplicadas tras JOIN: {dup_count}")
 
 # Guardar Silver
-df_silver.write.format("delta").mode("overwrite").saveAsTable("silver_transactions")
-print(f"Silver transactions: {df_silver.count():,} filas | {len(df_silver.columns)} columnas")
+df_silver.write.format("delta").mode("overwrite").saveAsTable("silver.transactions")
+print(f"silver.transactions: {df_silver.count():,} filas | {len(df_silver.columns)} columnas")
 ```
 
 > **Obligatorio:** documenta en markdown qué columnas tenía Bronze y cuáles quedan en Silver. ¿Cuáles eliminaste? ¿Por qué?
@@ -218,9 +229,9 @@ git commit -m "feat: silver layer - clean types, joins, enriched transactions ta
 
 ```python
 # GOLD — Tablas analíticas para consumo
-# Lee SIEMPRE desde silver_transactions
+# Lee SIEMPRE desde silver.transactions
 
-df_silver = spark.table("silver_transactions")
+df_silver = spark.table("silver.transactions")
 
 # ------------------------------------------------
 # GOLD 1: Fraude por categoría de comercio
@@ -236,7 +247,7 @@ df_gold_categoria = df_silver \
     ) \
     .orderBy(F.col("tasa_fraude_pct").desc())
 
-df_gold_categoria.write.format("delta").mode("overwrite").saveAsTable("gold_fraude_por_categoria")
+df_gold_categoria.write.format("delta").mode("overwrite").saveAsTable("gold.fraude_por_categoria")
 
 # ------------------------------------------------
 # GOLD 2: Fraude por tipo de tarjeta
@@ -251,7 +262,7 @@ df_gold_tarjeta = df_silver \
     ) \
     .orderBy(F.col("tasa_fraude_pct").desc())
 
-df_gold_tarjeta.write.format("delta").mode("overwrite").saveAsTable("gold_fraude_por_tarjeta")
+df_gold_tarjeta.write.format("delta").mode("overwrite").saveAsTable("gold.fraude_por_tarjeta")
 
 # ------------------------------------------------
 # GOLD 3: Fraude temporal — por hora, día y mes
@@ -265,7 +276,7 @@ df_gold_temporal = df_silver \
     ) \
     .orderBy("anio", "mes", "dia_semana", "hora")
 
-df_gold_temporal.write.format("delta").mode("overwrite").saveAsTable("gold_fraude_temporal")
+df_gold_temporal.write.format("delta").mode("overwrite").saveAsTable("gold.fraude_temporal")
 
 # ------------------------------------------------
 # GOLD 4: Usuarios de alto riesgo
@@ -282,10 +293,10 @@ df_gold_usuarios = df_silver \
     .filter(F.col("total_transacciones") >= 5) \  # solo usuarios con historial suficiente
     .orderBy(F.col("tasa_fraude_pct").desc())
 
-df_gold_usuarios.write.format("delta").mode("overwrite").saveAsTable("gold_usuarios_riesgo")
+df_gold_usuarios.write.format("delta").mode("overwrite").saveAsTable("gold.usuarios_riesgo")
 
 print("Tablas Gold disponibles:")
-spark.sql("SHOW TABLES LIKE 'gold*'").show()
+spark.sql("SHOW TABLES IN gold").show()
 ```
 
 ---
@@ -298,7 +309,7 @@ spark.sql("SHOW TABLES LIKE 'gold*'").show()
 # 1. Top 5 categorías de comercio con mayor tasa de fraude
 spark.sql("""
     SELECT merchant_category, tasa_fraude_pct, total_transacciones, total_fraudes
-    FROM gold_fraude_por_categoria
+    FROM gold.fraude_por_categoria
     ORDER BY tasa_fraude_pct DESC
     LIMIT 5
 """).show(truncate=False)
@@ -306,7 +317,7 @@ spark.sql("""
 # 2. ¿A qué hora del día hay más fraude?
 spark.sql("""
     SELECT hora, SUM(total_fraudes) AS fraudes_totales, AVG(tasa_fraude_pct) AS tasa_promedio
-    FROM gold_fraude_temporal
+    FROM gold.fraude_temporal
     GROUP BY hora
     ORDER BY fraudes_totales DESC
 """).show()
@@ -314,7 +325,7 @@ spark.sql("""
 # 3. ¿El fraude es más frecuente en fin de semana?
 spark.sql("""
     SELECT dia_semana, SUM(total_fraudes) AS fraudes, AVG(tasa_fraude_pct) AS tasa
-    FROM gold_fraude_temporal
+    FROM gold.fraude_temporal
     GROUP BY dia_semana
     ORDER BY dia_semana
 """).show()
