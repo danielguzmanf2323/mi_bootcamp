@@ -1,131 +1,69 @@
 # Inetum Data Engineer Bootcamp
 
-Programa de formación práctica de 12 semanas para Data Engineers Junior.
-Cada semana combina actividades, laboratorios y un proyecto progresivo sobre las herramientas y metodologías del stack de Data Engineering.
+Repositorio oficial del programa de formación en Data Engineering de Inetum.
 
 ---
 
 ## Estructura del repositorio
 
-Cada semana sigue la misma organización interna:
-
 ```
 semana_XX/
-├── actividades/   # Ejercicios guiados con instrucciones paso a paso
-├── documentos/    # Material de referencia y apuntes de la semana
-├── laboratorios/  # Prácticas con mayor autonomía
-└── proyecto/      # Entregable del proyecto incremental
+    actividades/     ← actividades guiadas por tema
+    documentos/      ← material de referencia
+    laboratorios/    ← ejercicios adicionales
+    proyecto/        ← proyecto integrador de la semana
 ```
 
-Consulta [GITFLOW.md](GITFLOW.md) para entender cómo trabajar con este repositorio.
+Cada actividad y proyecto tiene su propio `README.md` con instrucciones, criterios de evaluación y referencias.
+
+---
+
+## Convenciones Git
+
+Ver [GITFLOW.md](GITFLOW.md) para la guía completa de ramas, commits y pull requests.
 
 ---
 
 ## Contenido por semana
 
-| Semana | Tema | Estado |
-|--------|------|--------|
-| [Semana 01](#semana-01--control-de-versiones-con-git) | Control de versiones con Git + Fundamentos DE + Databricks + Medallón | En curso |
-| [Semana 02](#semana-02) | — | Pendiente |
-| [Semana 03](#semana-03) | — | Pendiente |
-| [Semana 04](#semana-04) | — | Pendiente |
-| [Semana 05](#semana-05) | — | Pendiente |
-| [Semana 06](#semana-06) | — | Pendiente |
-| [Semana 07](#semana-07) | — | Pendiente |
-| [Semana 08](#semana-08) | — | Pendiente |
-| [Semana 09](#semana-09) | — | Pendiente |
-| [Semana 10](#semana-10) | — | Pendiente |
-| [Semana 11](#semana-11) | — | Pendiente |
-| [Semana 12](#semana-12) | — | Pendiente |
+### Semana 01 — Fundamentos
+
+Dataset: customers (CSV/JSON/Parquet/Avro) + Maven Fuzzy Factory (6 tablas e-commerce)  
+Tecnologías: Git, PySpark, Delta Lake, Databricks Community Edition
+
+| Actividad | Tema | Descripción |
+|-----------|------|-------------|
+| [Actividad 01](semana_01/actividades/actividad_01/README.md) | Git workflow | Clonar repo, crear ramas, commits, PRs. git stash, revert y estrategias de undo |
+| [Actividad 02](semana_01/actividades/actividad_02/README.md) | Conceptos Data Engineering | ETL/ELT, batch/streaming, Data Warehouse, Data Lake, Lakehouse, roles y stack selection |
+| [Actividad 03](semana_01/actividades/actividad_03/README.md) | Formatos de datos | CSV, JSON, Parquet, Avro en PySpark + SQL con spark.sql() + investigación JOINs |
+| [Actividad 04](semana_01/actividades/actividad_04/README.md) | Medallón Architecture | Pipeline Bronze → Silver → Gold con dataset de 2M clientes |
+| [Proyecto](semana_01/proyecto/README.md) | Maven Fuzzy Factory | Pipeline completo sobre 6 tablas de e-commerce. JOINs, limpieza, Gold tables, análisis de negocio |
 
 ---
 
-## Semana 01 — Control de versiones con Git
+### Semana 02 — PySpark Avanzado y Análisis de Fraude
 
-Introducción al flujo de trabajo con Git en proyectos de datos.
-Se establecen las bases del uso del repositorio, las convenciones de ramas y commits que se usarán durante todo el programa.
+Dataset: [Financial Transactions (Caixabank Tech)](https://www.kaggle.com/datasets/ealtman2019/credit-card-transactions) — 1.42GB, 5 archivos (CSV + JSON)  
+Tecnologías: PySpark, Delta Lake, Databricks Community Edition
 
-**Actividades:**
-- [Actividad 01 — Mi primer flujo con Git](semana_01/actividades/actividad_01/README.md): crear una rama, realizar commits progresivos y abrir un Pull Request documentando los aprendizajes de la semana.
-- [Actividad 02 — El mundo de los datos: conceptos fundamentales](semana_01/actividades/actividad_02/README.md): investigar y documentar los conceptos clave del ecosistema de datos (ETL, ELT, batch, streaming, Data Warehouse, Data Lake, Lakehouse y más), entregando un documento completo vía Git.
-- [Actividad 03 — Formatos de archivos y primer contacto con Databricks](semana_01/actividades/actividad_03/README.md): leer y comparar archivos CSV, JSON, Parquet y Avro, perfilar el dataset de clientes, y practicar SQL (SELECT, GROUP BY, HAVING, WINDOW, UPDATE, DELETE) en Databricks Community Edition o Google Colab.
-- [Actividad 04 — Arquitectura Medallón con el dataset Customers](semana_01/actividades/actividad_04/README.md): diseñar e implementar las tres capas Bronze, Silver y Gold sobre el dataset de clientes en Databricks usando Delta Lake.
-
-**Proyecto:**
-- [Proyecto — Maven Fuzzy Factory: Pipeline completo de E-Commerce](semana_01/proyecto/README.md): proyecto integrador con 6 tablas reales de una tienda online. Modelo entidad-relación, detección de calidad de datos, pipeline medallón completo con JOINs, tabla desnormalizada y análisis de negocio (conversión, canales de marketing, rendimiento de productos).
-
----
-
-## Semana 02
-
-> Contenido pendiente.
+| Actividad | Tema | Descripción |
+|-----------|------|-------------|
+| [Actividad 01](semana_02/actividades/actividad_01/README.md) | Fundamentos PySpark | Leer CSV con schema, limpieza de tipos, filtros, columnas calculadas, groupBy, análisis de nulls |
+| [Actividad 02](semana_02/actividades/actividad_02/README.md) | JOINs en PySpark | Modelo de datos, INNER/LEFT/ANTI joins con las 5 tablas, pérdida de registros documentada |
+| [Actividad 03](semana_02/actividades/actividad_03/README.md) | Funciones avanzadas | Funciones de fecha (date_trunc, datediff), window functions (rank, lag, acumulados, media móvil) |
+| [Actividad 04](semana_02/actividades/actividad_04/README.md) | Medallón con fraude | Pipeline Bronze → Silver → Gold con las 5 tablas del dataset financiero |
+| [Proyecto](semana_02/proyecto/README.md) | Detección de fraude | Pipeline integrador: Gold de fraude + perfil de usuario en riesgo + informe de hallazgos |
 
 ---
 
-## Semana 03
+### Semanas 03–12 — Próximamente
 
-> Contenido pendiente.
-
----
-
-## Semana 04
-
-> Contenido pendiente.
-
----
-
-## Semana 05
-
-> Contenido pendiente.
-
----
-
-## Semana 06
-
-> Contenido pendiente.
-
----
-
-## Semana 07
-
-> Contenido pendiente.
-
----
-
-## Semana 08
-
-> Contenido pendiente.
-
----
-
-## Semana 09
-
-> Contenido pendiente.
-
----
-
-## Semana 10
-
-> Contenido pendiente.
-
----
-
-## Semana 11
-
-> Contenido pendiente.
-
----
-
-## Semana 12
-
-> Contenido pendiente.
-
----
-
-## Convenciones del repositorio
-
-- Rama base de desarrollo: `develop`
-- Nunca trabajar directamente en `main`
-- Prefijos de ramas: `feature/`, `bugfix/`, `hotfix/`, `release/`, `docs/`
-- Commits en formato [Conventional Commits](https://www.conventionalcommits.org/)
-
+| Semana | Tema principal | Tecnologías |
+|--------|----------------|-------------|
+| 03 | SQL avanzado | Spark SQL, Databricks |
+| 04 | Ingesta de datos | TBD |
+| 05 | dbt (data build tool) | dbt, Delta Lake |
+| 06 | Orquestación con Airflow | Apache Airflow |
+| 07–08 | Microsoft Fabric | Microsoft Fabric |
+| 09–11 | Proyecto final | Stack completo |
+| 12 | Presentaciones finales | — |
