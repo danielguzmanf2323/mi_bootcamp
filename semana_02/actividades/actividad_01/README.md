@@ -269,6 +269,142 @@ Documenta: ¿qué columnas tienen nulos? ¿Qué impacto tiene eso en el análisi
 
 ---
 
+## Parte extra — Internals de Spark: el motor detrás del código
+
+Hasta aquí usaste PySpark como si fuera pandas con mejor sintaxis. Antes de avanzar a semana 03 necesitas entender qué pasa realmente cuando ejecutas una celda. Sin estos conceptos no puedes diagnosticar un pipeline lento ni tomar decisiones de diseño en producción.
+
+### Evaluación lazy — demostración con código
+
+```python
+import time
+from pyspark.sql.functions import col, sum as spark_sum
+
+# Construir el plan — NO ejecuta nada
+t0 = time.time()
+df_plan = (
+    df
+    .filter(col("amount") > 0)
+    .groupBy("card_type")
+    .agg(spark_sum("amount").alias("total"))
+)
+t1 = time.time()
+print(f"Construir transformaciones (lazy): {t1-t0:.6f} s")  # cerca de 0
+
+# Ejecutar el plan — aquí Spark trabaja realmente
+t0 = time.time()
+df_plan.show()
+t1 = time.time()
+print(f"Ejecutar con show() (eager):       {t1-t0:.4f} s")  # aquí está el tiempo real
+```
+
+```python
+# Las transformaciones son lazy — cada llamada añade un paso al plan
+df_paso1 = df.filter(col("amount") > 0)          # plan: 1 paso
+df_paso2 = df_paso1.withColumn("abs", col("amount"))  # plan: 2 pasos
+df_paso3 = df_paso2.groupBy("card_type").count()  # plan: 3 pasos
+# Nada corrió todavía
+
+# Las acciones disparan el plan completo
+n = df_paso3.count()   # acción → todo el plan corre ahora
+print(f"Categorías de tarjeta: {n}")
+```
+
+Documenta: ¿cuánto tardó construir vs ejecutar? ¿Cuántas celdas llegaste a encadenar sin que Spark ejecutara nada?
+
+---
+
+### Driver y Executors
+
+```
+┌─────────────────────────────────────────────────────┐
+│                   CLUSTER SPARK                     │
+│                                                     │
+│  ┌─────────────────┐     ┌───────────────────────┐  │
+│  │     DRIVER      │────▶│     EXECUTOR 1        │  │
+│  │                 │     │  Task  Task  Task     │  │
+│  │  SparkSession   │     └───────────────────────┘  │
+│  │  DAG Scheduler  │────▶┌───────────────────────┐  │
+│  │  tu código aquí │     │     EXECUTOR 2        │  │
+│  └─────────────────┘     │  Task  Task  Task     │  │
+│                           └───────────────────────┘  │
+└─────────────────────────────────────────────────────┘
+```
+
+| Componente | Qué hace | Quién es en Databricks |
+|---|---|---|
+| **Driver** | Interpreta tu código, construye el DAG de ejecución, coordina los executors | El nodo donde corre tu notebook |
+| **Executor** | Ejecuta las tasks, guarda particiones en memoria/disco | Cada worker node del cluster |
+| **Task** | Unidad mínima de trabajo: procesa 1 partición del DataFrame | Corre dentro de un executor |
+
+```python
+# Inspeccionar el cluster desde el notebook
+print(f"SparkSession App:   {spark.sparkContext.appName}")
+print(f"Versión Spark:      {spark.version}")
+print(f"Cores disponibles:  {spark.sparkContext.defaultParallelism}")
+print(f"Particiones SQL:    {spark.conf.get('spark.sql.shuffle.partitions')}")
+```
+
+El valor de `spark.sql.shuffle.partitions` es por defecto 200. Para datasets medianos con pocos cores, eso es excesivo:
+
+```python
+# Ajustar para el dataset de transactions en un cluster pequeño
+spark.conf.set("spark.sql.shuffle.partitions", "16")
+print("Particiones ajustadas a 16")
+```
+
+---
+
+### Job, Stage y Task — el Spark UI
+
+Cada vez que ejecutas una acción (`show()`, `count()`, `write()`), Spark crea un **Job**. Ese Job se divide en **Stages** separados por operaciones de shuffle. Cada Stage contiene múltiples **Tasks** (una por partición de datos).
+
+```python
+# Esta acción dispara 1 Job — ábrela en el Spark UI
+resultado = (
+    df
+    .groupBy("merchant_city")
+    .agg(spark_sum("amount").alias("total"))
+    .orderBy(col("total").desc())
+    .limit(10)
+)
+resultado.show()
+```
+
+Después de ejecutar esta celda en Databricks:
+
+1. Haz clic en el enlace `View` que aparece debajo de la celda (o ve al ícono de cronómetro en la barra lateral)
+2. Abre el Job y ve a la pestaña **Stages**
+3. Documenta en una celda markdown:
+   - ¿Cuántos stages tuvo este Job?
+   - ¿En cuál stage aparece el nombre `Exchange` (eso es el shuffle)?
+   - ¿Cuántas tasks tuvo el stage de `groupBy`?
+
+---
+
+### SparkSession
+
+En Databricks, `spark` ya existe cuando abres un notebook — Databricks la inyecta automáticamente. En otros entornos (local, CI/CD), tienes que crearla:
+
+```python
+# En Databricks — verificar que existe
+print(type(spark))          # <class 'pyspark.sql.session.SparkSession'>
+print(spark.sparkContext.appName)
+
+# En entorno local (referencia futura — NO ejecutar en Databricks)
+# from pyspark.sql import SparkSession
+# spark = SparkSession.builder \
+#     .appName("pipeline_fraude") \
+#     .config("spark.sql.shuffle.partitions", "8") \
+#     .getOrCreate()
+```
+
+Commit esperado:
+```bash
+git commit -m "docs: spark internals - lazy eval, driver/executor, SparkUI analysis"
+```
+
+---
+
 ## Entrega en Git
 
 ```bash

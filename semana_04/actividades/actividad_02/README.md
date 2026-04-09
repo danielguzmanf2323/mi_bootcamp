@@ -305,6 +305,62 @@ En un notebook aparte (`reflexion_<tu-nombre>.py`), responde:
 
 ---
 
+## Parte 10 — Tipos de cluster en Databricks Enterprise
+
+Antes de enviar este notebook a producción, necesitas entender qué cluster está corriendo tu código — porque afecta el costo, el tiempo de arranque y las capacidades disponibles.
+
+### Los tipos principales
+
+| Tipo | Cuándo usarlo | Costo | Arranque |
+|------|--------------|-------|----------|
+| **Single Node** | Desarrollo, datasets pequeños, scripts simples | Bajo | ~1 min |
+| **Standard (Multi-node)** | Pipelines interactivos, exploración con datos medianos | Medio | ~2-3 min |
+| **Shared** | Múltiples usuarios en paralelo, acceso centralizado | Medio | Compartido |
+| **Job Cluster** | Tasks automatizadas en Jobs — nace con el Job, muere al terminar | El más eficiente | ~2 min |
+| **Serverless** | Pipelines DLT y Jobs sin configuración de workers | Variable | ~5-10 seg |
+
+```python
+# Ver el tipo de cluster donde corre este notebook
+print(spark.conf.get("spark.databricks.clusterUsageTags.clusterNodeType", "no disponible"))
+print(f"Cores disponibles: {spark.sparkContext.defaultParallelism}")
+print(f"Versión Spark:    {spark.version}")
+```
+
+### All-Purpose vs Job Cluster
+
+```
+All-Purpose Cluster (lo que usas ahora):
+  Siempre activo → siempre pagando
+  Ideal para: desarrollo, exploración interactiva, notebooks manuales
+  Problema: si olvidas apagarlo, el costo corre
+
+Job Cluster (para el Job que crearás en Act 04):
+  Se crea al iniciar la task → se destruye al terminar
+  No hay costo en idle
+  Ideal para: pipelines automatizados nocturnos, batch processing
+  Ahorro típico: 40–70% del costo de compute vs All-Purpose
+```
+
+### Serverless
+
+Serverless Compute elimina la gestión de workers. No configuras cores ni memory — Databricks asigna recursos dinámicamente. El arranque es en segundos, no minutos.
+
+Cuándo usar Serverless:
+- DLT Pipelines (semana 05 — es la opción recomendada por Databricks)
+- Jobs cortos y frecuentes donde el tiempo de arranque importa
+- Cuando quieres olvidarte del cluster sizing
+
+Cuándo NO usar Serverless:
+- Necesitas configuración explícita de Spark (`shuffle.partitions`, broadcast threshold)
+- Workloads con skew predecible que se beneficien de tuning manual
+- Cuando el dataset necesita más memoria que la que Serverless asigna por defecto
+
+Documenta en tu notebook de reflexión:
+- ¿En qué tipo de cluster estás corriendo esta actividad?
+- Si este notebook fuera un Job nocturno que corre a las 2am con 5GB de datos, ¿qué tipo de cluster elegirías? ¿Por qué?
+
+---
+
 ## Entrega en Git
 
 ```bash

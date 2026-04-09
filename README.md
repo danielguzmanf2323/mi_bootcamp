@@ -93,13 +93,27 @@ Tecnologías: Spark SQL, Delta Lake, Databricks Community Edition
 
 ---
 
-### Semanas 05–12 — Próximamente
+### Semana 05 — Declarative Pipelines (DLT) · CDC · SCD1/SCD2 · Databricks Enterprise
+
+> **Prerequisito de infraestructura:** DLT requiere Databricks Enterprise edición Standard (Expectations) o Advanced (SCD2/apply_changes).  
+> Dataset: Financial Transactions (mismo de semanas 02–04), procesado en modo incremental con batches simulados.
+
+| Actividad | Tema | Contenido |
+|-----------|------|------------|
+| [Actividad 01](semana_05/actividades/actividad_01/README.md) | DLT fundamentos | `@dlt.table`, `dlt.read()`, Pipeline Parameters (`spark.conf.get`), Jobs vs DLT |
+| [Actividad 02](semana_05/actividades/actividad_02/README.md) | Auto Loader + Expectations | `cloudFiles`, `@dlt.expect` / `expect_or_drop` / `expect_or_fail`, quarantine pattern |
+| [Actividad 03](semana_05/actividades/actividad_03/README.md) | CDC y dimensiones lentamente cambiantes | `dlt.apply_changes()`, SCD1, SCD2 con `__START_AT`/`__END_AT`/`__CURRENT` |
+| [Actividad 04](semana_05/actividades/actividad_04/README.md) | Pipeline completo + Notificaciones | Pipeline de 3 notebooks, `on_update_failure`, webhook/email, Dev vs Prod mode |
+| [Proyecto](semana_05/proyecto/README.md) | Pipeline DLT de producción | Auto Loader + SCD2 + quality + Gold analítico + notificaciones + pipeline_spec.json |
+
+---
+
+### Semanas 06–12 — Próximamente
 
 | Semana | Tema principal | Tecnologías |
 |--------|----------------|-------------|
-| 05 | Declarative Pipelines (DLT), Data Quality Expectations, Unity Catalog | Databricks Enterprise |
 | 06 | dbt (data build tool) | dbt, Delta Lake |
 | 07 | Ingesta de datos (APIs, JDBC, streaming básico) | Databricks, Spark Structured Streaming |
 | 08–09 | Microsoft Fabric | Microsoft Fabric |
-| 10–11 | Proyecto final end-to-end | Stack completo |
+| 10–11 | Proyecto final en equipos (daily, ramas de célula, integrate to develop) | Stack completo |
 | 12 | Presentaciones finales | — |

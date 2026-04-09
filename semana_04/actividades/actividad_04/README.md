@@ -387,6 +387,89 @@ En tu notebook de reflexión o como comentario en el PR:
 
 ---
 
+## Parte 10 — Carga incremental con MERGE INTO
+
+Hasta ahora todas tus escrituras son `overwrite`. En producción eso significa reprocesar 50 millones de filas cada noche aunque solo cambiaron 50 mil. `MERGE INTO` de Delta Lake resuelve eso: actualiza lo que cambió, inserta lo nuevo, deja intacto el resto.
+
+### ¿Qué hace MERGE INTO?
+
+```
+FUENTE (filas nuevas/modificadas)     DESTINO (tabla existente)
+┌──────────────────┐              ┌───────────────────────┐
+│ tx_id=1 amount=50│──match─▶│ tx_id=1 amount=40     │ → UPDATE
+│ tx_id=99 amount=30│─nuevo─▶│ tx_id=2 amount=20     │ → sin cambio
+└──────────────────┘              │ tx_id=99 [nuevo]      │ → INSERT
+                                 └───────────────────────┘
+```
+
+### SCD1 con MERGE (sobrescribir el valor actual)
+
+SCD1 = "Solo me importa el valor más reciente." Si el usuario cambia de ciudad: actualizar. Si es usuario nuevo: insertar.
+
+```python
+from pyspark.sql.functions import current_timestamp
+
+# Simular un batch incremental de usuarios nuevos o actualizados
+df_usuarios_nuevos = spark.table("bronze.users").limit(500)
+df_usuarios_nuevos.createOrReplaceTempView("usuarios_source")
+
+# Crear tabla destino incremental si no existe
+spark.sql("""
+    CREATE TABLE IF NOT EXISTS silver.users_scd1
+    USING DELTA
+    AS SELECT * FROM silver.users WHERE 1=0
+""")
+
+# MERGE SCD1: UPDATE * si existe, INSERT * si es nuevo
+spark.sql("""
+    MERGE INTO silver.users_scd1 AS destino
+    USING usuarios_source AS fuente
+    ON destino.user_id = fuente.user_id
+    WHEN MATCHED THEN
+        UPDATE SET *
+    WHEN NOT MATCHED THEN
+        INSERT *
+""")
+
+print(f"Registros en silver.users_scd1: {spark.table('silver.users_scd1').count():,}")
+spark.sql("DESCRIBE HISTORY silver.users_scd1").show(5, False)
+```
+
+### MERGE de transacciones: UPDATE condicional
+
+```python
+# Simular batch de transacciones con posibles correcciones de monto
+df_nuevas = spark.table("bronze.transactions").limit(1000)
+df_nuevas.createOrReplaceTempView("tx_source")
+
+spark.sql("""
+    CREATE TABLE IF NOT EXISTS silver.transactions_incremental
+    USING DELTA
+    AS SELECT * FROM silver.transactions WHERE 1=0
+""")
+
+spark.sql("""
+    MERGE INTO silver.transactions_incremental AS destino
+    USING tx_source AS fuente
+    ON destino.transaction_id = fuente.id
+    WHEN MATCHED AND destino.amount != cast(regexp_replace(fuente.amount, '[$,]', '') AS DOUBLE) THEN
+        UPDATE SET destino.amount = cast(regexp_replace(fuente.amount, '[$,]', '') AS DOUBLE),
+                   destino._processed_at = current_timestamp()
+    WHEN NOT MATCHED THEN
+        INSERT (transaction_id, user_id, amount, transaction_date, _processed_at)
+        VALUES (fuente.id, fuente.client_id,
+                cast(regexp_replace(fuente.amount, '[$,]', '') AS DOUBLE),
+                to_timestamp(fuente.date, 'yyyy-MM-dd HH:mm:ss'),
+                current_timestamp())
+""")
+```
+
+Documenta: ¿cuánto tarda el MERGE vs un `write.mode("overwrite")` con el mismo volumen? ¿Cuántos registros fueron UPDATE vs INSERT? (lo ves en el output del MERGE).
+
+> **Enlace con semana 05:** `APPLY CHANGES INTO` en Declarative Pipelines hace SCD1 y SCD2 automáticamente con solo declarar las keys y el campo de secuencia — sin escribir el SQL del MERGE. Es el motivo por el que DLT existe.
+
+---
+
 ## Entrega en Git
 
 ```bash
