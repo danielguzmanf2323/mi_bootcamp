@@ -300,6 +300,101 @@ En una celda markdown, responde:
 
 ---
 
+## Parte 5 — Shuffle, tipos de JOIN y skew
+
+Esta parte amplía el `EXPLAIN` de la Parte 2 con los conceptos de performance que más impactan en producción. Los viste mencionados en semana 02 como investigación — aquí los compruebas con código.
+
+### ¿Qué es un shuffle?
+
+Un shuffle ocurre cuando Spark necesita mover datos entre executors — al hacer un `groupBy`, un `orderBy`, o un JOIN entre tablas grandes. Es la operación más costosa: implica serialización, transferencia de red y reordenamiento en disco.
+
+```python
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import broadcast
+import pyspark.sql.functions as F
+
+df_tx    = spark.table("silver.transactions")
+df_users = spark.table("silver.users")
+df_mcc   = spark.table("bronze.mcc_codes")
+
+# Ver el plan de un JOIN grande (SortMergeJoin esperado)
+df_join_grande = df_tx.join(df_users, on="user_id", how="left")
+print("=== JOIN grande (transactions + users) ===")
+df_join_grande.explain(mode="simple")
+```
+
+Busca en el plan:
+- `Exchange hashpartitioning` → aquí está el shuffle
+- `SortMergeJoin` → JOIN después del shuffle (ambas tablas grandes)
+- `BroadcastHashJoin` → JOIN sin shuffle (una tabla es pequeña)
+
+### BroadcastHashJoin vs SortMergeJoin
+
+| | BroadcastHashJoin | SortMergeJoin |
+|---|---|---|
+| **Cuándo** | Una tabla cabe en memoria del driver (~10MB por defecto) | Ambas tablas son grandes |
+| **Shuffle** | No — la tabla pequeña se copia a todos los executors | Sí — ambas se redistribuyen |
+| **Velocidad** | Muy rápido | Depende del volumen |
+
+```python
+# Forzar BroadcastHashJoin con mcc_codes (tabla pequeña = JSON de categorías)
+df_con_broadcast    = df_tx.join(broadcast(df_mcc), on="mcc_code", how="left")
+df_sin_broadcast    = df_tx.join(df_mcc, on="mcc_code", how="left")
+
+print("=== CON broadcast() ===")
+df_con_broadcast.explain(mode="simple")
+
+print("\n=== SIN broadcast() ===")
+df_sin_broadcast.explain(mode="simple")
+```
+
+Documenta: ¿cuál de las dos tiene `Exchange` en el plan? ¿Cuál debería ser más rápida y por qué?
+
+### Particiones: repartition vs coalesce
+
+```python
+print(f"Particiones actuales: {df_tx.rdd.getNumPartitions()}")
+
+# repartition — redistribuye con shuffle, puede aumentar o reducir
+df_repart = df_tx.repartition(32)
+print(f"Después de repartition(32): {df_repart.rdd.getNumPartitions()}")
+
+# coalesce — solo reduce, SIN shuffle (fusiona particiones localmente)
+df_coal = df_tx.coalesce(4)
+print(f"Después de coalesce(4): {df_coal.rdd.getNumPartitions()}")
+```
+
+Regla: usa `repartition()` para redistribuir o aumentar. Usa `coalesce()` solo para reducir antes de escribir a disco (evitas el shuffle overhead).
+
+### Detectar skew
+
+El skew ocurre cuando los datos están distribuidos de forma desigual entre particiones. Una partición tiene 10 millones de filas mientras las demás tienen 10 mil. El executor que la procesa se vuelve el cuello de botella — las otras tasks terminan y ese executor sigue trabajando solo.
+
+```python
+# Detectar skew: buscar columnas con distribución muy desigual
+distribucion = (
+    df_tx
+    .groupBy("merchant_city")
+    .count()
+    .orderBy(F.desc("count"))
+)
+distribucion.show(20)
+
+# Si el top-1 tiene 10x más registros que el top-20 → potencial skew en JOINs por esa columna
+top1  = distribucion.first()["count"]
+top20 = distribucion.collect()[19]["count"]
+print(f"Ratio top1/top20: {top1/top20:.1f}x")
+```
+
+En el Spark UI, el skew se ve como: un stage donde la mayoría de tasks terminan en 2s pero una task tarda 45s. Esa es la partición grande.
+
+Commit esperado:
+```bash
+git commit -m "feat: shuffle analysis, broadcast hint, skew detection - sem03 act04"
+```
+
+---
+
 ## Entrega en Git
 
 ```bash

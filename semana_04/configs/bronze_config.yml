@@ -1,0 +1,72 @@
+# bronze_config.yml
+# Configuración de la pipeline de ingesta Bronze
+# Inetum Data Engineer Bootcamp — Semana 04
+#
+# Este archivo define TODAS las fuentes que la pipeline Bronze debe ingestar.
+# El notebook de ingesta lee este archivo y procesa cada fuente sin código quemado.
+# Para añadir una nueva fuente: añadir un bloque bajo "sources" y nada más.
+
+pipeline:
+  name: financial_transactions_bronze
+  catalog: main              # Unity Catalog: catalog.schema.table
+  environment: dev           # dev | prod — se sobreescribe con widget al ejecutar
+
+sources:
+
+  - name: transactions
+    description: "Transacciones financieras principales"
+    source_path: "/Volumes/main/landing/raw/transactions_data.csv"
+    format: csv
+    options:
+      header: "true"
+      inferSchema: "true"
+    destination:
+      schema: bronze
+      table: transactions
+      write_mode: overwrite
+
+  - name: users
+    description: "Datos demográficos de usuarios"
+    source_path: "/Volumes/main/landing/raw/users_data.csv"
+    format: csv
+    options:
+      header: "true"
+      inferSchema: "true"
+    destination:
+      schema: bronze
+      table: users
+      write_mode: overwrite
+
+  - name: cards
+    description: "Metadatos de tarjetas de crédito/débito"
+    source_path: "/Volumes/main/landing/raw/cards_data.csv"
+    format: csv
+    options:
+      header: "true"
+      inferSchema: "true"
+    destination:
+      schema: bronze
+      table: cards
+      write_mode: overwrite
+
+  - name: mcc_codes
+    description: "Categorías de comercios (MCC codes)"
+    source_path: "/Volumes/main/landing/raw/mcc_codes.json"
+    format: json
+    options:
+      multiLine: "true"
+    destination:
+      schema: bronze
+      table: mcc_codes
+      write_mode: overwrite
+
+  - name: fraud_labels
+    description: "Etiquetas de fraude por transacción"
+    source_path: "/Volumes/main/landing/raw/train_fraud_labels.json"
+    format: json
+    options:
+      multiLine: "true"
+    destination:
+      schema: bronze
+      table: fraud_labels
+      write_mode: overwrite

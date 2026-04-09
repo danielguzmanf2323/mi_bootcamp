@@ -1,0 +1,102 @@
+# silver_config.yml
+# Configuración de transformaciones para la capa Silver
+# Inetum Data Engineer Bootcamp — Semana 04
+#
+# Este archivo define las transformaciones que el notebook Silver aplica
+# sobre cada tabla Bronze. No hay transformaciones quemadas en el código:
+# si cambia una columna, se cambia aquí.
+
+pipeline:
+  name: financial_transactions_silver
+  catalog: main
+  environment: dev           # dev | prod — se sobreescribe con widget
+
+tables:
+
+  - name: transactions
+    description: "Tabla maestra de transacciones — limpia y enriquecida"
+    source: "bronze.transactions"
+    destination:
+      schema: silver
+      table: transactions
+      write_mode: overwrite
+
+    transformations:
+
+      renames:
+        - from: id
+          to: transaction_id
+        - from: client_id
+          to: user_id
+
+      casts:
+        - column: amount
+          expression: "regexp_replace(amount, '[$,]', '')"
+          type: double
+          alias: amount
+        - column: date
+          expression: "to_timestamp(date, 'yyyy-MM-dd HH:mm:ss')"
+          type: timestamp
+          alias: transaction_date
+
+      derived_columns:
+        - name: hora
+          expression: "hour(transaction_date)"
+        - name: dia_semana
+          expression: "dayofweek(transaction_date)"
+        - name: es_fin_de_semana
+          expression: "case when dayofweek(transaction_date) in (1, 7) then 1 else 0 end"
+        - name: mes
+          expression: "month(transaction_date)"
+        - name: anio
+          expression: "year(transaction_date)"
+        - name: amount_abs
+          expression: "abs(amount)"
+
+      drops:
+        - date
+
+      add_metadata:
+        - name: _processed_at
+          expression: "current_timestamp()"
+        - name: _source_table
+          expression: "'bronze.transactions'"
+
+  - name: users
+    description: "Perfil de usuarios"
+    source: "bronze.users"
+    destination:
+      schema: silver
+      table: users
+      write_mode: overwrite
+
+    transformations:
+      renames:
+        - from: id
+          to: user_id
+      derived_columns:
+        - name: edad_aprox
+          expression: "year(current_date()) - birth_year"
+      add_metadata:
+        - name: _processed_at
+          expression: "current_timestamp()"
+        - name: _source_table
+          expression: "'bronze.users'"
+
+  - name: cards
+    description: "Metadatos de tarjetas"
+    source: "bronze.cards"
+    destination:
+      schema: silver
+      table: cards
+      write_mode: overwrite
+
+    transformations:
+      renames:
+        - from: id
+          to: card_id
+      add_metadata:
+        - name: _processed_at
+          expression: "current_timestamp()"
+        - name: _source_table
+          expression: "'bronze.cards'"
