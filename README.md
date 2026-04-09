@@ -80,9 +80,10 @@ Tecnologías: Spark SQL, Delta Lake, Databricks Community Edition
 
 | Semana | Tema principal | Tecnologías |
 |--------|----------------|-------------|
-| 04 | Ingesta de datos | TBD |
-| 05 | dbt (data build tool) | dbt, Delta Lake |
-| 06 | Orquestación con Airflow | Apache Airflow |
-| 07–08 | Microsoft Fabric | Microsoft Fabric |
-| 09–11 | Proyecto final | Stack completo |
+| 04 | Databricks Jobs y orquestación — `dbutils.widgets`, Jobs parametrizados, scheduling | Databricks Enterprise |
+| 05 | Declarative Pipelines (DLT), Data Quality Expectations, Unity Catalog | Databricks Enterprise |
+| 06 | dbt (data build tool) | dbt, Delta Lake |
+| 07 | Ingesta de datos (APIs, JDBC, streaming básico) | Databricks, Spark Structured Streaming |
+| 08–09 | Microsoft Fabric | Microsoft Fabric |
+| 10–11 | Proyecto final end-to-end | Stack completo |
 | 12 | Presentaciones finales | — |

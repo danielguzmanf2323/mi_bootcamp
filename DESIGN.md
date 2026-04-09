@@ -158,17 +158,39 @@ df_sample = df.sample(fraction=0.10, seed=42)
 
 ---
 
-## 10. Semanas 04-12 — arco pendiente
+## 10. Semanas 04-12 — arco planificado
 
-El arco planificado (sujeto a revisión tras primera cohorte):
+### Semanas 04-05: Databricks Avanzado (plataforma en producción)
 
-| Semana | Tema | Dependencia clave |
-|--------|------|-------------------|
-| 04 | Ingesta de datos (APIs, JDBC, archivos incrementales) | Requiere Databricks Enterprise o similar |
-| 05 | dbt (data build tool) | Requiere haber solidificado SQL en semana 03 |
-| 06 | Orquestación con Airflow | Requiere entender pipelines de semanas 01-04 |
-| 07-08 | Microsoft Fabric | Requiere trial de 60 días — coordinar con Inetum |
-| 09-11 | Proyecto final end-to-end | Requiere todo el stack anterior |
-| 12 | Presentaciones | El proyecto final de cada estudiante |
+Las semanas 4 y 5 continúan en Databricks para cubrir lo que diferencia a alguien que "sabe PySpark" de alguien que puede **operar una plataforma de datos en producción**. No tiene sentido saltar a otra herramienta antes de dominar la que ya tienen.
 
-**Decisión sobre dbt:** evaluar si adelantar a semana 04 en lugar de ingesta. dbt es SQL + pipeline structure — conecta directamente con semana 03 y tiene menor barrera de entrada que configurar conectores de ingesta.
+| Semana | Tema | Contenido principal | Entorno |
+|--------|------|---------------------|---------|
+| 04 | Orquestación con Databricks Jobs | Jobs parametrizados, `dbutils.widgets`, dependencias entre tareas, scheduling, alertas | Databricks Enterprise |
+| 05 | Pipelines declarativos y gobernanza | Declarative Pipelines (DLT), Data Quality Expectations, Unity Catalog (schemas, grants, lineage) | Databricks Enterprise |
+
+**Por qué en este orden:**
+- **Jobs primero (semana 04):** Los estudiantes ya tienen notebooks funcionales de semana 02-03. El paso natural es convertirlos en pipelines orquestados. `dbutils.widgets` les permite parametrizar lo que ya construyeron — la curva de aprendizaje es baja porque el código ya existe.
+- **DLT + Unity Catalog después (semana 05):** Declarative Pipelines añade calidad de datos sobre pipelines que ya entienden. Unity Catalog es gobernanza — no tiene sentido sin saber qué se está gobernando.
+
+**Prerequisito de entorno:** Databricks Enterprise (o workspace con acceso a Jobs, DLT y Unity Catalog). Coordinar acceso con Inetum antes de semana 04.
+
+**Decisión sobre `dbutils.widgets`:**  
+En Databricks CE los widgets funcionan pero Jobs no están disponibles. Si el grupo sigue en CE en semana 04, la actividad de Jobs debe hacerse en Enterprise. Los widgets se pueden practicar en CE de forma aislada pero sin el contexto de orquestación completo.
+
+**Decisión sobre Unity Catalog:**  
+El Unity Catalog requiere un workspace Enterprise con metastore configurado. No está disponible en Community Edition. Es el estándar de gobernanza de Databricks — todo lo que hicieron con `CREATE SCHEMA` en schemas locales de semanas 01-03 se convierte en objetos del Unity Catalog en semana 05.
+
+---
+
+### Semanas 06-12: por definir tras primera cohorte
+
+| Semana | Tema tentativo | Dependencia clave |
+|--------|----------------|-------------------|
+| 06 | dbt (data build tool) | SQL semana 03 + pipelines semana 04-05 |
+| 07 | Ingesta de datos (APIs, JDBC, streaming básico) | Jobs semana 04 |
+| 08-09 | Microsoft Fabric | Trial 60 días — coordinar con Inetum |
+| 10-11 | Proyecto final end-to-end | Todo el stack anterior |
+| 12 | Presentaciones finales | — |
+
+**Nota:** El orden de semanas 06-12 está sujeto a revisión después de que la primera cohorte complete semanas 01-05. La decisión sobre dbt vs Fabric primero dependerá del nivel del grupo y de la disponibilidad de licencias.
