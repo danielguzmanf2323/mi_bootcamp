@@ -18,9 +18,14 @@ Cada actividad y proyecto tiene su propio `README.md` con instrucciones, criteri
 
 ---
 
-## Convenciones Git
+## Documentación del proyecto
 
-Ver [GITFLOW.md](GITFLOW.md) para la guía completa de ramas, commits y pull requests.
+| Documento | Descripción |
+|-----------|-------------|
+| [GITFLOW.md](GITFLOW.md) | Guía de ramas, commits y pull requests |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Cómo añadir semanas, convenciones de actividades, modelo de fork por cohorte |
+| [DESIGN.md](DESIGN.md) | Decisiones pedagógicas y técnicas — el "por qué" del diseño del bootcamp |
+| [CHANGELOG.md](CHANGELOG.md) | Cambios por cohorte: qué funcionó, qué se ajustó, problemas conocidos |
 
 ---
 
