@@ -382,6 +382,15 @@ En el PR:
 
 ---
 
+## Laboratorio
+
+El notebook de laboratorio para esta actividad está en:
+[`../../laboratorios/lab_03_sql_avanzado.ipynb`](../../laboratorios/lab_03_sql_avanzado.ipynb)
+
+Cubre: CTEs de dos o más pasos (`WITH`), `ROW_NUMBER / RANK / DENSE_RANK` con `PARTITION BY`, `LAG / LEAD` con variación porcentual, acumulado corrido con `SUM OVER ROWS BETWEEN`, y tres preguntas de negocio que combinan CTEs con window functions.
+
+---
+
 ## Referencias
 
 - [Spark SQL Window Functions](https://spark.apache.org/docs/latest/sql-ref-syntax-qry-select-window.html)

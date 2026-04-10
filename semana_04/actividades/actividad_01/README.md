@@ -291,6 +291,15 @@ En el PR:
 
 ---
 
+## Laboratorio
+
+El notebook de laboratorio para esta actividad está en:
+[`../../laboratorios/lab_01_widgets.ipynb`](../../laboratorios/lab_01_widgets.ipynb)
+
+Cubre: detección de columnas categóricas y numéricas para alimentar widgets, definición de `text / dropdown / combobox / multiselect` con `dbutils.widgets`, aplicación de los parámetros al filtrado y análisis del dataset, y simulación de llamada desde notebook orquestador con `dbutils.notebook.exit()`.
+
+---
+
 ## Referencias
 
 - [dbutils.widgets — Databricks](https://docs.databricks.com/en/dev-tools/databricks-utils.html#widgets-utility-dbutilswidgets)

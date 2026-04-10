@@ -291,6 +291,15 @@ Incluye en el PR:
 
 ---
 
+## Laboratorio
+
+El notebook de laboratorio para esta actividad está en:
+[`../../laboratorios/lab_03_cdc_scd.ipynb`](../../laboratorios/lab_03_cdc_scd.ipynb)
+
+Cubre: simulación de eventos INSERT/UPDATE/DELETE sobre tu dataset, ingestión incremental Bronze con Auto Loader, `dp.create_auto_cdc_flow()` para SCD Tipo 1 (último estado) y SCD Tipo 2 (historial con `__START_AT / __END_AT`), comparativa de conteos entre ambas estrategias, y análisis de registros eliminados.
+
+---
+
 ## Referencias
 
 - [Lakeflow Pipelines — create_auto_cdc_flow() Python reference](https://learn.microsoft.com/en-us/azure/databricks/dlt/python-ref#create_auto_cdc_flow)

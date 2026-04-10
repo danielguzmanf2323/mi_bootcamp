@@ -325,6 +325,15 @@ En el PR responde:
 
 ---
 
+## Laboratorio
+
+El notebook de laboratorio para esta actividad está en:
+[`../../laboratorios/lab_01_sql_basico.ipynb`](../../laboratorios/lab_01_sql_basico.ipynb)
+
+Cubre: carga de tu propio dataset como tabla Delta, perfil técnico con SQL (`DESCRIBE TABLE EXTENDED`, % de nulos, cardinalidades), cinco consultas con `SELECT/WHERE/GROUP BY/HAVING`, y tres preguntas de negocio respondidas con Spark SQL.
+
+---
+
 ## Referencias
 
 - [Databricks SQL Reference](https://docs.databricks.com/sql/language-manual/index.html)
