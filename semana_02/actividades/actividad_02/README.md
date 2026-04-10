@@ -91,25 +91,36 @@ df_users = spark.read.format("csv").option("header", "true").option("inferSchema
 df_cards = spark.read.format("csv").option("header", "true").option("inferSchema", "true") \
     .load("/FileStore/cards_data.csv")
 
-# Tablas JSON — formato diferente al CSV
+# Tablas JSON
 df_mcc = spark.read.option("multiLine", "true").json("/FileStore/mcc_codes.json")
+```
 
-# train_fraud_labels.json es un archivo grande — multiLine lo carga completo en memoria
-# y puede superar el límite de Photon (1 GB). Leerlo sin multiLine (NDJSON line-by-line):
-df_fraud = spark.read.json("/FileStore/train_fraud_labels.json")
+Fraud labels está en Parquet (ya disponible en FileStore). Si por alguna razón el archivo no está, la celda siguiente lo convierte como fallback:
 
-# Si aun así falla, deshabilitar Photon para esta lectura:
-# spark.conf.set("spark.databricks.photon.enabled", "false")
-# df_fraud = spark.read.json("/FileStore/train_fraud_labels.json")
-# spark.conf.set("spark.databricks.photon.enabled", "true")
+```python
+# Fraud labels — leer desde Parquet
+# El archivo train_fraud_labels.parquet ya está subido a FileStore.
+# Si no lo tienes, esta celda convierte el JSON como alternativa.
 
+try:
+    df_fraud = spark.read.parquet("/FileStore/train_fraud_labels.parquet")
+    print("✓ Parquet cargado correctamente")
+except Exception:
+    print("⚠ Parquet no encontrado — convirtiendo desde JSON (puede tardar varios minutos)...")
+    df_fraud = spark.read.json("/FileStore/train_fraud_labels.json")
+    df_fraud.write.mode("overwrite").parquet("/FileStore/train_fraud_labels.parquet")
+    df_fraud = spark.read.parquet("/FileStore/train_fraud_labels.parquet")
+    print("✓ Conversión completada y Parquet relanzado")
+```
+
+```python
 # Verificar conteos
-for nombre, df in [("transactions", df_transactions), ("users", df_users), 
+for nombre, df in [("transactions", df_transactions), ("users", df_users),
                     ("cards", df_cards), ("mcc", df_mcc), ("fraud", df_fraud)]:
     print(f"{nombre}: {df.count():,} registros | {len(df.columns)} columnas")
 ```
 
-> **Investigar:** ¿Por qué los archivos JSON se leen diferente al CSV? ¿Qué hace `multiLine`?
+> **Investigar:** ¿Por qué los archivos JSON se leen diferente al CSV? ¿Qué hace `multiLine`? ¿Qué ventajas tiene Parquet sobre JSON para procesamiento en Spark?
 
 Commit esperado:
 ```bash
@@ -210,10 +221,10 @@ df_full.groupBy("merchant_description") \
 ### JOIN 4: + fraud_labels (LEFT JOIN)
 
 ```python
-# fraud_labels: id de transacción + label (0=legítima, 1=fraude)
+# fraud_labels: id de transacción + target ("Yes"=fraude, "No"=legítima)
 df_fraud_renamed = df_fraud \
     .withColumnRenamed("id", "transaction_id") \
-    .withColumnRenamed("label", "is_fraud")
+    .withColumnRenamed("target", "is_fraud")
 
 df_final = df_full.join(df_fraud_renamed, on="transaction_id", how="left")
 
@@ -263,6 +274,7 @@ Con `df_final` (las 5 tablas unidas), responde estas preguntas usando PySpark:
 
 ```python
 # Ejemplo de estructura para responder la pregunta 3
+# is_fraud tiene valores "Yes" (fraude) y "No" (legítima)
 df_final.groupBy("is_fraud") \
     .agg(
         F.count("transaction_id").alias("total"),
