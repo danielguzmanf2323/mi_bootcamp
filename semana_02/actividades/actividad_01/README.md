@@ -324,6 +324,28 @@ print(f"Ciudades de comercio: {n}")
 
 Documenta: ¿cuánto tardó construir vs ejecutar? ¿Cuántas celdas llegaste a encadenar sin que Spark ejecutara nada?
 
+**Ejercicio adicional — `show()` vs `display()`:**
+
+Reemplaza el `df_plan.show()` de arriba por `display(df_plan.limit(10))` y responde en una celda markdown:
+
+```python
+# En lugar de:
+df_plan.show()
+
+# Usar:
+display(df_plan.limit(10))
+```
+
+| | `show()` | `display()` |
+|---|---|---|
+| Disponibilidad | PySpark estándar (cualquier entorno) | Solo Databricks |
+| Salida | Texto plano en consola | Tabla interactiva con filtros y descarga |
+| Visualización | No | Sí — gráficos desde la misma celda |
+| Filas mostradas | 20 por defecto (configurable con `n=`) | Paginado automático |
+| ¿Dispara una acción? | Sí | Sí |
+
+> ¿Cuándo preferirías `show()` sobre `display()`? Piensa en pipelines automatizados sin interfaz gráfica.
+
 ---
 
 ### Driver y Executors
@@ -349,12 +371,17 @@ Documenta: ¿cuánto tardó construir vs ejecutar? ¿Cuántas celdas llegaste a 
 | **Executor** | Ejecuta las tasks, guarda particiones en memoria/disco | Cada worker node del cluster |
 | **Task** | Unidad mínima de trabajo: procesa 1 partición del DataFrame | Corre dentro de un executor |
 
+> **Serverless:** si estás en compute serverless, `spark.sparkContext` no está disponible y lanzará un error. Usa las alternativas de abajo.
+
 ```python
 # Inspeccionar el cluster desde el notebook
-print(f"SparkSession App:   {spark.sparkContext.appName}")
+# En serverless: spark.sparkContext.X lanza error — usar spark.conf y spark.version
 print(f"Versión Spark:      {spark.version}")
-print(f"Cores disponibles:  {spark.sparkContext.defaultParallelism}")
 print(f"Particiones SQL:    {spark.conf.get('spark.sql.shuffle.partitions')}")
+
+# Solo en cluster de un único usuario (single-user) — fallará en serverless:
+# print(f"SparkSession App:   {spark.sparkContext.appName}")
+# print(f"Cores disponibles:  {spark.sparkContext.defaultParallelism}")
 ```
 
 El valor de `spark.sql.shuffle.partitions` es por defecto 200. Para datasets medianos con pocos cores, eso es excesivo:
@@ -401,7 +428,8 @@ En Databricks, `spark` ya existe cuando abres un notebook — Databricks la inye
 ```python
 # En Databricks — verificar que existe
 print(type(spark))          # <class 'pyspark.sql.session.SparkSession'>
-print(spark.sparkContext.appName)
+print(spark.version)
+# spark.sparkContext.appName → falla en serverless, OK en single-user cluster
 
 # En entorno local (referencia futura — NO ejecutar en Databricks)
 # from pyspark.sql import SparkSession
@@ -410,6 +438,10 @@ print(spark.sparkContext.appName)
 #     .config("spark.sql.shuffle.partitions", "8") \
 #     .getOrCreate()
 ```
+
+> **Si ves este error en serverless:**  
+> `Directly accessing the underlying Spark driver JVM using the attribute 'sparkContext' is not supported on serverless compute.`  
+> Es esperado — serverless abstrae el driver JVM. Usa `spark.version` y `spark.conf.get(...)` como alternativas. Para acceder a `sparkContext` necesitarás un cluster de **single-user**.
 
 Commit esperado:
 ```bash

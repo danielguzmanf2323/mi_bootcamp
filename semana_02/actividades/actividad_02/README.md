@@ -93,7 +93,15 @@ df_cards = spark.read.format("csv").option("header", "true").option("inferSchema
 
 # Tablas JSON — formato diferente al CSV
 df_mcc = spark.read.option("multiLine", "true").json("/FileStore/mcc_codes.json")
-df_fraud = spark.read.option("multiLine", "true").json("/FileStore/train_fraud_labels.json")
+
+# train_fraud_labels.json es un archivo grande — multiLine lo carga completo en memoria
+# y puede superar el límite de Photon (1 GB). Leerlo sin multiLine (NDJSON line-by-line):
+df_fraud = spark.read.json("/FileStore/train_fraud_labels.json")
+
+# Si aun así falla, deshabilitar Photon para esta lectura:
+# spark.conf.set("spark.databricks.photon.enabled", "false")
+# df_fraud = spark.read.json("/FileStore/train_fraud_labels.json")
+# spark.conf.set("spark.databricks.photon.enabled", "true")
 
 # Verificar conteos
 for nombre, df in [("transactions", df_transactions), ("users", df_users), 
