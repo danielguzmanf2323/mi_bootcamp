@@ -91,8 +91,29 @@ df_users = spark.read.format("csv").option("header", "true").option("inferSchema
 df_cards = spark.read.format("csv").option("header", "true").option("inferSchema", "true") \
     .load("/FileStore/cards_data.csv")
 
-# Tablas JSON
-df_mcc = spark.read.option("multiLine", "true").json("/FileStore/mcc_codes.json")
+# MCC codes — JSON de un solo objeto: cada clave es un código MCC, el valor es la descripción
+# Spark lo lee como 1 fila × N columnas → se pivota en la celda siguiente
+df_mcc_raw = spark.read.option("multiLine", "true").json("/FileStore/mcc_codes.json")
+```
+
+El JSON de MCC tiene formato ancho (1 fila, una columna por código). Hay que pivotarlo a formato largo (`mcc | description`) antes del JOIN:
+
+```python
+# Pivotar mcc_codes: de ancho (1 fila × N cols) a largo (N filas × 2 cols)
+mcc_cols = df_mcc_raw.columns
+stack_expr = (
+    f"stack({len(mcc_cols)}, "
+    + ", ".join([f"'{c}', `{c}`" for c in mcc_cols])
+    + ") as (mcc_str, description)"
+)
+df_mcc = (
+    df_mcc_raw
+    .select(F.expr(stack_expr))
+    .withColumn("mcc", F.col("mcc_str").cast("int"))
+    .drop("mcc_str")
+)
+print(f"Categorías MCC: {df_mcc.count()}")
+df_mcc.show(5, truncate=False)
 ```
 
 Fraud labels está en Parquet (ya disponible en FileStore). Si por alguna razón el archivo no está, la celda siguiente lo convierte como fallback:
@@ -195,26 +216,19 @@ Responde: ¿Por qué usamos LEFT en vez de INNER aquí? ¿Qué perderíamos con 
 ### JOIN 3: + mcc_codes (LEFT JOIN)
 
 ```python
-# mcc_codes puede tener estructura anidada — explorar primero
-df_mcc.printSchema()
-df_mcc.show(5, truncate=False)
-
-# Ajustar según la estructura real del JSON
-df_full = df_tx_users_cards.join(
-    df_mcc,
-    df_tx_users_cards["mcc"] == df_mcc["mcc"],
-    how="left"
-)
+# df_mcc ya está en formato largo (mcc int | description string) tras el pivote de Parte 2
+# transactions.mcc también es int con inferSchema → JOIN directo por "mcc"
+df_full = df_tx_users_cards.join(df_mcc, on="mcc", how="left")
 
 # Ver categorías de comercio más frecuentes
-df_full.groupBy("merchant_description") \
+df_full.groupBy("description") \
     .count() \
     .orderBy(F.col("count").desc()) \
     .limit(10) \
     .show(truncate=False)
 ```
 
-> **Pista:** El JSON de MCC puede tener el código como string o integer. Verifica y castea si es necesario.
+> **Nota:** Si el JOIN produce 0 coincidencias, verifica que `transactions.mcc` sea integer con `df_tx_users_cards.schema["mcc"].dataType`. Si es string, añade `.withColumn("mcc", F.col("mcc").cast("int"))` antes del JOIN.
 
 ---
 
