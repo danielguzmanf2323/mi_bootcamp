@@ -83,17 +83,20 @@ git commit -m "docs: add data model diagram for financial transactions"
 ```python
 from pyspark.sql import functions as F
 
+# Ruta base del volumen en Unity Catalog
+VOL = "/Volumes/workspace/default/week_2"
+
 # Tablas CSV
 df_transactions = spark.read.format("csv").option("header", "true").option("inferSchema", "true") \
-    .load("/FileStore/transactions_data.csv")
+    .load(f"{VOL}/transactions_data.csv")
 df_users = spark.read.format("csv").option("header", "true").option("inferSchema", "true") \
-    .load("/FileStore/users_data.csv")
+    .load(f"{VOL}/users_data.csv")
 df_cards = spark.read.format("csv").option("header", "true").option("inferSchema", "true") \
-    .load("/FileStore/cards_data.csv")
+    .load(f"{VOL}/cards_data.csv")
 
 # MCC codes — JSON de un solo objeto: cada clave es un código MCC, el valor es la descripción
 # Spark lo lee como 1 fila × N columnas → se pivota en la celda siguiente
-df_mcc_raw = spark.read.option("multiLine", "true").json("/FileStore/mcc_codes.json")
+df_mcc_raw = spark.read.option("multiLine", "true").json(f"{VOL}/mcc_codes.json")
 ```
 
 El JSON de MCC tiene formato ancho (1 fila, una columna por código). Hay que pivotarlo a formato largo (`mcc | description`) antes del JOIN:
@@ -116,21 +119,21 @@ print(f"Categorías MCC: {df_mcc.count()}")
 df_mcc.show(5, truncate=False)
 ```
 
-Fraud labels está en Parquet (ya disponible en FileStore). Si por alguna razón el archivo no está, la celda siguiente lo convierte como fallback:
+Fraud labels está en Parquet (ya disponible en el volumen `week_2`). Si por alguna razón el archivo no está, la celda siguiente lo convierte como fallback:
 
 ```python
 # Fraud labels — leer desde Parquet
-# El archivo train_fraud_labels.parquet ya está subido a FileStore.
+# El archivo train_fraud_labels.parquet ya está subido al volumen week_2.
 # Si no lo tienes, esta celda convierte el JSON como alternativa.
 
 try:
-    df_fraud = spark.read.parquet("/FileStore/train_fraud_labels.parquet")
+    df_fraud = spark.read.parquet(f"{VOL}/train_fraud_labels.parquet")
     print("✓ Parquet cargado correctamente")
 except Exception:
     print("⚠ Parquet no encontrado — convirtiendo desde JSON (puede tardar varios minutos)...")
-    df_fraud = spark.read.json("/FileStore/train_fraud_labels.json")
-    df_fraud.write.mode("overwrite").parquet("/FileStore/train_fraud_labels.parquet")
-    df_fraud = spark.read.parquet("/FileStore/train_fraud_labels.parquet")
+    df_fraud = spark.read.json(f"{VOL}/train_fraud_labels.json")
+    df_fraud.write.mode("overwrite").parquet(f"{VOL}/train_fraud_labels.parquet")
+    df_fraud = spark.read.parquet(f"{VOL}/train_fraud_labels.parquet")
     print("✓ Conversión completada y Parquet relanzado")
 ```
 
@@ -297,6 +300,27 @@ df_final.groupBy("is_fraud") \
     ) \
     .show()
 ```
+
+---
+
+## Persistir df_final en Delta
+
+Antes de cerrar el notebook, guarda `df_final` como tabla Delta en Unity Catalog. La **Actividad 03** la leerá desde ahí sin repetir todos los JOINs.
+
+```python
+# Guardar df_final como tabla Delta en el esquema default del catálogo workspace
+# Esto crea workspace.default.financial_final accesible desde cualquier notebook
+df_final.write \
+    .format("delta") \
+    .mode("overwrite") \
+    .saveAsTable("workspace.default.financial_final")
+
+print("✓ df_final guardado como workspace.default.financial_final")
+print(f"  Filas: {df_final.count():,} | Columnas: {len(df_final.columns)}")
+print(f"  Columnas: {df_final.columns}")
+```
+
+> `saveAsTable` registra la tabla en el catálogo Unity Catalog — cualquier notebook del workspace puede leerla con `spark.table("workspace.default.financial_final")` o desde el Data Explorer. Si prefieres un esquema propio, cámbialo por `workspace.<tu_esquema>.financial_final`.
 
 ---
 
