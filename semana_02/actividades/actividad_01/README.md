@@ -401,9 +401,9 @@ Cada vez que ejecutas una acción (`show()`, `count()`, `write()`), Spark crea u
 ```python
 # Esta acción dispara 1 Job — ábrela en el Spark UI
 resultado = (
-    df
+    df_typed
     .groupBy("merchant_city")
-    .agg(spark_sum("amount").alias("total"))
+    .agg(spark_sum("amount_num").alias("total"))
     .orderBy(col("total").desc())
     .limit(10)
 )
@@ -489,6 +489,16 @@ En la descripción incluye:
 - No omitir las celdas de reflexión
 - No hacer un solo commit con todo
 - No hardcodear rutas absolutas que solo funcionen en tu entorno — usa variables
+
+---
+
+## Laboratorio
+
+Completa el notebook de laboratorio con un dataset de tu elección:
+
+**[`semana_02/laboratorios/lab_01_exploracion.ipynb`](../../laboratorios/lab_01_exploracion.ipynb)**
+
+El notebook te guía por 6 partes: descripción del dataset, perfil técnico completo (schema, nulos, cardinalidades, descriptivo), transformaciones de esta actividad aplicadas a tus datos, evaluación lazy, análisis de negocio y reflexión final.
 
 ---
 

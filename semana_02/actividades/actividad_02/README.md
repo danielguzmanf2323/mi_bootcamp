@@ -357,7 +357,15 @@ Describe en el PR:
 
 ---
 
-## Referencias
+## Laboratorio
 
-- [PySpark DataFrame Join](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.join.html)
+Completa el notebook de laboratorio con un dataset relacional de tu elección:
+
+**[`semana_02/laboratorios/lab_02_joins.ipynb`](../../laboratorios/lab_02_joins.ipynb)**
+
+El notebook te guía por 6 partes: descripción del dataset y modelo de relaciones, perfil técnico de cada tabla (nulos, duplicados en llaves, cardinalidades), transformaciones previas al JOIN, INNER + LEFT + Anti JOIN con análisis de impacto, análisis de negocio y reflexión final.
+
+---
+
+## Referencias(https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.join.html)
 - [Actividad 01 semana 02](../actividad_01/README.md) — base para esta actividad

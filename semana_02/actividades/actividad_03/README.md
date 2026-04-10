@@ -157,7 +157,7 @@ df_mensual_usuario = df.groupBy("user_id", "mes_inicio") \
         F.sum("amount").alias("gasto_mensual"),
         F.avg("amount").alias("ticket_promedio"),
         F.max("amount").alias("compra_maxima"),
-        F.countDistinct("merchant_name").alias("comercios_distintos"),
+        F.countDistinct("description").alias("categorias_distintas"),
         F.percentile_approx("amount", 0.5).alias("mediana_gasto")
     ) \
     .orderBy("mes_inicio", F.col("gasto_mensual").desc())
@@ -200,7 +200,7 @@ from pyspark.sql import Window
 # "description" es la columna de categoría que viene del JOIN con mcc_codes (Actividad 02)
 windowSpec = Window.partitionBy("description").orderBy(F.col("gasto_total").desc())
 
-df_por_comercio = df.groupBy("merchant_name", "description") \
+df_por_comercio = df.groupBy("description") \
     .agg(F.sum("amount").alias("gasto_total"))
 
 df_ranking = df_por_comercio.withColumn("rank_en_categoria", F.rank().over(windowSpec))
@@ -320,8 +320,16 @@ Describe en el PR:
 
 ---
 
-## Referencias
+## Laboratorio
 
-- [PySpark Window Functions](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/window.html)
+Completa el notebook de laboratorio con un dataset temporal de tu elección:
+
+**[`semana_02/laboratorios/lab_03_funciones_avanzadas.ipynb`](../../laboratorios/lab_03_funciones_avanzadas.ipynb)**
+
+El notebook te guía por 9 partes: descripción del dataset, perfil técnico, preparación de la columna temporal, agregaciones por período, ranking con window functions, LAG y detección de variaciones, acumulado o media móvil, análisis de negocio temporal y reflexión final.
+
+---
+
+## Referencias(https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/window.html)
 - [PySpark Date Functions](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/functions/datetime.html)
 - [Actividad 02 semana 02](../actividad_02/README.md) — df_final como punto de partida
