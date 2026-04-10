@@ -235,10 +235,17 @@ df_enriched.groupBy("transaction_type") \
 
 ```python
 # Contar nulos por columna
-from pyspark.sql.functions import col, sum as spark_sum, isnan, when, count
+from pyspark.sql.functions import col, sum as spark_sum, isnan, when
+
+numeric_types = {"double", "float"}
 
 nulos = df_enriched.select([
-    spark_sum(when(col(c).isNull() | isnan(c), 1).otherwise(0)).alias(c)
+    spark_sum(
+        when(
+            col(c).isNull() | (isnan(col(c)) if df_enriched.schema[c].dataType.typeName() in numeric_types else False),
+            1
+        ).otherwise(0)
+    ).alias(c)
     for c in df_enriched.columns
 ])
 nulos.show(vertical=True)
@@ -277,15 +284,21 @@ Hasta aquí usaste PySpark como si fuera pandas con mejor sintaxis. Antes de ava
 
 ```python
 import time
-from pyspark.sql.functions import col, sum as spark_sum
+from pyspark.sql.functions import col, sum as spark_sum, regexp_replace
+
+# amount viene como string ("$1,234.56") — convertir a double primero
+df_typed = df.withColumn(
+    "amount_num",
+    regexp_replace(col("amount"), r"[$,]", "").cast("double")
+)
 
 # Construir el plan — NO ejecuta nada
 t0 = time.time()
 df_plan = (
-    df
-    .filter(col("amount") > 0)
-    .groupBy("card_type")
-    .agg(spark_sum("amount").alias("total"))
+    df_typed
+    .filter(col("amount_num") > 0)
+    .groupBy("merchant_city")
+    .agg(spark_sum("amount_num").alias("total"))
 )
 t1 = time.time()
 print(f"Construir transformaciones (lazy): {t1-t0:.6f} s")  # cerca de 0
@@ -299,14 +312,14 @@ print(f"Ejecutar con show() (eager):       {t1-t0:.4f} s")  # aquí está el tie
 
 ```python
 # Las transformaciones son lazy — cada llamada añade un paso al plan
-df_paso1 = df.filter(col("amount") > 0)          # plan: 1 paso
-df_paso2 = df_paso1.withColumn("abs", col("amount"))  # plan: 2 pasos
-df_paso3 = df_paso2.groupBy("card_type").count()  # plan: 3 pasos
+df_paso1 = df_typed.filter(col("amount_num") > 0)                    # plan: 1 paso
+df_paso2 = df_paso1.withColumn("amount_abs", col("amount_num"))       # plan: 2 pasos
+df_paso3 = df_paso2.groupBy("merchant_city").count()                  # plan: 3 pasos
 # Nada corrió todavía
 
 # Las acciones disparan el plan completo
 n = df_paso3.count()   # acción → todo el plan corre ahora
-print(f"Categorías de tarjeta: {n}")
+print(f"Ciudades de comercio: {n}")
 ```
 
 Documenta: ¿cuánto tardó construir vs ejecutar? ¿Cuántas celdas llegaste a encadenar sin que Spark ejecutara nada?
