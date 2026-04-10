@@ -302,6 +302,15 @@ Incluye en el PR:
 
 ---
 
+## Laboratorio
+
+El notebook de laboratorio para esta actividad está en:
+[`../../laboratorios/lab_01_pipeline_basica.ipynb`](../../laboratorios/lab_01_pipeline_basica.ipynb)
+
+Cubre: exploración interactiva del dataset antes de definir la pipeline, parámetros de pipeline con `spark.conf.get()`, definición de `@dp.materialized_view` (Bronze y Silver) y `@dp.table` (Gold), configuración JSON de la pipeline en Lakeflow con modo `TRIGGERED` vs `CONTINUOUS`, y preguntas de negocio sobre tablas Gold.
+
+---
+
 ## Referencias
 
 - [Azure Databricks — Lakeflow Spark Declarative Pipelines](https://learn.microsoft.com/en-us/azure/databricks/dlt/)

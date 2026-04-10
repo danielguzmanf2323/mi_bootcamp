@@ -415,6 +415,15 @@ Incluye en el PR:
 
 ---
 
+## Laboratorio
+
+El notebook de laboratorio para esta actividad está en:
+[`../../laboratorios/lab_04_pipeline_completa.ipynb`](../../laboratorios/lab_04_pipeline_completa.ipynb)
+
+Cubre: pipeline Medallion completa en multi-notebook (Bronze Auto Loader + expectativas, Silver limpia + quarantine, Gold con dos `materialized_view` de KPIs y una `table` final), configuración JSON con webhooks de notificación, función `notificar_webhook()` simulada, y reflexión comparativa entre Databricks Jobs (semana 04) y Lakeflow pipelines (semana 05).
+
+---
+
 ## Referencias
 
 - [Lakeflow Pipelines — notifications](https://learn.microsoft.com/en-us/azure/databricks/dlt/settings#configure-pipeline-notifications)

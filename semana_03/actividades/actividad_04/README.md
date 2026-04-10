@@ -427,6 +427,15 @@ En el PR:
 
 ---
 
+## Laboratorio
+
+El notebook de laboratorio para esta actividad está en:
+[`../../laboratorios/lab_04_vistas_optimizacion.ipynb`](../../laboratorios/lab_04_vistas_optimizacion.ipynb)
+
+Cubre: creación de dos vistas con `CREATE OR REPLACE VIEW`, análisis del plan de ejecución con `EXPLAIN FORMATTED` (FileScan, Exchange/shuffle), tabla comparativa SQL ↔ PySpark (`Window`, `groupBy`, `filter`), y preguntas de negocio consultando directamente las vistas.
+
+---
+
 ## Referencias
 
 - [CREATE VIEW en Databricks](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-ddl-create-view.html)

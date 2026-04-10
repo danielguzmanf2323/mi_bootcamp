@@ -296,6 +296,15 @@ En el PR responde:
 
 ---
 
+## Laboratorio
+
+El notebook de laboratorio para esta actividad está en:
+[`../../laboratorios/lab_02_sql_joins.ipynb`](../../laboratorios/lab_02_sql_joins.ipynb)
+
+Cubre: diseño de dos tablas relacionadas con tu dataset, diagnóstico de duplicados en claves de JOIN, aplicación de `INNER JOIN / LEFT JOIN / FULL OUTER JOIN` con comparación de filas resultantes, subconsulta correlacionada, y tres preguntas de negocio resueltas con JOINs.
+
+---
+
 ## Referencias
 
 - [Spark SQL Joins](https://spark.apache.org/docs/latest/sql-ref-syntax-qry-select-join.html)
