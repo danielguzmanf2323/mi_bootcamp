@@ -2,6 +2,9 @@
 
 Repositorio oficial del programa de formación en Data Engineering de Inetum.
 
+> 📖 **Antes de empezar, lee el [Manifiesto del Ingeniero de Datos](MANIFIESTO.md).**  
+> No es un documento técnico. Es el por qué de todo lo que harás aquí.
+
 ---
 
 ## Estructura del repositorio

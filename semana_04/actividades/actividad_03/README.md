@@ -366,6 +366,15 @@ En el PR:
 
 ---
 
+## Laboratorio
+
+El notebook de laboratorio para esta actividad está en:
+[`../../laboratorios/lab_03_yaml_config.ipynb`](../../laboratorios/lab_03_yaml_config.ipynb)
+
+Cubre: diseño y escritura de `bronze_config.yml` con secciones `dev/prod`, carga con `yaml.safe_load()`, validación de columnas declaradas como obligatorias antes de la ingestión, ejecución declarativa de todas las fuentes del YAML, y verificación del historial Delta por entorno.
+
+---
+
 ## Referencias
 
 - [PyYAML Documentation](https://pyyaml.org/wiki/PyYAMLDocumentation)

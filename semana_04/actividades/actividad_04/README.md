@@ -503,6 +503,15 @@ Incluye en el PR:
 
 ---
 
+## Laboratorio
+
+El notebook de laboratorio para esta actividad está en:
+[`../../laboratorios/lab_04_silver_jobs.ipynb`](../../laboratorios/lab_04_silver_jobs.ipynb)
+
+Cubre: creación de `silver_config.yml` con filtros, renombres, casteos, normalización de strings y columnas derivadas, función `aplicar_transformaciones_silver()` que ejecuta la config de forma declarativa, escritura con `overwrite` o `MERGE INTO`, esqueleto de capa Gold, y diseño teórico del Databricks Job multi-tarea Bronze→Silver→Gold.
+
+---
+
 ## Referencias
 
 - [Databricks Jobs — Create and manage](https://docs.databricks.com/en/workflows/jobs/create-run-jobs.html)

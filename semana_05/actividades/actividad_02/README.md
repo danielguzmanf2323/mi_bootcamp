@@ -276,6 +276,15 @@ Incluye:
 
 ---
 
+## Laboratorio
+
+El notebook de laboratorio para esta actividad está en:
+[`../../laboratorios/lab_02_autoloader_quality.ipynb`](../../laboratorios/lab_02_autoloader_quality.ipynb)
+
+Cubre: simulación del impacto de cada expectativa antes de definirla, ingestión incremental con `cloudFiles` y `schemaLocation`, expectativas `@dp.expect / @dp.expect_or_drop` sobre columnas clave, tabla `quarantine` con registros rechazados, y comparativa Bronze → Silver → Quarantine de conteos.
+
+---
+
 ## Referencias
 
 - [Auto Loader — cloudFiles](https://docs.databricks.com/en/ingestion/auto-loader/index.html)

@@ -390,6 +390,15 @@ PR hacia `develop`:
 
 ---
 
+## Laboratorio
+
+El notebook de laboratorio para esta actividad está en:
+[`../../laboratorios/lab_02_bronze_generico.ipynb`](../../laboratorios/lab_02_bronze_generico.ipynb)
+
+Cubre: notebook genérico multiformato (CSV/JSON/Parquet/Delta) parametrizado con widgets, quality gate de nulos antes de la ingestión, adición de columnas de auditoría `_ingest_timestamp / _source_file`, y verificación con `DESCRIBE HISTORY` tras escribir en Delta con distintos modos.
+
+---
+
 ## Referencias
 
 - [Delta Lake — Write modes](https://docs.delta.io/latest/delta-intro.html)
