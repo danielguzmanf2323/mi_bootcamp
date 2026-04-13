@@ -1,94 +1,88 @@
-# Proyecto Semana 10 — Architecture Decision Record (ADR)
+# Proyecto Semana 10 — Reflexión Comparativa de Plataformas
 
 **Semana:** 10  
 **Modalidad:** Individual  
-**Entregable:** Documento técnico escrito — no hay código
+**Entregable:** Documento de reflexión — no hay código
 
 ---
 
-## Qué es un ADR
+## Objetivo
 
-Un **Architecture Decision Record** es un documento corto que registra
-una decisión arquitectónica importante: el contexto, las opciones evaluadas,
-la decisión tomada y las consecuencias. Es un artefacto estándar en equipos
-de ingeniería — documentar por qué elegiste algo es tan importante como saber usarlo.
+Has trabajado en profundidad con Databricks (semanas 01-06), vas a trabajar con Fabric (semanas 07-09),
+y esta semana te has orientado en Snowflake y el mapa multi-cloud.
 
-En esta actividad, tú eres el Data Engineer al que el cliente le pide que
-evalúe y recomiende un stack tecnológico para su nuevo proyecto de datos.
-
----
-
-## El caso de negocio
-
-**Cliente:** cadena de retail con 200 tiendas en España y Portugal  
-**Situación actual:** datos en Excel y un ERP on-premise (SAP), sin plataforma de datos
-
-**Requisitos del proyecto:**
-
-| Requisito | Detalle |
-|-----------|---------|
-| Volumen inicial | ~50 GB de histórico de ventas (5 años), crecimiento de ~500 MB/mes |
-| Fuentes de datos | SAP (JDBC), archivos CSV desde TPV de tiendas, API de proveedor logístico |
-| Latencia aceptable | Reportes de ventas: T+1 (datos del día anterior). Alertas de stock: < 1 hora |
-| Equipo técnico del cliente | 2 analistas con SQL básico, sin experiencia en cloud ni Spark |
-| Presupuesto cloud | Moderado — el cliente quiere empezar sin sobreescalar |
-| Stack del cliente | Microsoft 365 + Azure AD ya contratados. El CTO prefiere minimizar vendors |
-| Restricciones | Datos de clientes no pueden salir de la UE. Cumplimiento GDPR requerido |
+Este documento es el momento de parar y reflexionar con criterio propio:
+qué has aprendido de cada plataforma, dónde brilla cada una y dónde no.
+No es un examen de contenido — es una muestra de cómo piensas como Data Engineer.
 
 ---
 
 ## Tu entregable
 
-Un documento `ADR_stack_retail_<tu-nombre>.md` con esta estructura:
+Un documento `reflexion_plataformas_<tu-nombre>.md` con las siguientes secciones:
 
 ---
 
-### 1. Contexto
+### 1. Databricks — lo que aprendiste haciendo
 
-Describe el problema que hay que resolver y las restricciones más relevantes.
-No copies los requisitos — sintetízalos con tus palabras, destacando lo que
-más condiciona la decisión técnica.
+Lleva 6 semanas usando Databricks. Más allá de repetir lo que hace,
+describe tu experiencia real con la plataforma:
 
----
-
-### 2. Opciones evaluadas
-
-Evalúa al menos **3 opciones** de stack. Por cada una:
-- Qué plataformas incluye (storage, compute, orquestación, visualización)
-- Por qué encaja o no con los requisitos del cliente
-
-Ejemplo de opciones a considerar (no son las únicas):
-- **Opción A:** Databricks + ADLS Gen2 + Power BI
-- **Opción B:** Microsoft Fabric (all-in-one)
-- **Opción C:** Snowflake + Azure Data Factory + Power BI
-- **Opción D:** AWS (S3 + Glue + Athena + QuickSight)
+- ¿Qué te resultó más difícil de entender al principio y cómo lo superaste?
+- ¿Hubo alguna decisión de diseño en tus actividades que tomaste mal y tuviste que corregir? ¿Cuál y por qué?
+- ¿Qué feature de Databricks te parece más potente para un entorno de producción real?
+- ¿Qué le falta o qué te generó fricción?
 
 ---
 
-### 3. Decisión
+### 2. Microsoft Fabric — primeras impresiones
 
-Elige una opción y justifícala. La justificación debe responder a:
-- ¿Por qué esta opción sobre las demás?
-- ¿Qué requisito fue el más determinante en tu decisión?
-- ¿Qué sacrificias con esta elección?
+Llevas 3 semanas trabajando con Fabric. Compáralo con lo que ya conocías de Databricks:
 
-No hay respuesta correcta — se evalúa la solidez del razonamiento.
-
----
-
-### 4. Consecuencias
-
-¿Qué implica esta decisión a largo plazo?
-- Qué skills necesitará el equipo del cliente
-- Qué limitaciones tendrá el sistema si el volumen crece 10x
-- Qué debería revisarse en 12-18 meses
+- ¿Qué es más fácil en Fabric que en Databricks? ¿Por qué crees que es así?
+- ¿Qué es más limitado o más rígido?
+- ¿El modelo de OneLake + Shortcuts te parece una ventaja o una restricción? Justifica.
+- ¿Para qué tipo de equipo o empresa crees que Fabric es la opción natural?
 
 ---
 
-### 5. Riesgos y mitigaciones
+### 3. Snowflake — orientación rápida
 
-Identifica al menos 2 riesgos técnicos o de negocio de tu decisión
-y cómo los mitigarías.
+Solo has tenido un día con Snowflake. Con esa perspectiva limitada pero fresca:
+
+- ¿Qué te llamó más la atención de su arquitectura (separación cómputo/storage, virtual warehouses)?
+- ¿En qué escenario concreto elegirías Snowflake sobre Databricks o Fabric?
+- ¿Qué necesitarías aprender de Snowflake antes de recomendarlo a un cliente?
+
+---
+
+### 4. Tabla comparativa propia
+
+Completa esta tabla con tu criterio — no hay respuestas correctas,
+hay respuestas bien o mal justificadas:
+
+| Criterio | Databricks | Microsoft Fabric | Snowflake |
+|----------|-----------|-----------------|-----------|
+| Curva de aprendizaje | | | |
+| Mejor para pipelines complejos | | | |
+| Mejor para analítica self-service | | | |
+| Coste en equipos pequeños | | | |
+| Integración con ecosistema Microsoft | | | |
+| Control sobre la infraestructura | | | |
+| Cuándo lo recomendarías | | | |
+
+---
+
+### 5. Una decisión honesta
+
+Si mañana un cliente te pide que le ayudes a elegir plataforma para un proyecto nuevo,
+y después de estas 10 semanas solo puedes recomendar **una** de las tres:
+
+- ¿Cuál recomendarías para un equipo técnico con experiencia en Spark?
+- ¿Cuál recomendarías para una empresa con todo en Microsoft 365?
+- ¿Cuál recomendarías para un equipo pequeño que quiere empezar rápido con SQL?
+
+No justifiques con los nombres de los features — justifica con lo que viviste.
 
 ---
 
@@ -97,22 +91,22 @@ y cómo los mitigarías.
 ```bash
 git checkout develop
 git pull origin develop
-git checkout -b feature/semana10-adr-<tu-nombre>
+git checkout -b feature/semana10-reflexion-<tu-nombre>
 ```
 
 Carpeta de entrega:
 ```
 semana_10/proyecto/<tu-nombre>/
-ADR_stack_retail_<tu-nombre>.md
+reflexion_plataformas_<tu-nombre>.md
 ```
 
 ```bash
-git push origin feature/semana10-adr-<tu-nombre>
+git push origin feature/semana10-reflexion-<tu-nombre>
 ```
 
 PR hacia `develop` con título:
 ```
-[Semana 10] ADR Stack Retail — <Tu Nombre>
+[Semana 10] Reflexión Comparativa — <Tu Nombre>
 ```
 
 ---
@@ -121,14 +115,13 @@ PR hacia `develop` con título:
 
 | Criterio | Descripción | Puntaje |
 |----------|-------------|---------|
-| [Requerido] Contexto sintetizado con restricciones clave | No es copiar los requisitos — es interpretarlos | 15% |
-| [Requerido] 3 opciones evaluadas con pros/contras reales | Argumentos técnicos, no genéricos | 30% |
-| [Requerido] Decisión justificada con requisito determinante identificado | "Elegí X porque el requisito Y hace que Z sea inviable" | 30% |
-| [Requerido] Consecuencias y riesgos documentados | Al menos 2 riesgos con mitigación | 25% |
+| [Requerido] Reflexión Databricks con experiencia propia | Menciona algo concreto — una dificultad real, una corrección real | 25% |
+| [Requerido] Comparativa Fabric vs Databricks argumentada | No genérica — basada en lo que viviste en las actividades | 25% |
+| [Requerido] Tabla comparativa completa con criterio propio | "Cuándo lo recomendarías" con justificación | 25% |
+| [Requerido] Decisión final justificada con experiencia | "Lo elegí porque lo viví" — no "porque lo dice la documentación" | 25% |
 | **Total** | | **100%** |
 
 ---
 
-> **Nota:** Este documento es el tipo de entregable que un Data Engineer senior
-> produce en la fase de preventa o diseño de un proyecto. No es un examen —
-> es una muestra de criterio técnico.
+> Este tipo de reflexión es lo que diferencia a un Data Engineer que sabe usar herramientas
+> de uno que sabe elegirlas. Ambas skills importan en un proyecto real.

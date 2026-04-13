@@ -28,14 +28,15 @@
 | 02 | Azure IAM para datos — service principals, Key Vault, RBAC | [actividades/actividad_02/](actividades/actividad_02/README.md) |
 | 03 | Snowflake — orientación, external stages y comparativa con Databricks/Fabric | [actividades/actividad_03/](actividades/actividad_03/README.md) |
 | 04 | AWS y GCP — mapeo de conceptos y traducción de arquitecturas | [actividades/actividad_04/](actividades/actividad_04/README.md) |
+| 05 | Modelado dimensional (Kimball) — diseño del star schema del proyecto final | [actividades/actividad_05/](actividades/actividad_05/README.md) |
 
 ---
 
 ## Proyecto de la semana
 
-Un **Architecture Decision Record (ADR)**: dado un caso de negocio con requisitos reales,
-el alumno justifica qué stack tecnológico elegiría y por qué.
-Evaluado como documento técnico — no hay código que entregar.
+**Reflexión comparativa de plataformas:** Databricks, Fabric y Snowflake vistos desde
+la experiencia propia de las últimas semanas. Documento escrito, sin código.
+El objetivo es desarrollar criterio de elección, no demostrar que se conocen los features.
 
 → [Ver instrucciones del proyecto](proyecto/README.md)
 

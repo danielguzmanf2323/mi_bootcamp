@@ -149,7 +149,8 @@ Tecnologías: ADLS Gen2, Azure IAM, Key Vault, Snowflake, AWS/GCP (conceptual)
 | [Actividad 02](semana_10/actividades/actividad_02/README.md) | Azure IAM para datos | Service principals, Managed Identities, Key Vault, RBAC y mínimo privilegio |
 | [Actividad 03](semana_10/actividades/actividad_03/README.md) | Snowflake | External stages sobre ADLS, COPY INTO, Streams+Tasks, comparativa Snowflake vs Databricks vs Fabric |
 | [Actividad 04](semana_10/actividades/actividad_04/README.md) | AWS y GCP — mapeo | Tabla de equivalencias multi-cloud, traducción de arquitecturas entre nubes |
-| [Proyecto](semana_10/proyecto/README.md) | Architecture Decision Record | Documento técnico: elegir y justificar un stack para un caso de negocio real |
+| [Actividad 05](semana_10/actividades/actividad_05/README.md) | Modelado dimensional (Kimball) | Grain, medidas, dimensiones, surrogate keys, SCD — diseño del star schema del proyecto final |
+| [Proyecto](semana_10/proyecto/README.md) | Reflexión comparativa | Databricks vs Fabric vs Snowflake desde la experiencia propia — criterio de elección, no features |
 
 ---
 
