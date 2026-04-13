@@ -5,12 +5,17 @@
 *.csv
 *.parquet
 *.avro
-*.json
 *.jsonl
 *.xlsx
 *.xls
 *.tsv
 *.orc
+
+# JSON de datos crudos por carpeta (evita bloquear configs del proyecto)
+**/data/**/*.json
+**/datasets/**/*.json
+**/raw/**/*.json
+**/landing/**/*.json
 
 # Excepción: archivos de ejemplo pequeños (< 1MB) sí se versionan
 !recursos/datasets/ejemplos/**
