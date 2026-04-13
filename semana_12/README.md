@@ -1,36 +1,41 @@
-# Semana 12 — Presentaciones Finales
+# Semana 12 — Proyecto Final: Integración Fabric, Testing y Presentaciones
 
-**Estado:** Contenido en preparación  
-**Modalidad:** Equipos — presentación ante instructores y stakeholders
-
----
-
-## Objetivo de la semana
-
-Presentar el proyecto final, demostrar el pipeline en vivo
-y documentar las decisiones técnicas del equipo.
+**Modalidad:** Individual o parejas  
+**Stack:** Databricks Enterprise + Microsoft Fabric  
+**Continúa desde:** Semana 11
 
 ---
 
-## Estructura de la presentación (referencia)
+## Objetivo de la semana 12
 
-1. **Contexto y problema** — qué resuelve el pipeline
-2. **Arquitectura** — diagrama de capas, tecnologías usadas
-3. **Demo en vivo** — pipeline ejecutándose extremo a extremo
-4. **Calidad de datos** — métricas, expectations, anomalías encontradas
-5. **Hallazgos de negocio** — qué descubrieron en los datos
-6. **Retrospectiva** — qué salió bien, qué mejorarían
+Al empezar la semana 12 debes tener Bronze y Silver terminados y el star schema diseñado.
+Esta semana completas el pipeline y lo presentas.
 
----
-
-## Entregables finales
-
-- [ ] Pipeline funcional en el fork del equipo (rama `main` estable)
-- [ ] README del proyecto con arquitectura documentada
-- [ ] Presentación (slides o notebook)
-- [ ] Informe de hallazgos
+**Al terminar la semana 12, debes tener:**
+- Gold completo (star schema en Delta Lake)
+- OneLake Shortcut configurado en Fabric
+- Report en Fabric con las 5 métricas de negocio
+- Componente de streaming funcionando (si aplica)
+- Documentación técnica completa
+- Presentación preparada
 
 ---
 
-> El contenido de esta semana se publicará antes de su inicio.
-> Consulta el [README raíz](../README.md) para el estado actualizado del programa.
+## Contenido
+
+| Carpeta | Descripción |
+|---------|-------------|
+| [proyecto/](proyecto/) | Instrucciones de la presentación final |
+
+---
+
+## Agenda de la semana
+
+| Día | Actividad |
+|-----|-----------|
+| Lunes - Martes | Completar Gold + OneLake Shortcut + Report en Fabric |
+| Miércoles | Componente streaming + documentación técnica |
+| Jueves | Revisión con instructor + ensayo de presentación |
+| Viernes | Presentaciones finales |
+
+→ [Ver instrucciones de la presentación](proyecto/README.md)

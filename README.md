@@ -111,12 +111,68 @@ Tecnologías: Spark SQL, Delta Lake, Databricks Community Edition
 
 ---
 
-### Semanas 06–12 — Próximamente
+### Semana 06 — Databricks II: Delta Lake Avanzado, Streaming y Performance
 
-| Semana | Tema principal | Tecnologías |
-|--------|----------------|-------------|
-| 06 | dbt (data build tool) | dbt, Delta Lake |
-| 07 | Ingesta de datos (APIs, JDBC, streaming básico) | Databricks, Spark Structured Streaming |
-| 08–09 | Microsoft Fabric | Microsoft Fabric |
-| 10–11 | Proyecto final en equipos (daily, ramas de célula, integrate to develop) | Stack completo |
-| 12 | Presentaciones finales | — |
+Dataset: Financial Transactions (mismo de semanas 02-05) — tablas `bronze.*`, `silver.*`, `gold.*` ya construidas  
+Tecnologías: Delta Lake, Structured Streaming, Auto Loader, Spark UI, Databricks Enterprise
+
+| Actividad | Tema | Descripción |
+|-----------|------|-------------|
+| [Actividad 01](semana_06/actividades/actividad_01/README.md) | Delta Lake en producción | OPTIMIZE, ZORDER, Liquid Clustering, VACUUM, time travel, zero-copy clone |
+| [Actividad 02](semana_06/actividades/actividad_02/README.md) | MERGE INTO y upserts | Patrones de ingesta incremental, deduplicación, comparativa con DLT y overwrite |
+| [Actividad 03](semana_06/actividades/actividad_03/README.md) | Structured Streaming | Trigger modes, watermarking para late data, checkpointing y tolerancia a fallos |
+| [Actividad 04](semana_06/actividades/actividad_04/README.md) | Performance tuning | Spark UI, broadcast joins, skew + salting, small files problem |
+| [Proyecto](semana_06/proyecto/README.md) | Pipeline streaming end-to-end | Auto Loader + MERGE INTO + Gold optimizada con ZORDER + informe con evidencia Spark UI |
+
+---
+
+### Semanas 07–09 — Microsoft Fabric
+
+Contenido en desarrollo por el equipo de Fabric.
+
+| Semana | Estado |
+|--------|--------|
+| 07 | En preparación |
+| 08 | En preparación |
+| 09 | En preparación |
+
+---
+
+### Semana 10 — Cloud para Datos: Azure en Profundidad + Snowflake + Mapa de Nubes
+
+Dataset: Financial Transactions sobre ADLS Gen2 + Snowflake Trial  
+Tecnologías: ADLS Gen2, Azure IAM, Key Vault, Snowflake, AWS/GCP (conceptual)
+
+| Actividad | Tema | Descripción |
+|-----------|------|-------------|
+| [Actividad 01](semana_10/actividades/actividad_01/README.md) | ADLS Gen2 | Hierarchical namespace, acceso con service principal, montaje en Databricks, Volumes vs ADLS directo |
+| [Actividad 02](semana_10/actividades/actividad_02/README.md) | Azure IAM para datos | Service principals, Managed Identities, Key Vault, RBAC y mínimo privilegio |
+| [Actividad 03](semana_10/actividades/actividad_03/README.md) | Snowflake | External stages sobre ADLS, COPY INTO, Streams+Tasks, comparativa Snowflake vs Databricks vs Fabric |
+| [Actividad 04](semana_10/actividades/actividad_04/README.md) | AWS y GCP — mapeo | Tabla de equivalencias multi-cloud, traducción de arquitecturas entre nubes |
+| [Proyecto](semana_10/proyecto/README.md) | Architecture Decision Record | Documento técnico: elegir y justificar un stack para un caso de negocio real |
+
+---
+
+### Semanas 11–12 — Proyecto Final: Olist E-Commerce con Databricks y Fabric
+
+Dataset: [Olist Brazilian E-Commerce](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) — 9 tablas CSV, ~450 MB  
+Tecnologías: Databricks Enterprise + ADLS Gen2 + Microsoft Fabric (OneLake Shortcuts)
+
+**Semana 11 — Diseño, ingesta y transformaciones**
+
+| Entregable | Descripción |
+|-----------|-------------|
+| Bronze | 9 tablas Delta con schema explícito y columna de auditoría |
+| Silver | Tablas limpias con `delivery_delay_days`, tipos correctos, nulos documentados |
+| Modelo dimensional diseñado | Star schema en papel antes de codificarlo |
+
+**Semana 12 — Gold, Fabric y presentación**
+
+| Entregable | Descripción |
+|-----------|-------------|
+| Gold — Star Schema | `fact_orders` + 4 dimensiones (`dim_customers`, `dim_sellers`, `dim_products`, `dim_date`) |
+| Microsoft Fabric | OneLake Shortcut + report con 5 métricas de negocio |
+| Presentación final | Demo en vivo del pipeline + decisiones técnicas justificadas |
+
+→ [Ver instrucciones completas del proyecto](semana_11/proyecto/README.md)  
+→ [Ver instrucciones de la presentación](semana_12/proyecto/README.md)

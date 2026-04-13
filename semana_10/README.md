@@ -1,37 +1,47 @@
-# Semana 10 — Proyecto Final: Inicio y Planificación
+# Semana 10 — Cloud para Datos: Azure en Profundidad + Snowflake + Mapa de Nubes
 
-**Estado:** Contenido en preparación  
-**Modalidad:** Equipos (daily, ramas de célula, integración a develop)  
-**Stack:** Todo el stack del bootcamp (Databricks + dbt + Fabric)
+**Tecnologías:** Azure Data Lake Storage Gen2, Azure IAM, Key Vault, Snowflake, AWS, GCP  
+**Dataset:** Financial Transactions — subido a ADLS como ejercicio base  
+**Entorno requerido:** Azure subscription (coordinar acceso con Inetum) + Snowflake Trial (30 días)
 
----
-
-## Objetivo de la semana
-
-Arrancar el proyecto final end-to-end en equipos.
-El equipo definirá su arquitectura, dataset y plan de entrega,
-y comenzará la implementación del pipeline completo.
+> Esta semana no construye un pipeline nuevo. El objetivo es entender la infraestructura
+> sobre la que corren los pipelines que ya sabes construir, y desarrollar el criterio
+> para elegir entre plataformas.
 
 ---
 
-## Dinámica de equipo
+## Contenido
 
-- Daily de 15 minutos al inicio de cada jornada
-- Cada miembro trabaja en su rama de célula (`feature/pf-<célula>-<nombre>`)
-- Integración hacia `develop` del fork del equipo mediante PR revisado
-
----
-
-## Contenido previsto
-
-| Carpeta | Estado |
-|---------|--------|
-| actividades/ | En preparación |
-| laboratorios/ | En preparación |
-| documentos/ | En preparación |
-| proyecto/ | En preparación |
+| Carpeta | Descripción |
+|---------|-------------|
+| [actividades/](actividades/) | 4 actividades — una por bloque |
+| [documentos/](documentos/) | Material de referencia: cheatsheets, tablas de equivalencia |
+| [proyecto/](proyecto/) | Architecture Decision Record (ADR) — entregable escrito, sin código |
 
 ---
 
-> El contenido de esta semana se publicará antes de su inicio.
-> Consulta el [README raíz](../README.md) para el estado actualizado del programa.
+## Actividades
+
+| # | Tema | Enlace |
+|---|------|--------|
+| 01 | ADLS Gen2 — el sistema de archivos de datos en Azure | [actividades/actividad_01/](actividades/actividad_01/README.md) |
+| 02 | Azure IAM para datos — service principals, Key Vault, RBAC | [actividades/actividad_02/](actividades/actividad_02/README.md) |
+| 03 | Snowflake — orientación, external stages y comparativa con Databricks/Fabric | [actividades/actividad_03/](actividades/actividad_03/README.md) |
+| 04 | AWS y GCP — mapeo de conceptos y traducción de arquitecturas | [actividades/actividad_04/](actividades/actividad_04/README.md) |
+
+---
+
+## Proyecto de la semana
+
+Un **Architecture Decision Record (ADR)**: dado un caso de negocio con requisitos reales,
+el alumno justifica qué stack tecnológico elegiría y por qué.
+Evaluado como documento técnico — no hay código que entregar.
+
+→ [Ver instrucciones del proyecto](proyecto/README.md)
+
+---
+
+## Conexión con otras semanas
+
+- **Semanas anteriores (01-09):** todo lo que construiste corrió sobre infraestructura cloud ya configurada. Esta semana entiendes qué había debajo.
+- **Semanas siguientes (11-12):** el proyecto final usa ADLS Gen2 como landing zone para el dataset Olist, y OneLake Shortcuts para exponer datos a Fabric.

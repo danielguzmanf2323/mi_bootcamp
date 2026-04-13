@@ -1,36 +1,84 @@
-# Semana 11 — Proyecto Final: Desarrollo e Integración
+# Semana 11 — Proyecto Final: Diseño, Arquitectura y Desarrollo (Olist)
 
-**Estado:** Contenido en preparación  
-**Modalidad:** Equipos  
-**Stack:** Todo el stack del bootcamp
-
----
-
-## Objetivo de la semana
-
-Completar el desarrollo del pipeline del proyecto final e integrar
-el trabajo de todos los miembros del equipo en una rama `develop` estable.
+**Modalidad:** Individual o parejas (a criterio del instructor)  
+**Dataset:** Olist Brazilian E-Commerce — Kaggle `olistbr/brazilian-ecommerce`  
+**Stack:** Databricks Enterprise + ADLS Gen2 + Microsoft Fabric  
+**Entorno requerido:** Databricks Enterprise + Microsoft Fabric (coordinar acceso con Inetum)
 
 ---
 
-## Dinámica de equipo
+## Contexto del proyecto final
 
-- Daily de 15 minutos al inicio de cada jornada
-- Code review entre compañeros antes de mergear a develop
-- El instructor actúa como tech lead — revisar PRs y dar feedback técnico
+El proyecto final integra todo el stack del bootcamp en un pipeline real end-to-end:
+
+```
+ADLS Gen2 (landing)
+    │  Auto Loader (streaming o batch)
+    ▼
+Delta Lake Bronze (Databricks)
+    │  PySpark + MERGE + calidad de datos
+    ▼
+Delta Lake Silver (Databricks)
+    │  Modelado dimensional (star schema)
+    ▼
+Delta Lake Gold (Databricks)
+    │  OneLake Shortcut
+    ▼
+Microsoft Fabric (análisis y reporting)
+```
+
+La diferencia con los proyectos anteriores: aquí el alumno toma **todas** las decisiones
+de diseño — no hay arquitectura predefinida. El pipeline, el modelo dimensional,
+las métricas de la capa Gold y el report de Fabric son decisiones propias.
 
 ---
 
-## Contenido previsto
+## Dataset: Olist Brazilian E-Commerce
 
-| Carpeta | Estado |
-|---------|--------|
-| actividades/ | En preparación |
-| laboratorios/ | En preparación |
-| documentos/ | En preparación |
-| proyecto/ | En preparación |
+**Fuente:** [kaggle.com/datasets/olistbr/brazilian-ecommerce](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)  
+**Tamaño:** ~130 MB comprimido, ~450 MB descomprimido  
+**Formato:** 9 archivos CSV
+
+| Archivo | Descripción | Filas aprox. |
+|---------|-------------|-------------|
+| `olist_orders_dataset.csv` | Pedidos — tabla central | 99.441 |
+| `olist_order_items_dataset.csv` | Líneas de pedido (producto, precio, flete) | 112.650 |
+| `olist_order_payments_dataset.csv` | Pagos (puede haber varios por pedido) | 103.886 |
+| `olist_order_reviews_dataset.csv` | Reseñas de clientes | 99.224 |
+| `olist_customers_dataset.csv` | Clientes | 99.441 |
+| `olist_sellers_dataset.csv` | Vendedores | 3.095 |
+| `olist_products_dataset.csv` | Productos | 32.951 |
+| `olist_geolocation_dataset.csv` | Coordenadas por código postal | 1.000.163 |
+| `product_category_name_translation.csv` | Categorías PT → EN | 71 |
+
+**Descarga:** desde Kaggle con la Kaggle API:
+```bash
+kaggle datasets download -d olistbr/brazilian-ecommerce
+unzip brazilian-ecommerce.zip -d olist/
+```
+
+O directamente desde la UI de Kaggle. Subir los CSV a:
+```
+ADLS Gen2: landing/raw/olist/
+```
 
 ---
 
-> El contenido de esta semana se publicará antes de su inicio.
-> Consulta el [README raíz](../README.md) para el estado actualizado del programa.
+## Contenido de la semana
+
+| Carpeta | Descripción |
+|---------|-------------|
+| [proyecto/](proyecto/) | Instrucciones completas del proyecto final |
+| [documentos/](documentos/) | Material de referencia: modelado dimensional, OneLake Shortcuts |
+
+---
+
+## Objetivo de la semana 11
+
+Al terminar la semana 11, debes tener:
+- Los 9 archivos en ADLS Gen2
+- Bronze completo (9 tablas Delta en `bronze.*`)
+- Silver completo (tablas limpias, tipadas, con joins preparados)
+- Diseño del modelo dimensional documentado (star schema en papel/diagrama antes de codificarlo)
+
+→ [Ver instrucciones completas del proyecto](proyecto/README.md)
