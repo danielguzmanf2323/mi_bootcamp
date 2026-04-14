@@ -1,30 +1,137 @@
-# Archivos de datos — no subir al repositorio
-data/
+# =============================================================
+# Datos — no subir datasets al repositorio
+# Los datos van en Google Drive: data_engineering_files/semana_XX/
+# =============================================================
+*.csv
 *.parquet
 *.avro
-*.csv
-*.json
+*.jsonl
+*.xlsx
+*.xls
+*.tsv
+*.orc
 
-# Entornos virtuales
-.venv/
-venv/
-env/
+# JSON de datos crudos por carpeta (evita bloquear configs del proyecto)
+**/data/**/*.json
+**/datasets/**/*.json
+**/raw/**/*.json
+**/landing/**/*.json
 
+# Excepción: archivos de ejemplo pequeños (< 1MB) sí se versionan
+!recursos/datasets/ejemplos/**
+
+# =============================================================
 # Python
+# =============================================================
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
 *.egg-info/
 .eggs/
 dist/
 build/
+*.whl
 
-# Jupyter
+# =============================================================
+# Entornos virtuales
+# =============================================================
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.*
+*.env
+
+# =============================================================
+# Jupyter Notebooks
+# =============================================================
 .ipynb_checkpoints/
 
-# IDEs
-.vscode/
-.idea/
+# =============================================================
+# Credenciales y datos sensibles — NUNCA subir al repo
+# =============================================================
+secrets/
+credentials/
+*.pem
+*.key
+*.p12
+*service_account*.json
+*-credentials.json
+*_credentials.json
+*-key.json
 
+# =============================================================
+# Cloud SDKs
+# =============================================================
+# AWS
+.aws/
+
+# GCP
+.gcloud/
+gcloud-service-key.json
+
+# Azure
+.azure/
+*.publishsettings
+
+# =============================================================
+# Apache Spark (ejecución local)
+# =============================================================
+derby.log
+metastore_db/
+spark-warehouse/
+
+# =============================================================
+# Apache Airflow
+# =============================================================
+airflow.db
+airflow.cfg
+webserver_config.py
+standalone_admin_password.txt
+airflow/logs/
+
+# =============================================================
+# Docker
+# =============================================================
+.docker/
+docker-compose.override.yml
+
+# =============================================================
+# Bases de datos locales
+# =============================================================
+*.db
+*.sqlite
+*.sqlite3
+
+# =============================================================
+# IDEs y editores
+# =============================================================
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+
+# VSCode: solo ignorar configuración personal, no la del repo
+.vscode/settings.json
+.vscode/launch.json
+
+# =============================================================
 # Sistema operativo
+# =============================================================
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# =============================================================
+# Logs y temporales
+# =============================================================
+*.log
+*.tmp
+*.temp
+logs/
+tmp/
