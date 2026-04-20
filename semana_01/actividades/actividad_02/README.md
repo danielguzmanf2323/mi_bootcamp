@@ -284,7 +284,7 @@ git commit -m "docs: add stack selection exercise"
 
 ---
 
-## Referencia
+## Referencias
 
 - [GITFLOW.md](../../GITFLOW.md) — flujo de trabajo con Git en este repositorio
 - [Actividad 01](../actividad_01/README.md) — repaso del flujo de Git si tienes dudas

@@ -229,7 +229,7 @@ df_resultado = df_a.join(df_b, df_a["id"] == df_b["id"], how="left")
 
 ---
 
-## Paso 4 — Práctica SQL
+## Paso 5 — Práctica SQL
 
 En un quinto notebook llamado `sql_customers_<tu-nombre>.ipynb`, practica SQL sobre el dataset de clientes usando **PySpark SQL**.
 
@@ -278,7 +278,7 @@ Escribe una query SQL para cada uno de estos ejercicios:
 
 ---
 
-## Paso 4 — Commits y entrega
+## Paso 6 — Commits y entrega
 
 Haz commits progresivos, **uno por notebook completado**:
 

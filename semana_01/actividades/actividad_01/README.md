@@ -207,6 +207,15 @@ git push origin feature/semana01-git-<tu-nombre>
 
 ---
 
+## Entregables esperados
+
+```
+semana_01/actividades/actividad_01/<tu-nombre>/
+└── aprendizajes_<tu-nombre>.md
+```
+
+---
+
 ## Criterios de evaluación
 
 | Criterio | Descripción | Puntaje |
