@@ -206,3 +206,10 @@ El equipo de **análisis de negocios** o **gerentes de ventas** pueden usar esta
 
 ## 9. Reflexión personal
 
+A lo largo de esta actividad, pude aprender y profundizar en varios conceptos fundamentales del mundo de los datos. Primero, entendí la diferencia entre **ETL** y **ELT**, lo cual es crucial para elegir el enfoque correcto según las necesidades del negocio y la infraestructura disponible. 
+
+Además, el procesamiento por **Batch** y **Streaming** me permitió comprender cómo y cuándo utilizar cada uno en función de los requisitos de tiempo y volumen de datos. Fue especialmente útil conocer las diferencias y cómo se pueden aplicar en diferentes casos de uso.
+
+La actividad también me ayudó a familiarizarme con conceptos como **Data Warehouse**, **Data Lake** y **Data Lakehouse**, y cómo cada uno se adapta a distintos escenarios de almacenamiento y análisis de datos.
+
+En resumen, esta actividad me permitió ver cómo los conceptos teóricos se aplican en situaciones reales y cómo un Data Engineer debe tomar decisiones basadas en la arquitectura de datos adecuada para cada tipo de negocio.
