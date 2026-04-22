@@ -66,7 +66,25 @@ El procesamiento por lotes es ideal para reportes financieros, ya que las transa
 
 
 
-## 3. Data Warehouse
+ 3. Data Warehouse
+¿Qué es y para qué sirve?
+  
+Un Data Warehouse (DW) es una base de datos especializada diseñada para almacenar y analizar grandes volúmenes de datos de forma eficiente. Se utiliza para consolidar datos provenientes de diferentes fuentes para realizar análisis y reportes. Los datos son organizados y almacenados de tal manera que facilitan consultas rápidas y eficientes.
+
+**¿Qué tipo de datos almacena?**  
+Almacena datos estructurados y procesados provenientes de diferentes sistemas, como bases de datos operacionales, archivos log, o incluso datos de otras aplicaciones. Los datos suelen ser históricos y no se modifican una vez almacenados, lo que permite hacer análisis de tendencias a largo plazo.
+
+**Ejemplos de tecnologías:**
+- **Snowflake**: Una plataforma moderna de almacenamiento de datos en la nube.
+- **BigQuery**: El sistema de almacenamiento de datos de Google Cloud, ideal para grandes volúmenes de datos.
+- **Redshift**: La solución de almacenamiento de datos de Amazon Web Services (AWS).
+- **Synapse**: La plataforma de datos de Microsoft Azure, ideal para análisis y procesamiento de grandes cantidades de datos.
+
+¿Qué es el esquema estrella (star schema)?  
+El esquema estrella es un tipo de modelado de datos utilizado en un Data Warehouse, donde se centraliza la tabla de hechos (que contiene los datos principales, como ventas, ingresos, etc.) y se conecta con diversas tablas de dimensiones (que describen los atributos relacionados, como cliente, productos, tiempo, etc.).
+
+
+
 ## 4. Data Lake
 ## 5. Data Lakehouse
 ## 6. Pipeline de datos
