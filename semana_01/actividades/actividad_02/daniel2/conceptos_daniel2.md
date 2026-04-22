@@ -278,3 +278,37 @@ En resumen, esta actividad me permitió ver cómo los conceptos teóricos se apl
 - **Responsabilidad principal**: Gestiona y optimiza el ciclo de vida de los modelos de machine learning.
 - **Herramientas típicas**: TensorFlow, Kubernetes, Docker.
 - **Diferencia con Data Engineer**: El MLOps Engineer se enfoca en la infraestructura de machine learning y su ciclo de vida, mientras que el Data Engineer trabaja en toda la infraestructura de datos general.
+
+
+
+### 13. Elige tu stack
+
+#### **Escenario A**:
+
+**¿Batch o streaming?**  
+**Batch**, porque el análisis no requiere procesamiento en tiempo real. Los datos pueden ser procesados a intervalos regulares, como una vez al día, para generar reportes semanales sobre el rendimiento por ciudad.
+
+**¿Data Warehouse, Data Lake o Lakehouse?**  
+**Data Warehouse**, porque los datos son estructurados y se usarán principalmente para generar reportes y análisis históricos. Un Data Warehouse es ideal para almacenar datos organizados y realizar consultas rápidas.
+
+**¿Qué herramientas elegirías?**  
+**PostgreSQL** para almacenamiento y análisis de datos, y **Power BI** para la visualización de los reportes.
+
+**¿Por qué?**  
+Un Data Warehouse es perfecto para este escenario debido a que se requiere almacenamiento de datos históricos y consultas rápidas para la generación de reportes. **PostgreSQL** es una opción adecuada para manejar grandes volúmenes de datos estructurados, y **Power BI** es útil para crear visualizaciones accesibles.
+
+---
+
+#### **Escenario B**:
+
+**¿Batch o streaming?**  
+**Streaming**, ya que se requiere procesar los datos en tiempo real para detectar transacciones fraudulentas inmediatamente, sin demoras.
+
+**¿Data Warehouse, Data Lake o Lakehouse?**  
+**Data Lakehouse**, porque permite manejar tanto datos estructurados como no estructurados y permite análisis en tiempo real, lo cual es fundamental para este escenario donde se necesitan respuestas rápidas.
+
+**¿Qué herramientas elegirías?**  
+**Apache Kafka** para ingestión en tiempo real, y **Delta Lake** para almacenamiento y procesamiento de los datos.
+
+**¿Por qué?**  
+**Kafka** es ideal para manejar datos en tiempo real y hacer un procesamiento continuo de las transacciones. **Delta Lake** combina las características de un Data Lake con las ventajas de un Data Warehouse, permitiendo tanto almacenamiento eficiente como transacciones ACID para análisis rápidos.
