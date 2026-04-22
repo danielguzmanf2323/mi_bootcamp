@@ -38,7 +38,7 @@ En un Data Lakehouse moderno, es común usar ELT, ya que primero cargamos todos 
 
 
 
- 2. Batch vs Streaming
+ ## 3. Batch vs Streaming
 
  Qué significa procesar datos en batch?
 
@@ -213,3 +213,5 @@ Además, el procesamiento por **Batch** y **Streaming** me permitió comprender 
 La actividad también me ayudó a familiarizarme con conceptos como **Data Warehouse**, **Data Lake** y **Data Lakehouse**, y cómo cada uno se adapta a distintos escenarios de almacenamiento y análisis de datos.
 
 En resumen, esta actividad me permitió ver cómo los conceptos teóricos se aplican en situaciones reales y cómo un Data Engineer debe tomar decisiones basadas en la arquitectura de datos adecuada para cada tipo de negocio.
+
+
