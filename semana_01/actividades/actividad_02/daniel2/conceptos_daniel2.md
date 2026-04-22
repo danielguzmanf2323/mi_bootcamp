@@ -241,3 +241,40 @@ En resumen, esta actividad me permitió ver cómo los conceptos teóricos se apl
 - **Tecnología**: Power BI, Tableau, APIs para consumo externo.  
 - **Tipo de datos**: Dashboards de reportes, visualizaciones, modelos de predicción.  
 - **Ejemplo**: Power BI, Tableau, RESTful APIs.
+
+
+
+### 12. Roles del equipo de datos
+
+**Data Engineer:**
+- **Responsabilidad principal**: Construye y mantiene pipelines de datos, asegurando la calidad y eficiencia de los flujos de datos.
+- **Herramientas típicas**: Apache Kafka, Apache Airflow, DBT.
+- **Diferencia con Data Engineer**: Se enfoca más en la infraestructura de datos y la creación de pipelines de datos.
+
+---
+
+**Data Analyst:**
+- **Responsabilidad principal**: Analiza datos y genera reportes e informes.
+- **Herramientas típicas**: SQL, Excel, Tableau, Power BI.
+- **Diferencia con Data Engineer**: El analista se enfoca en el análisis de datos, mientras que el ingeniero construye la infraestructura para procesar los datos.
+
+---
+
+**Data Scientist:**
+- **Responsabilidad principal**: Desarrolla modelos predictivos y trabaja con grandes volúmenes de datos para extraer insights.
+- **Herramientas típicas**: Python, R, Jupyter Notebooks.
+- **Diferencia con Data Engineer**: El científico de datos utiliza modelos de machine learning, mientras que el ingeniero de datos construye la infraestructura de datos para alimentar esos modelos.
+
+---
+
+**Analytics Engineer:**
+- **Responsabilidad principal**: Facilita la transformación de datos y la creación de pipelines optimizados para el análisis de datos.
+- **Herramientas típicas**: Apache Airflow, dbt, Power BI.
+- **Diferencia con Data Engineer**: El Analytics Engineer se enfoca más en optimizar el pipeline para el análisis de datos, mientras que el Data Engineer gestiona la infraestructura general.
+
+---
+
+**MLOps Engineer:**
+- **Responsabilidad principal**: Gestiona y optimiza el ciclo de vida de los modelos de machine learning.
+- **Herramientas típicas**: TensorFlow, Kubernetes, Docker.
+- **Diferencia con Data Engineer**: El MLOps Engineer se enfoca en la infraestructura de machine learning y su ciclo de vida, mientras que el Data Engineer trabaja en toda la infraestructura de datos general.
