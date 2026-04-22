@@ -27,3 +27,6 @@ Durante la actividad surgieron algunos inconvenientes relacionados con el manejo
 Esto permitió entender mejor cómo Git maneja internamente las referencias y la importancia de mantener un flujo de trabajo limpio. También fue útil para reforzar el uso de comandos como git checkout, git branch y git reset para recuperar el estado del repositorio sin perder avances.
 
 En general, más que dificultades, fueron situaciones prácticas que ayudaron a consolidar el manejo de Git en escenarios reales.
+
+
+esta es una pruebra para git diff 
