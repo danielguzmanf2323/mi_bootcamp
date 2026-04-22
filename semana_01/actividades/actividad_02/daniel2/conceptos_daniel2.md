@@ -35,15 +35,37 @@ Herramientas como dbt (Data Build Tool) permiten transformar datos dentro del Da
 **Ejemplo:**  
 En un Data Lakehouse moderno, es común usar ELT, ya que primero cargamos todos los datos crudos y luego los transformamos de forma más eficiente en el mismo sistema.
 
----
 
-Cuando hayas terminado con la explicación, realiza el commit:
 
-```bash
-git add .
-git commit -m "docs: add ETL vs ELT explanation"
 
-## 2. Batch vs Streaming
+ 2. Batch vs Streaming
+
+ Qué significa procesar datos en batch?
+
+El procesamiento por lotes (Batch) implica procesar grandes volúmenes de datos a intervalos programados. En lugar de procesar los datos de manera continua, los datos se recogen y almacenan durante un período de tiempo y luego se procesan todos juntos en un solo "lote".
+
+¿Cada cuánto tiempo se ejecuta un proceso batch típico? 
+
+Los procesos batch suelen ejecutarse a intervalos regulares, como una vez al día, semanalmente o mensualmente. La frecuencia depende de la necesidad de los datos y los procesos de negocio involucrados.
+
+Ventajas y desventajas del procesamiento por lotes:
+
+- Ventajas:
+
+  - Eficiente para grandes volúmenes de datos.
+  - Procesos sin interferencias, ya que los datos no se procesan continuamente.
+  - Suele ser más sencillo de implementar en entornos donde no se necesita inmediatez.
+
+- Desventajas:
+  - No es adecuado para situaciones que requieren datos en tiempo real.
+  - Puede haber una latencia considerable entre la recolección de datos y su procesamiento.
+
+Ejemplo: ¿cuándo usarías batch en un pipeline de reportes financieros?
+
+El procesamiento por lotes es ideal para reportes financieros, ya que las transacciones pueden acumularse durante todo el día o la semana, y luego ser procesadas todas juntas en la noche para generar reportes semanales o mensuales. De esta manera, los sistemas no necesitan estar activos todo el tiempo y pueden generar los informes necesarios al final del ciclo de trabajo.
+
+
+
 ## 3. Data Warehouse
 ## 4. Data Lake
 ## 5. Data Lakehouse
