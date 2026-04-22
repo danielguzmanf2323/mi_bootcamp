@@ -215,3 +215,29 @@ La actividad también me ayudó a familiarizarme con conceptos como **Data Wareh
 En resumen, esta actividad me permitió ver cómo los conceptos teóricos se aplican en situaciones reales y cómo un Data Engineer debe tomar decisiones basadas en la arquitectura de datos adecuada para cada tipo de negocio.
 
 
+### 11. Arquitectura de datos de extremo a extremo
+
+**[Fuente de datos]**  
+- **Tecnología**: Bases de datos SQL, API de terceros.  
+- **Tipo de datos**: Datos estructurados de ventas, logs de transacciones.  
+- **Ejemplo**: SQL Server, PostgreSQL, APIs RESTful.
+
+**[Ingesta]**  
+- **Tecnología**: Apache Kafka, Apache NiFi.  
+- **Tipo de datos**: Registros de eventos, datos transaccionales, eventos de usuario.  
+- **Ejemplo**: Kafka Streams, Apache NiFi.
+
+**[Almacenamiento]**  
+- **Tecnología**: Data Lake, Data Warehouse.  
+- **Tipo de datos**: Datos crudos (Data Lake), datos procesados (Data Warehouse).  
+- **Ejemplo**: Amazon S3 (Data Lake), Snowflake (Data Warehouse).
+
+**[Transformación]**  
+- **Tecnología**: dbt, Apache Spark.  
+- **Tipo de datos**: Datos limpios y transformados, listos para análisis.  
+- **Ejemplo**: dbt, Apache Spark.
+
+**[Consumo]**  
+- **Tecnología**: Power BI, Tableau, APIs para consumo externo.  
+- **Tipo de datos**: Dashboards de reportes, visualizaciones, modelos de predicción.  
+- **Ejemplo**: Power BI, Tableau, RESTful APIs.
