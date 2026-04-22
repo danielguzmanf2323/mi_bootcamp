@@ -66,7 +66,7 @@ git reset --soft HEAD~1
 3. Corregir el último commit:
 
 Comando: git commit --amend
-Descripción: Permite modificar el último commit, ya sea para añadir cambios adicionales o corregir el mensaje de commit.
+Descripción: Permite modificar el último  commit, ya sea para añadir cambios adicionales o corregir el mensaje de commit.
 
 Ejemplo de uso:
 
