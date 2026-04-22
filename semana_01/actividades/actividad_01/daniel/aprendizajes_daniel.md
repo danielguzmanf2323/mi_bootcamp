@@ -22,3 +22,8 @@ Una rama en Git es una copia del código en la que puedes trabajar sin afectar l
 
 ## Dudas o dificultades
 
+Durante la actividad surgieron algunos inconvenientes relacionados con el manejo de ramas, específicamente cuando una referencia local se corrompió y fue necesario eliminar la rama y recrearla desde develop.
+
+Esto permitió entender mejor cómo Git maneja internamente las referencias y la importancia de mantener un flujo de trabajo limpio. También fue útil para reforzar el uso de comandos como git checkout, git branch y git reset para recuperar el estado del repositorio sin perder avances.
+
+En general, más que dificultades, fueron situaciones prácticas que ayudaron a consolidar el manejo de Git en escenarios reales.
