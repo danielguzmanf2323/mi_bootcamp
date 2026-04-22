@@ -121,6 +121,28 @@ El **Data Lakehouse** es una arquitectura moderna que combina lo mejor de los **
 El Data Lakehouse es considerado la arquitectura moderna porque combina lo mejor de ambos mundos: la escalabilidad y flexibilidad del Data Lake con el rendimiento y la consistencia del Data Warehouse. Esto lo convierte en una solución ideal para organizaciones que necesitan almacenar grandes volúmenes de datos y realizar análisis rápidos sin tener que mover los datos entre diferentes sistemas.
 
 ## 6. Pipeline de datos
+
+**¿Qué es un pipeline de datos?**  
+Un **pipeline de datos** es un conjunto de procesos automatizados que mueve los datos desde su origen hasta su destino, pasando por varias etapas de transformación y procesamiento. Los pipelines de datos suelen ser orquestados para que los datos se muevan y transformen de manera eficiente y sin intervención manual.
+
+**¿Qué etapas puede tener?**
+Un pipeline de datos típico puede incluir las siguientes etapas:
+- **Ingesta**: La recopilación de datos desde las fuentes, que pueden ser bases de datos, archivos, APIs, etc.
+- **Transformación**: Limpieza, validación, agregación o cualquier otro proceso que cambie el formato o la calidad de los datos.
+- **Almacenamiento**: El destino donde se guardan los datos procesados (Data Warehouse, Data Lake, etc.).
+- **Consumo**: El uso de los datos, como análisis, informes, visualizaciones o la creación de modelos predictivos.
+
+**¿Qué herramienta se usa para orquestar pipelines?**  
+- **Apache Airflow**: Una herramienta de orquestación de flujos de trabajo que permite programar y supervisar pipelines de datos.
+
+**Ejemplo de flujo de un pipeline simple:**
+- **Fuente**: Base de datos de ventas.
+- **Transformación**: Limpiar los datos, convertir los valores de la fecha al formato adecuado, agregar columnas adicionales.
+- **Destino**: Data Warehouse para almacenar los datos procesados.
+  
+Este flujo puede ser orquestado con herramientas como **Apache Airflow**.
+
+
 ## 7. Otros conceptos
 ## 8. Caso práctico imaginario
 ## 9. Reflexión personal
