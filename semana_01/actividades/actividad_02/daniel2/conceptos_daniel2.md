@@ -104,6 +104,22 @@ El mayor riesgo es convertirlo en un **"data swamp"** (pantano de datos). Esto o
 
 
 ## 5. Data Lakehouse
+
+**¿Qué problema viene a resolver?**  
+El **Data Lakehouse** es una arquitectura moderna que combina lo mejor de los **Data Lakes** y los **Data Warehouses**. El problema que resuelve es la falta de consistencia y la alta latencia que suelen tener los Data Lakes cuando se trata de análisis de datos estructurados. A diferencia de los Data Lakes, que almacenan datos crudos, el Data Lakehouse permite tener un sistema único que puede manejar tanto datos no estructurados como estructurados, optimizando el rendimiento y la consistencia para el análisis de datos.
+
+**¿Qué combina del Data Lake y del Data Warehouse?**  
+- **De los Data Lakes**, toma la capacidad de almacenar grandes volúmenes de datos no estructurados a bajo costo.
+- **De los Data Warehouses**, toma la capacidad de análisis de datos estructurados y el uso de esquemas y herramientas que optimizan el rendimiento de las consultas.
+
+**Tecnologías:**
+- **Delta Lake**: Plataforma que combina un Data Lake con características de un Data Warehouse, agregando soporte para transacciones ACID y control de versiones.
+- **Apache Iceberg**: Un formato de almacenamiento para Data Lakes y Data Warehouses que ofrece transacciones ACID y escalabilidad.
+- **Apache Hudi**: Plataforma similar a Delta Lake que agrega capacidades de actualización y eliminación en Data Lakes.
+
+**¿Por qué se dice que es la arquitectura moderna de referencia?**  
+El Data Lakehouse es considerado la arquitectura moderna porque combina lo mejor de ambos mundos: la escalabilidad y flexibilidad del Data Lake con el rendimiento y la consistencia del Data Warehouse. Esto lo convierte en una solución ideal para organizaciones que necesitan almacenar grandes volúmenes de datos y realizar análisis rápidos sin tener que mover los datos entre diferentes sistemas.
+
 ## 6. Pipeline de datos
 ## 7. Otros conceptos
 ## 8. Caso práctico imaginario
