@@ -38,7 +38,7 @@ En un Data Lakehouse moderno, es común usar ELT, ya que primero cargamos todos 
 
 
 
- 2. Batch vs Streaming
+ ## 3. Batch vs Streaming
 
  Qué significa procesar datos en batch?
 
@@ -213,3 +213,102 @@ Además, el procesamiento por **Batch** y **Streaming** me permitió comprender 
 La actividad también me ayudó a familiarizarme con conceptos como **Data Warehouse**, **Data Lake** y **Data Lakehouse**, y cómo cada uno se adapta a distintos escenarios de almacenamiento y análisis de datos.
 
 En resumen, esta actividad me permitió ver cómo los conceptos teóricos se aplican en situaciones reales y cómo un Data Engineer debe tomar decisiones basadas en la arquitectura de datos adecuada para cada tipo de negocio.
+
+
+### 11. Arquitectura de datos de extremo a extremo
+
+**[Fuente de datos]**  
+- **Tecnología**: Bases de datos SQL, API de terceros.  
+- **Tipo de datos**: Datos estructurados de ventas, logs de transacciones.  
+- **Ejemplo**: SQL Server, PostgreSQL, APIs RESTful.
+
+**[Ingesta]**  
+- **Tecnología**: Apache Kafka, Apache NiFi.  
+- **Tipo de datos**: Registros de eventos, datos transaccionales, eventos de usuario.  
+- **Ejemplo**: Kafka Streams, Apache NiFi.
+
+**[Almacenamiento]**  
+- **Tecnología**: Data Lake, Data Warehouse.  
+- **Tipo de datos**: Datos crudos (Data Lake), datos procesados (Data Warehouse).  
+- **Ejemplo**: Amazon S3 (Data Lake), Snowflake (Data Warehouse).
+
+**[Transformación]**  
+- **Tecnología**: dbt, Apache Spark.  
+- **Tipo de datos**: Datos limpios y transformados, listos para análisis.  
+- **Ejemplo**: dbt, Apache Spark.
+
+**[Consumo]**  
+- **Tecnología**: Power BI, Tableau, APIs para consumo externo.  
+- **Tipo de datos**: Dashboards de reportes, visualizaciones, modelos de predicción.  
+- **Ejemplo**: Power BI, Tableau, RESTful APIs.
+
+
+
+### 12. Roles del equipo de datos
+
+**Data Engineer:**
+- **Responsabilidad principal**: Construye y mantiene pipelines de datos, asegurando la calidad y eficiencia de los flujos de datos.
+- **Herramientas típicas**: Apache Kafka, Apache Airflow, DBT.
+- **Diferencia con Data Engineer**: Se enfoca más en la infraestructura de datos y la creación de pipelines de datos.
+
+---
+
+**Data Analyst:**
+- **Responsabilidad principal**: Analiza datos y genera reportes e informes.
+- **Herramientas típicas**: SQL, Excel, Tableau, Power BI.
+- **Diferencia con Data Engineer**: El analista se enfoca en el análisis de datos, mientras que el ingeniero construye la infraestructura para procesar los datos.
+
+---
+
+**Data Scientist:**
+- **Responsabilidad principal**: Desarrolla modelos predictivos y trabaja con grandes volúmenes de datos para extraer insights.
+- **Herramientas típicas**: Python, R, Jupyter Notebooks.
+- **Diferencia con Data Engineer**: El científico de datos utiliza modelos de machine learning, mientras que el ingeniero de datos construye la infraestructura de datos para alimentar esos modelos.
+
+---
+
+**Analytics Engineer:**
+- **Responsabilidad principal**: Facilita la transformación de datos y la creación de pipelines optimizados para el análisis de datos.
+- **Herramientas típicas**: Apache Airflow, dbt, Power BI.
+- **Diferencia con Data Engineer**: El Analytics Engineer se enfoca más en optimizar el pipeline para el análisis de datos, mientras que el Data Engineer gestiona la infraestructura general.
+
+---
+
+**MLOps Engineer:**
+- **Responsabilidad principal**: Gestiona y optimiza el ciclo de vida de los modelos de machine learning.
+- **Herramientas típicas**: TensorFlow, Kubernetes, Docker.
+- **Diferencia con Data Engineer**: El MLOps Engineer se enfoca en la infraestructura de machine learning y su ciclo de vida, mientras que el Data Engineer trabaja en toda la infraestructura de datos general.
+
+
+
+### 13. Elige tu stack
+
+#### **Escenario A**:
+
+**¿Batch o streaming?**  
+**Batch**, porque el análisis no requiere procesamiento en tiempo real. Los datos pueden ser procesados a intervalos regulares, como una vez al día, para generar reportes semanales sobre el rendimiento por ciudad.
+
+**¿Data Warehouse, Data Lake o Lakehouse?**  
+**Data Warehouse**, porque los datos son estructurados y se usarán principalmente para generar reportes y análisis históricos. Un Data Warehouse es ideal para almacenar datos organizados y realizar consultas rápidas.
+
+**¿Qué herramientas elegirías?**  
+**PostgreSQL** para almacenamiento y análisis de datos, y **Power BI** para la visualización de los reportes.
+
+**¿Por qué?**  
+Un Data Warehouse es perfecto para este escenario debido a que se requiere almacenamiento de datos históricos y consultas rápidas para la generación de reportes. **PostgreSQL** es una opción adecuada para manejar grandes volúmenes de datos estructurados, y **Power BI** es útil para crear visualizaciones accesibles.
+
+---
+
+#### **Escenario B**:
+
+**¿Batch o streaming?**  
+**Streaming**, ya que se requiere procesar los datos en tiempo real para detectar transacciones fraudulentas inmediatamente, sin demoras.
+
+**¿Data Warehouse, Data Lake o Lakehouse?**  
+**Data Lakehouse**, porque permite manejar tanto datos estructurados como no estructurados y permite análisis en tiempo real, lo cual es fundamental para este escenario donde se necesitan respuestas rápidas.
+
+**¿Qué herramientas elegirías?**  
+**Apache Kafka** para ingestión en tiempo real, y **Delta Lake** para almacenamiento y procesamiento de los datos.
+
+**¿Por qué?**  
+**Kafka** es ideal para manejar datos en tiempo real y hacer un procesamiento continuo de las transacciones. **Delta Lake** combina las características de un Data Lake con las ventajas de un Data Warehouse, permitiendo tanto almacenamiento eficiente como transacciones ACID para análisis rápidos.
