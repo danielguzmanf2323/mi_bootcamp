@@ -74,4 +74,4 @@ git commit --amend
 
 
 
-esta es una pruebra para git  diff 
+esta es una pruebra para git diff 
