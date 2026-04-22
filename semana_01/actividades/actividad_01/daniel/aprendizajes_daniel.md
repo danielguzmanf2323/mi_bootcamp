@@ -29,4 +29,17 @@ Esto permitió entender mejor cómo Git maneja internamente las referencias y la
 En general, más que dificultades, fueron situaciones prácticas que ayudaron a consolidar el manejo de Git en escenarios reales.
 
 
+## Comandos que investigué
+
+### git stash
+**¿Para qué sirve?**  
+Guarda los cambios temporalmente sin necesidad de hacer un commit. Ideal cuando se está trabajando en algo pero se necesita cambiar de contexto rápidamente.
+
+**Ejemplo de uso:**  
+```bash
+git stash
+
+
+
+
 esta es una pruebra para git diff 
