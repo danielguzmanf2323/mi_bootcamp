@@ -18,7 +18,7 @@ Git es un sistema de control de versiones que permite guardar cambios en el cód
 
 ## ¿Qué es una rama y por qué se usa?
 
-
+Una rama en Git es una copia del código en la que puedes trabajar sin afectar la versión principal. Se utiliza para desarrollar nuevas funcionalidades, hacer pruebas o corregir errores de forma aislada. Una vez validados los cambios, estos se integran nuevamente a la rama principal mediante un merge o pull request.
 
 ## Dudas o dificultades
 
