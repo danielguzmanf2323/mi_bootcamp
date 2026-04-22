@@ -62,7 +62,7 @@ Ventajas y desventajas del procesamiento por lotes:
 
 Ejemplo: ¿cuándo usarías batch en un pipeline de reportes financieros?
 
-El procesamiento por lotes es ideal para reportes financieros, ya que las transacciones pueden acumularse durante todo el día o la semana, y luego ser procesadas todas juntas en la noche para generar reportes semanales o mensuales. De esta manera, los sistemas no necesitan estar activos todo el tiempo y pueden generar los informes necesarios al final del ciclo de trabajo.
+El procesamiento por lotes es ideal para reportes financieros, ya que las transacciones pueden acumularse durante todo el día o la semana, y luego ser procesadas todas juntas en la noche para generar reportes semanales o mensuales. De esta manera, los sistemas no necesitan estar activos todo el tiempo y pueden generar los informes necesarios al final del ciclo de trabajo..
 
 
 
