@@ -41,5 +41,37 @@ git stash
 
 
 
+Estrategias para deshacer cambios:
+
+1. Restaurar cambios antes de hacer commit:
+
+Comando: git restore <archivo>
+Descripción: Permite restaurar un archivo a su última versión comprometida, descartando cualquier cambio no guardado.
+Ejemplo de uso:
+
+git restore semana_01/actividades/actividad_01/README.md
+
+
+2. Deshacer el último commit sin perder los cambios:
+
+Comando: git reset --soft HEAD~1
+Descripción: Deshace el último commit pero mantiene los cambios en el área de staging para ser editados antes de hacer un nuevo commit.
+
+Ejemplo de uso:
+
+git reset --soft HEAD~1
+
+
+
+3. Corregir el último commit:
+
+Comando: git commit --amend
+Descripción: Permite modificar el último commit, ya sea para añadir cambios adicionales o corregir el mensaje de commit.
+
+Ejemplo de uso:
+
+git commit --amend
+
+
 
 esta es una pruebra para git diff 
