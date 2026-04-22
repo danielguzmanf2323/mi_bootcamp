@@ -144,6 +144,41 @@ Este flujo puede ser orquestado con herramientas como **Apache Airflow**.
 
 
 ## 7. Otros conceptos
+
+**Data Mart**  
+Un **Data Mart** es una versión más pequeña y específica de un **Data Warehouse**. Se centra en un área particular de un negocio, como ventas o marketing. Los Data Marts se utilizan para proporcionar a los usuarios acceso rápido a los datos relevantes para su departamento o función.
+
+**Particionado de datos**  
+El particionado de datos es una técnica utilizada en bases de datos y sistemas de almacenamiento para dividir grandes volúmenes de datos en fragmentos más pequeños y manejables. Esto ayuda a mejorar el rendimiento de las consultas y facilita el manejo de grandes cantidades de información.
+
+**Formato columnar vs fila (Parquet vs CSV)**  
+- **Formato columnar**: En un archivo **columnar** (como Parquet), los datos se almacenan por columna, lo que mejora el rendimiento de las consultas que acceden a un pequeño subconjunto de las columnas.  
+- **Formato de fila**: En un archivo **de fila** (como CSV), los datos se almacenan por fila, lo que es útil para consultas que necesitan acceder a todos los campos de una sola fila.
+
+**Data Catalog**  
+Un **Data Catalog** es una herramienta que permite a las organizaciones gestionar, buscar y entender los datos disponibles dentro de su infraestructura. Es útil para realizar un seguimiento de las fuentes de datos, definir metadatos y garantizar la gobernanza de los datos.
+
+**Linaje de datos (Data Lineage)**  
+El **linaje de datos** describe el recorrido de los datos desde su origen hasta su destino. Permite a los usuarios ver cómo se transforman y manipulan los datos a lo largo de su ciclo de vida.
+
+**Schema-on-read vs Schema-on-write**  
+- **Schema-on-read**: La estructura de los datos se aplica cuando se leen. Esto es común en los **Data Lakes**, donde los datos no necesitan una estructura predefinida antes de ser almacenados.  
+- **Schema-on-write**: Los datos deben ajustarse a un esquema cuando se escriben en el sistema, como en los **Data Warehouses**.
+
+**SLA de datos**  
+El **SLA (Service Level Agreement)** de datos establece los acuerdos sobre la calidad, disponibilidad y tiempo de respuesta de los datos. Es fundamental para asegurar que los datos estén disponibles cuando se necesitan y que cumplan con los estándares de calidad.
+
+**Idempotencia en pipelines**  
+La **idempotencia** en los pipelines de datos significa que un proceso puede ejecutarse varias veces sin cambiar el resultado más de una vez. Es un principio importante en los pipelines, ya que asegura que los datos no se dupliquen o se pierdan si un proceso se ejecuta varias veces.
+
+**CDC — Change Data Capture**  
+**CDC** es una técnica utilizada para capturar y registrar los cambios que ocurren en los datos de una fuente en tiempo real, lo que permite replicar esos cambios a otros sistemas sin necesidad de recargar toda la base de datos.
+
+**Data Mesh**  
+El **Data Mesh** es una nueva arquitectura que propone tratar los datos como un producto y distribuir la responsabilidad del manejo de datos entre equipos de negocio. Cada equipo es responsable de los datos que producen, promoviendo la descentralización.
+
+
+
 ## 8. Caso práctico imaginario
 ## 9. Reflexión personal
 
