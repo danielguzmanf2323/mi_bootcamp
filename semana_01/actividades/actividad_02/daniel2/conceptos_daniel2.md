@@ -180,5 +180,29 @@ El **Data Mesh** es una nueva arquitectura que propone tratar los datos como un 
 
 
 ## 8. Caso práctico imaginario
+
+
+**Pregunta**:  
+"¿Cuáles fueron los 10 productos más vendidos en los últimos 7 días, por región?"
+
+**¿De dónde vienen los datos?**  
+Los datos provienen de la plataforma de e-commerce de la empresa. La fuente incluye registros de ventas, que contienen información sobre el producto, la cantidad vendida, la fecha de la transacción y la región de venta.
+
+**¿Batch o streaming?**  
+Este caso podría beneficiarse de un **procesamiento por lotes (batch)**, ya que no se requiere tiempo real para obtener los 10 productos más vendidos, y los datos pueden ser procesados a intervalos regulares, como una vez al día.
+
+**¿Cómo los transformas?**  
+Se pueden realizar las siguientes transformaciones:
+- **Filtrar** las transacciones para que solo incluyan las ventas de los últimos 7 días.
+- **Agrupar** por producto y región, sumando las cantidades vendidas.
+- **Ordenar** los productos por cantidad vendida, limitando a los 10 productos más vendidos por cada región.
+
+**¿Dónde los almacenas?**  
+El resultado podría ser almacenado en un **Data Warehouse** (como Redshift o BigQuery), ya que este sistema permite realizar consultas rápidas y eficientes sobre grandes volúmenes de datos estructurados.
+
+**¿Quién los consume?**  
+El equipo de **análisis de negocios** o **gerentes de ventas** pueden usar esta información para entender qué productos son más populares y tomar decisiones estratégicas sobre inventarios o promociones.
+
+
 ## 9. Reflexión personal
 
