@@ -68,7 +68,7 @@ El procesamiento por lotes es ideal para reportes financieros, ya que las transa
 
  3. Data Warehouse
 ¿Qué es y para qué sirve?
-  
+
 Un Data Warehouse (DW) es una base de datos especializada diseñada para almacenar y analizar grandes volúmenes de datos de forma eficiente. Se utiliza para consolidar datos provenientes de diferentes fuentes para realizar análisis y reportes. Los datos son organizados y almacenados de tal manera que facilitan consultas rápidas y eficientes.
 
 **¿Qué tipo de datos almacena?**  
@@ -86,6 +86,23 @@ El esquema estrella es un tipo de modelado de datos utilizado en un Data Warehou
 
 
 ## 4. Data Lake
+
+**¿Qué lo diferencia de un Data Warehouse?**  
+A diferencia de un **Data Warehouse**, que solo almacena datos estructurados y transformados, un **Data Lake** permite almacenar **datos crudos y sin procesar**, tanto estructurados como no estructurados. Los datos pueden ser almacenados en su formato original, como archivos CSV, JSON, Avro, imágenes, logs, etc. Esto lo convierte en una solución más flexible para grandes volúmenes de datos, ya que no es necesario transformar los datos antes de almacenarlos.
+
+**¿Qué tipo de archivos se almacenan?**  
+- **Estructurados**: CSV, Parquet, Avro.
+- **No estructurados**: JSON, imágenes, videos, archivos de log, datos de sensores, etc.
+  
+**¿Cuál es el riesgo de un Data Lake mal gestionado?**  
+El mayor riesgo es convertirlo en un **"data swamp"** (pantano de datos). Esto ocurre cuando los datos no se gestionan de manera adecuada, no se etiquetan correctamente y se almacenan sin ningún orden ni estructura, lo que dificulta el acceso y análisis de la información.
+
+**Ejemplos de tecnologías:**
+- **Amazon S3**: Servicio de almacenamiento en la nube de Amazon, que se utiliza comúnmente como un Data Lake.
+- **Azure Data Lake Storage**: Plataforma de almacenamiento de datos no estructurados de Microsoft Azure.
+- **Google Cloud Storage**: El sistema de almacenamiento de Google que permite almacenar grandes volúmenes de datos no estructurados.
+
+
 ## 5. Data Lakehouse
 ## 6. Pipeline de datos
 ## 7. Otros conceptos
