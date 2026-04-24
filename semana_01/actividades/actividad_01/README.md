@@ -207,6 +207,32 @@ git push origin feature/semana01-git-<tu-nombre>
 
 ---
 
+### Paso 10 — Borrar la rama después de que el PR sea aprobado y mergeado
+
+Una vez que el instructor apruebe y mergee tu Pull Request, elimina la rama — tanto en el repositorio remoto como en tu máquina local. Mantener ramas obsoletas desordena el repositorio.
+
+```bash
+# Primero, actualiza tu develop local
+git checkout develop
+git pull origin develop
+
+# Elimina la rama remota
+git push origin --delete feature/semana01-git-<tu-nombre>
+
+# Elimina la rama local
+git branch -d feature/semana01-git-<tu-nombre>
+```
+
+> **¿Por qué borrar la rama?** Una rama de feature que ya fue mergeada ya no tiene utilidad. El historial del trabajo queda preservado en los commits dentro de `develop`. Equipos de Data Engineering reales aplican esta práctica para mantener el repositorio limpio.
+
+Verifica que la rama ya no aparece:
+
+```bash
+git branch -a
+```
+
+---
+
 ## Entregables esperados
 
 ```

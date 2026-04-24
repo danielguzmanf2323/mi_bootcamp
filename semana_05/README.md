@@ -6,6 +6,24 @@
 
 ---
 
+## Material obligatorio — Databricks Academy
+
+Esta semana debes completar los **3 videos** del path **"Build a data pipeline"**
+en Databricks Free Edition (Home → Learn → Build a data pipeline).
+
+| # | Video | Tipo | Tiempo |
+|---|-------|------|--------|
+| 1 | What is a pipeline? | Video | 4 min |
+| 2 | Explore a sample pipeline | Video + demo | 7 min |
+| 3 | Build your own pipeline | Video + tutorial | 5 min |
+
+**Tiempo total: ~16 minutos**
+
+**Entrega:** copia, completa y sube el archivo de evidencia a tu PR de la semana:  
+→ [documentos/databricks_academy_build_pipeline.md](documentos/databricks_academy_build_pipeline.md)
+
+---
+
 ## Contenido
 
 | Carpeta | Descripción |

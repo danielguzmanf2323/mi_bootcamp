@@ -24,9 +24,9 @@ En análisis financiero, preguntas como:
 
 ## Dataset
 
-Los mismos archivos de semana 02:
+Los mismos archivos de semana 02, disponibles en el sitio de Teams del bootcamp (SharePoint):
 
-**[data_engineering_files/semana_02_actividad_01](https://drive.google.com/drive/folders/1NPcvkwEyU5t9euXay3Uzxo02LqY_Ptb9)**
+**[inetum_data_engineer_bootcamp / semana_02 / financial_transaction_dataset](https://gfi1.sharepoint.com/sites/JUNIORDATAENGINEERSDEVTEAM/Documents%20partages/Forms/AllItems.aspx?id=%2Fsites%2FJUNIORDATAENGINEERSDEVTEAM%2FDocuments%20partages%2FGeneral%2Finetum%5Fdata%5Fengineer%5Fbootcamp&viewid=532715df%2D69df%2D4d0e%2D8785%2Daf7a4ccf2983)**
 
 Punto de partida recomendado: el `df_final` construido en la Actividad 02 (5 tablas unidas).
 

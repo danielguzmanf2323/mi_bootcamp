@@ -14,9 +14,11 @@ Maven Fuzzy Factory es una tienda online que vende osos de peluche. Tiene datos 
 
 Tu misión como Data Engineer: entender el modelo de datos, detectar problemas de calidad, construir el pipeline medallón completo y responder preguntas de negocio que el equipo de marketing y producto necesitan.
 
-Los archivos están disponibles en Google Drive:
+Los archivos están disponibles en el sitio de Teams del bootcamp (SharePoint):
 
-**[Descargar dataset — data_engineering_files/semana_01_proyecto/maven_fuzzy_factory](https://drive.google.com/drive/folders/1NPcvkwEyU5t9euXay3Uzxo02LqY_Ptb9)**
+**[Descargar dataset — inetum_data_engineer_bootcamp / semana_01 / Maven+Fuzzy+Factory](https://gfi1.sharepoint.com/sites/JUNIORDATAENGINEERSDEVTEAM/Documents%20partages/Forms/AllItems.aspx?id=%2Fsites%2FJUNIORDATAENGINEERSDEVTEAM%2FDocuments%20partages%2FGeneral%2Finetum%5Fdata%5Fengineer%5Fbootcamp&viewid=532715df%2D69df%2D4d0e%2D8785%2Daf7a4ccf2983)**
+
+> Navega dentro del sitio a: `General / inetum_data_engineer_bootcamp / semana_01 / Maven+Fuzzy+Factory`
 
 ---
 
@@ -163,7 +165,8 @@ tablas = {
 }
 
 for nombre_tabla, ruta in tablas.items():
-    df = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load(ruta)
+    # Bronze: inferSchema=false — preserva el dato crudo exactamente como llega
+    df = spark.read.format("csv").option("header", "true").option("inferSchema", "false").load(ruta)
     df.write.format("delta").mode("overwrite").saveAsTable(nombre_tabla)
     print(f"{nombre_tabla}: {df.count()} registros")
 ```
