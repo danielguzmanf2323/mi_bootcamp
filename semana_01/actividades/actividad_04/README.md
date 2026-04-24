@@ -119,6 +119,8 @@ Crea el notebook `bronze_customers_<tu-nombre>.ipynb`.
 **Objetivo:** leer el archivo raw y guardarlo como tabla Delta sin ninguna transformación.
 
 ```python
+MI_NOMBRE = "<tu_nombre>"  # ej: "maria", "carlos" — sin espacios, en minúsculas
+
 # Leer el archivo fuente (ajusta la ruta según donde subiste el archivo)
 df_bronze = spark.read.format("csv") \
     .option("header", "true") \
@@ -130,10 +132,10 @@ print(f"Registros: {df_bronze.count()}")
 df_bronze.printSchema()
 display(df_bronze)  # En Databricks: display() es preferible a show()
 
-# Guardar como tabla Delta (Bronze)
+# Guardar como tabla Delta (Bronze) — sufija tu nombre para no pisar tablas de otros
 df_bronze.write.format("delta") \
     .mode("overwrite") \
-    .saveAsTable("bronze_customers")
+    .saveAsTable(f"bronze_customers_{MI_NOMBRE}")
 ```
 
 > **Regla de Bronze:** no filtres nada, no cambies nada. Si el archivo tiene nulos, errores o columnas raras — Bronze los guarda igual. Eso es intencional.
@@ -179,7 +181,7 @@ df_silver.show(5)
 # Guardar como tabla Delta (Silver)
 df_silver.write.format("delta") \
     .mode("overwrite") \
-    .saveAsTable("silver_customers")
+    .saveAsTable(f"silver_customers_{MI_NOMBRE}")
 ```
 
 > **Pista:** compara `df_bronze.count()` con `df_silver.count()`. Si son iguales, probablemente no hiciste ninguna limpieza real. Revisa el perfilamiento de la Act 03.
@@ -220,7 +222,7 @@ df_gold_result.show(10)
 # Guardar como tabla Delta (Gold)
 df_gold_result.write.format("delta") \
     .mode("overwrite") \
-    .saveAsTable("gold_customers_by_country")
+    .saveAsTable(f"gold_customers_by_country_{MI_NOMBRE}")
 ```
 
 > **Reto adicional (opcional):** crea una segunda tabla Gold que responda otra pregunta, por ejemplo: `gold_customers_top_names` con los 10 nombres de contacto más frecuentes.

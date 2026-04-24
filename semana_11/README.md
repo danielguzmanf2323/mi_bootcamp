@@ -7,6 +7,22 @@
 
 ---
 
+> **Convención obligatoria — entorno compartido**
+>
+> Todos los estudiantes del proyecto final trabajan sobre el mismo catálogo `default` en Databricks Enterprise.
+> Para no sobrescribir las tablas de otras personas, **sufija siempre tu nombre en cada tabla que crees**:
+>
+> ```
+> default.bronze.olist_orders_<tu_nombre>
+> default.silver.olist_orders_<tu_nombre>
+> default.gold.ventas_por_categoria_<tu_nombre>
+> ```
+>
+> Esto aplica a las 9 tablas Bronze, todas las tablas Silver y todas las tablas Gold del proyecto.
+> Si usas `mode("overwrite")` sin el sufijo, sobrescribirás el trabajo de otro estudiante.
+
+---
+
 ## Contexto del proyecto final
 
 El proyecto final integra todo el stack del bootcamp en un pipeline real end-to-end:

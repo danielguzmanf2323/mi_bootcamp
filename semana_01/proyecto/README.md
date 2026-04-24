@@ -155,13 +155,15 @@ Crea el notebook `bronze_<tu-nombre>.ipynb`.
 Lee y guarda las 6 tablas como tablas Delta en su estado raw. Sin transformaciones.
 
 ```python
+MI_NOMBRE = "<tu_nombre>"  # ej: "maria" — sin espacios, en minúsculas
+
 tablas = {
-    "bronze_website_sessions": "/FileStore/website_sessions.csv",
-    "bronze_website_pageviews": "/FileStore/website_pageviews.csv",
-    "bronze_orders": "/FileStore/orders.csv",
-    "bronze_order_items": "/FileStore/order_items.csv",
-    "bronze_order_item_refunds": "/FileStore/order_item_refunds.csv",
-    "bronze_products": "/FileStore/products.csv",
+    f"bronze_website_sessions_{MI_NOMBRE}": "/FileStore/website_sessions.csv",
+    f"bronze_website_pageviews_{MI_NOMBRE}": "/FileStore/website_pageviews.csv",
+    f"bronze_orders_{MI_NOMBRE}": "/FileStore/orders.csv",
+    f"bronze_order_items_{MI_NOMBRE}": "/FileStore/order_items.csv",
+    f"bronze_order_item_refunds_{MI_NOMBRE}": "/FileStore/order_item_refunds.csv",
+    f"bronze_products_{MI_NOMBRE}": "/FileStore/products.csv",
 }
 
 for nombre_tabla, ruta in tablas.items():

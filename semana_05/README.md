@@ -6,6 +6,21 @@
 
 ---
 
+> **Convención obligatoria — entorno compartido**
+>
+> Todos los estudiantes del bootcamp trabajan sobre el mismo catálogo `default` en Databricks Enterprise.
+> Para no sobrescribir las tablas de otras personas, **sufija siempre tu nombre en cada tabla que crees**:
+>
+> ```
+> default.bronze.transactions_<tu_nombre>
+> default.silver.users_scd2_<tu_nombre>
+> ```
+>
+> En pipelines DLT, el nombre del pipeline y el target schema deben incluir tu nombre.
+> Si usas `mode("overwrite")` o `apply_changes` sin el sufijo, sobrescribirás el trabajo de otro estudiante.
+
+---
+
 ## Material obligatorio — Databricks Academy
 
 Esta semana debes completar los **3 videos** del path **"Build a data pipeline"**
