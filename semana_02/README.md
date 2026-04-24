@@ -5,6 +5,27 @@
 
 ---
 
+## Material obligatorio — Databricks Academy
+
+Esta semana arrancas con Databricks. Antes de cerrar la semana debes completar los **12 videos**
+del path **"Data Engineering"** en Databricks Free Edition (Home → Learn → Data Engineering).
+
+| Módulo | Videos | Tiempo |
+|--------|--------|--------|
+| Data Engineering Basics | 2 videos | ~10 min |
+| Ingestion and Transformation | 5 videos | ~41 min |
+| Pipelines | 3 videos | ~23 min |
+| Orchestration | 2 videos | ~14 min |
+
+**Tiempo total: ~88 minutos**
+
+Los videos de Pipelines y Orchestration los usarás en semanas 04 y 05 — por ahora velos una vez para tener contexto.
+
+**Entrega:** copia, completa y sube el archivo de evidencia a tu PR de la semana:  
+→ [documentos/databricks_academy_data_engineering.md](documentos/databricks_academy_data_engineering.md)
+
+---
+
 ## Contenido
 
 | Carpeta | Descripción |

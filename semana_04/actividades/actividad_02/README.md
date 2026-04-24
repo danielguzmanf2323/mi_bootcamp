@@ -248,7 +248,8 @@ display(df_verificado)
 Ver el historial de cambios Delta:
 
 ```python
-spark.sql(f"DESCRIBE HISTORY {full_table}").show(5, truncate=False)
+display(spark.sql(f"DESCRIBE HISTORY {full_table}"))
+# Alternativa portable: spark.sql(f"DESCRIBE HISTORY {full_table}").show(5, truncate=False)
 ```
 
 Documentar qué campos aparecen en `DESCRIBE HISTORY`. ¿Cuántas versiones hay después de correr el notebook dos veces con `overwrite`?
