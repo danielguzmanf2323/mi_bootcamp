@@ -54,9 +54,17 @@ semana_04/actividades/actividad_03/<tu-nombre>/
 
 ## El archivo de configuración
 
-El repositorio ya incluye el archivo de referencia en `semana_04/configs/bronze_config.yml`. Úsalo como fuente de datos de configuración. No copies el archivo — en Databricks Repos, el repo completo está montado en el workspace y puedes leer el YAML directamente desde el filesystem.
+> ⚠️ **IMPORTANTE — no edites `semana_04/configs/bronze_config.yml` directamente.**
+>
+> Ese archivo es compartido por todos los estudiantes. Editarlo genera conflictos de merge cuando varios Pull Requests lleguen a `develop` al mismo tiempo. En lugar de eso:
+>
+> 1. **Copia** el archivo a tu carpeta de trabajo: `semana_04/actividades/actividad_03/<tu-nombre>/bronze_config_<tu-nombre>.yml`
+> 2. Trabaja sobre tu copia — ajusta rutas, schemas o lo que necesites para tu entorno.
+> 3. En tu notebook, apunta a **tu copia** del YAML, no al original en `configs/`.
+>
+> El archivo en `semana_04/configs/bronze_config.yml` es la referencia de la pipeline de producción. Es de lectura solamente para el ejercicio.
 
-Revisa el archivo:
+El repositorio ya incluye el archivo de referencia en `semana_04/configs/bronze_config.yml`. Revísalo para entender la estructura:
 
 ```
 semana_04/configs/bronze_config.yml

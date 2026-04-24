@@ -27,7 +27,11 @@ Preguntas que debes poder responder después de estudiar el material:
 
 Ya leíste el dataset `customers`, lo perfilaste y le hiciste SQL. Ahora vas a organizarlo como lo haría un equipo de Data Engineering real: en tres capas bien definidas, con una razón clara para cada transformación.
 
-En la carpeta `data_engineering_files/semana_01_actividad_04` del Drive del bootcamp encontrarás el mismo dataset customers, pero con 2 millones de registros.
+En el sitio de Teams del bootcamp (SharePoint) encontrarás el mismo dataset customers, pero con 2 millones de registros:
+
+**[inetum_data_engineer_bootcamp / semana_01 / customers-2000000](https://gfi1.sharepoint.com/sites/JUNIORDATAENGINEERSDEVTEAM/Documents%20partages/Forms/AllItems.aspx?id=%2Fsites%2FJUNIORDATAENGINEERSDEVTEAM%2FDocuments%20partages%2FGeneral%2Finetum%5Fdata%5Fengineer%5Fbootcamp&viewid=532715df%2D69df%2D4d0e%2D8785%2Daf7a4ccf2983)**
+
+> Navega dentro del sitio a: `General / inetum_data_engineer_bootcamp / semana_01 / customers-2000000`
 
 Al final de esta actividad tendrás tres tablas en Databricks — `bronze_customers`, `silver_customers` y `gold_customers` — y un documento que explica cada decisión que tomaste.
 
@@ -85,7 +89,7 @@ Ejemplo de estructura esperada en el documento:
 
 ```markdown
 ## Bronze — customers_raw
-- Fuente: customers-2000000.csv
+- Fuente: customers-2000000.csv  (disponible en SharePoint: semana_01/customers-2000000)
 - Columnas: index, Customer_id, First_Name, Last_Name, Company, City, Country, Phone_1, Phone_2, Email, Subscription_Date, Website
 - Sin transformaciones. Se guarda tal como llega.
 
@@ -118,13 +122,13 @@ Crea el notebook `bronze_customers_<tu-nombre>.ipynb`.
 # Leer el archivo fuente (ajusta la ruta según donde subiste el archivo)
 df_bronze = spark.read.format("csv") \
     .option("header", "true") \
-    .option("inferSchema", "true") \
-    .load("/FileStore/customers.csv")
+    .option("inferSchema", "false") \  # Bronze: siempre inferSchema=false — preserva el dato exactamente como llega
+    .load("/FileStore/customers-2000000.csv")
 
 # Verificar que llegó completo
 print(f"Registros: {df_bronze.count()}")
 df_bronze.printSchema()
-df_bronze.show(5)
+display(df_bronze)  # En Databricks: display() es preferible a show()
 
 # Guardar como tabla Delta (Bronze)
 df_bronze.write.format("delta") \
@@ -133,6 +137,8 @@ df_bronze.write.format("delta") \
 ```
 
 > **Regla de Bronze:** no filtres nada, no cambies nada. Si el archivo tiene nulos, errores o columnas raras — Bronze los guarda igual. Eso es intencional.
+>
+> **¿Por qué `inferSchema=false` en Bronze?** Con `inferSchema=true`, Spark hace una pasada extra sobre el archivo para adivinar los tipos — en datasets de millones de filas esto es costoso y puede inferir tipos incorrectos (ej: IDs numéricos tratados como enteros). En Bronze queremos el dato crudo tal como llega: todo como `StringType`. Los tipos se aplican en Silver, donde tienes control total.
 
 Commit esperado:
 ```bash
@@ -288,11 +294,31 @@ semana_01/actividades/actividad_04/<tu-nombre>/
 | Criterio | Descripción | Puntaje |
 |----------|-------------|---------|
 | Diagrama completo antes del código | Las tres capas diseñadas con decisiones justificadas | 20% |
-| Bronze correcto | Sin transformaciones, datos raw completos | 15% |
+| Bronze correcto | Sin transformaciones, datos raw completos, `inferSchema=false` | 15% |
 | Silver con limpieza real | Al menos 3 transformaciones aplicadas y justificadas | 25% |
-| Gold con agregación funcional | Responde una pregunta de negocio concreta | 25% |
+| Gold con agregación funcional | Responde una pregunta de negocio concreta | 20% |
+| Dataset subido al Volumen en la ruta correcta | `/default/<tu_nombre>/semana_01/customers-2000000/` | 5% |
 | Reflexión documentada | Sección de reflexión completa en el diagrama | 10% |
 | Commits descriptivos (mínimo 4) | Un commit por entregable | 5% |
+
+---
+
+## Instrucciones de entrega en Databricks Volumes
+
+Carga el archivo `customers-2000000.csv` al Volumen del entorno Databricks en la siguiente ruta antes de hacer el PR:
+
+```
+/Volumes/main/default/<tu_nombre>/semana_01/customers-2000000/
+```
+
+El instructor verificará que el archivo esté en esa ruta para poder ejecutar tu notebook.
+
+---
+
+## Notas sobre la entrega
+
+- **Outputs del notebook:** deja los resultados de `display()` y `.show()` visibles en el `.ipynb`. El instructor los revisará sin ejecutar el notebook.
+- **Capturas de pantalla en `.md`:** puedes incluir imágenes en tu archivo de reflexión con `![descripción](imagen.png)` — útil para mostrar el Catalog, el Spark UI o resultados de Databricks.
 
 ---
 

@@ -24,9 +24,9 @@ Imagina que trabajas en el equipo de Data Engineering de un banco. El equipo de 
 
 ## Dataset
 
-**[data_engineering_files/semana_02_proyecto](https://drive.google.com/drive/folders/1NPcvkwEyU5t9euXay3Uzxo02LqY_Ptb9)**
+**[inetum_data_engineer_bootcamp / semana_02 / financial_transaction_dataset](https://gfi1.sharepoint.com/sites/JUNIORDATAENGINEERSDEVTEAM/Documents%20partages/Forms/AllItems.aspx?id=%2Fsites%2FJUNIORDATAENGINEERSDEVTEAM%2FDocuments%20partages%2FGeneral%2Finetum%5Fdata%5Fengineer%5Fbootcamp&viewid=532715df%2D69df%2D4d0e%2D8785%2Daf7a4ccf2983)**
 
-Los mismos 5 archivos del dataset financiero.
+Los mismos 5 archivos del dataset financiero (mismo dataset que las actividades de esta semana).
 
 ---
 

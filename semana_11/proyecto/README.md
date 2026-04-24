@@ -21,7 +21,13 @@ no solo que el código funcione.
 
 ## Dataset
 
-**Descarga:** [kaggle.com/datasets/olistbr/brazilian-ecommerce](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
+> ⚠️ **Usa la versión del bootcamp en SharePoint — no descargues desde Kaggle.** La copia oficial tiene errores introducidos intencionalmente que forman parte del ejercicio de debugging.
+
+**Descarga desde el sitio de Teams del bootcamp (SharePoint):**
+
+**[inetum_data_engineer_bootcamp / semana_11 / Brazilian E-Commerce](https://gfi1.sharepoint.com/sites/JUNIORDATAENGINEERSDEVTEAM/Documents%20partages/Forms/AllItems.aspx?id=%2Fsites%2FJUNIORDATAENGINEERSDEVTEAM%2FDocuments%20partages%2FGeneral%2Finetum%5Fdata%5Fengineer%5Fbootcamp&viewid=532715df%2D69df%2D4d0e%2D8785%2Daf7a4ccf2983)**
+
+> Navega a: `General / inetum_data_engineer_bootcamp / semana_11 / Brazilian E-Commerce`
 
 Sube los 9 archivos CSV a ADLS Gen2:
 ```

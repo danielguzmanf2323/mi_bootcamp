@@ -23,7 +23,9 @@ La diferencia entre un Data Analyst y un Data Engineer está aquí: no basta con
 
 ## Dataset
 
-**[data_engineering_files/semana_02_actividad_01](https://drive.google.com/drive/folders/1NPcvkwEyU5t9euXay3Uzxo02LqY_Ptb9)**
+**[inetum_data_engineer_bootcamp / semana_02 / financial_transaction_dataset](https://gfi1.sharepoint.com/sites/JUNIORDATAENGINEERSDEVTEAM/Documents%20partages/Forms/AllItems.aspx?id=%2Fsites%2FJUNIORDATAENGINEERSDEVTEAM%2FDocuments%20partages%2FGeneral%2Finetum%5Fdata%5Fengineer%5Fbootcamp&viewid=532715df%2D69df%2D4d0e%2D8785%2Daf7a4ccf2983)**
+
+> Navega dentro del sitio a: `General / inetum_data_engineer_bootcamp / semana_02 / financial_transaction_dataset`
 
 Archivos:
 - `transactions_data.csv` — transacciones financieras
@@ -363,11 +365,25 @@ Incluye en el PR:
 | Criterio | Descripción | Puntaje |
 |----------|-------------|---------|
 | Diseño documentado antes de codificar | Diagrama + descripción de cada tabla | 10% |
-| Bronze: 5 tablas ingestadas como Delta | Sin transformaciones en Bronze | 20% |
-| Silver: limpieza correcta + JOIN completo | Tipos correctos, sin errores de join | 30% |
-| Gold: 4 tablas analíticas de fraude | Con métricas correctas por dimensión | 30% |
+| Bronze: 5 tablas ingestadas como Delta | Sin transformaciones en Bronze, `inferSchema=false` | 20% |
+| Silver: limpieza correcta + JOIN completo | Tipos correctos, sin errores de join | 25% |
+| Gold: 4 tablas analíticas de fraude | Con métricas correctas por dimensión | 25% |
+| Dataset subido al Volumen en la ruta correcta | `/default/<tu_nombre>/semana_02/financial_transaction_dataset/` | 5% |
 | Validación SQL sobre tablas Gold | Al menos 3 consultas de negocio | 5% |
 | Commits descriptivos | Mínimo 3 commits, uno por capa | 5% |
+| Outputs visibles en el notebook | Resultados de `display()` / `show()` presentes en el `.ipynb` | 5% |
+
+---
+
+## Instrucciones de entrega en Databricks Volumes
+
+Carga los archivos del dataset financiero al Volumen del entorno Databricks en la siguiente ruta antes de hacer el PR:
+
+```
+/Volumes/main/default/<tu_nombre>/semana_02/financial_transaction_dataset/
+```
+
+El instructor verificará que los archivos estén en esa ruta para poder ejecutar tu notebook.
 
 ---
 
