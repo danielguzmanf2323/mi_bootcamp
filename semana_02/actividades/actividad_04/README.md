@@ -102,6 +102,8 @@ SILVER → GOLD
 
 from pyspark.sql import functions as F
 
+MI_NOMBRE = "<tu_nombre>"  # ej: "maria" — sin espacios, en minúsculas
+
 # Crear schemas si no existen (solo necesitas hacerlo una vez)
 spark.sql("CREATE SCHEMA IF NOT EXISTS bronze")
 spark.sql("CREATE SCHEMA IF NOT EXISTS silver")
@@ -110,42 +112,42 @@ spark.sql("CREATE SCHEMA IF NOT EXISTS gold")
 # 1. transactions
 df_bronze_tx = spark.read.format("csv") \
     .option("header", "true") \
-    .option("inferSchema", "true") \
+    .option("inferSchema", "false") \
     .load("/FileStore/transactions_data.csv")
 
-df_bronze_tx.write.format("delta").mode("overwrite").saveAsTable("bronze.transactions")
-print(f"bronze.transactions: {df_bronze_tx.count():,} filas | {len(df_bronze_tx.columns)} columnas")
+df_bronze_tx.write.format("delta").mode("overwrite").saveAsTable(f"bronze.transactions_{MI_NOMBRE}")
+print(f"bronze.transactions_{MI_NOMBRE}: {df_bronze_tx.count():,} filas | {len(df_bronze_tx.columns)} columnas")
 
 # 2. users
 df_bronze_users = spark.read.format("csv") \
     .option("header", "true") \
-    .option("inferSchema", "true") \
+    .option("inferSchema", "false") \
     .load("/FileStore/users_data.csv")
 
-df_bronze_users.write.format("delta").mode("overwrite").saveAsTable("bronze.users")
-print(f"bronze.users: {df_bronze_users.count():,} filas")
+df_bronze_users.write.format("delta").mode("overwrite").saveAsTable(f"bronze.users_{MI_NOMBRE}")
+print(f"bronze.users_{MI_NOMBRE}: {df_bronze_users.count():,} filas")
 
 # 3. cards
 df_bronze_cards = spark.read.format("csv") \
     .option("header", "true") \
-    .option("inferSchema", "true") \
+    .option("inferSchema", "false") \
     .load("/FileStore/cards_data.csv")
 
-df_bronze_cards.write.format("delta").mode("overwrite").saveAsTable("bronze.cards")
-print(f"bronze.cards: {df_bronze_cards.count():,} filas")
+df_bronze_cards.write.format("delta").mode("overwrite").saveAsTable(f"bronze.cards_{MI_NOMBRE}")
+print(f"bronze.cards_{MI_NOMBRE}: {df_bronze_cards.count():,} filas")
 
 # 4. mcc_codes (JSON)
 df_bronze_mcc = spark.read.option("multiLine", "true").json("/FileStore/mcc_codes.json")
-df_bronze_mcc.write.format("delta").mode("overwrite").saveAsTable("bronze.mcc_codes")
-print(f"bronze.mcc_codes: {df_bronze_mcc.count():,} filas")
+df_bronze_mcc.write.format("delta").mode("overwrite").saveAsTable(f"bronze.mcc_codes_{MI_NOMBRE}")
+print(f"bronze.mcc_codes_{MI_NOMBRE}: {df_bronze_mcc.count():,} filas")
 
 # 5. fraud_labels (JSON)
 df_bronze_fraud = spark.read.option("multiLine", "true").json("/FileStore/train_fraud_labels.json")
-df_bronze_fraud.write.format("delta").mode("overwrite").saveAsTable("bronze.fraud_labels")
-print(f"bronze.fraud_labels: {df_bronze_fraud.count():,} filas")
+df_bronze_fraud.write.format("delta").mode("overwrite").saveAsTable(f"bronze.fraud_labels_{MI_NOMBRE}")
+print(f"bronze.fraud_labels_{MI_NOMBRE}: {df_bronze_fraud.count():,} filas")
 
 print("\nBronze completo. Tablas disponibles:")
-spark.sql("SHOW TABLES IN bronze").show()
+display(spark.sql("SHOW TABLES IN bronze"))
 ```
 
 Commit esperado:
@@ -211,9 +213,9 @@ df_silver = df_tx_clean \
 dup_count = df_silver.groupBy("transaction_id").count().filter(F.col("count") > 1).count()
 print(f"Transacciones duplicadas tras JOIN: {dup_count}")
 
-# Guardar Silver
-df_silver.write.format("delta").mode("overwrite").saveAsTable("silver.transactions")
-print(f"silver.transactions: {df_silver.count():,} filas | {len(df_silver.columns)} columnas")
+# Guardar Silver — sufija tu nombre (MI_NOMBRE definido en el notebook Bronze)
+df_silver.write.format("delta").mode("overwrite").saveAsTable(f"silver.transactions_{MI_NOMBRE}")
+print(f"silver.transactions_{MI_NOMBRE}: {df_silver.count():,} filas | {len(df_silver.columns)} columnas")
 ```
 
 > **Obligatorio:** documenta en markdown qué columnas tenía Bronze y cuáles quedan en Silver. ¿Cuáles eliminaste? ¿Por qué?
@@ -231,9 +233,10 @@ git commit -m "feat: silver layer - clean types, joins, enriched transactions ta
 
 ```python
 # GOLD — Tablas analíticas para consumo
-# Lee SIEMPRE desde silver.transactions
+# Lee SIEMPRE desde tu tabla Silver (sufijada con tu nombre)
 
-df_silver = spark.table("silver.transactions")
+MI_NOMBRE = "<tu_nombre>"  # ej: "maria"
+df_silver = spark.table(f"silver.transactions_{MI_NOMBRE}")
 
 # ------------------------------------------------
 # GOLD 1: Fraude por categoría de comercio
@@ -249,7 +252,7 @@ df_gold_categoria = df_silver \
     ) \
     .orderBy(F.col("tasa_fraude_pct").desc())
 
-df_gold_categoria.write.format("delta").mode("overwrite").saveAsTable("gold.fraude_por_categoria")
+df_gold_categoria.write.format("delta").mode("overwrite").saveAsTable(f"gold.fraude_por_categoria_{MI_NOMBRE}")
 
 # ------------------------------------------------
 # GOLD 2: Fraude por tipo de tarjeta
@@ -264,7 +267,7 @@ df_gold_tarjeta = df_silver \
     ) \
     .orderBy(F.col("tasa_fraude_pct").desc())
 
-df_gold_tarjeta.write.format("delta").mode("overwrite").saveAsTable("gold.fraude_por_tarjeta")
+df_gold_tarjeta.write.format("delta").mode("overwrite").saveAsTable(f"gold.fraude_por_tarjeta_{MI_NOMBRE}")
 
 # ------------------------------------------------
 # GOLD 3: Fraude temporal — por hora, día y mes
@@ -278,7 +281,7 @@ df_gold_temporal = df_silver \
     ) \
     .orderBy("anio", "mes", "dia_semana", "hora")
 
-df_gold_temporal.write.format("delta").mode("overwrite").saveAsTable("gold.fraude_temporal")
+df_gold_temporal.write.format("delta").mode("overwrite").saveAsTable(f"gold.fraude_temporal_{MI_NOMBRE}")
 
 # ------------------------------------------------
 # GOLD 4: Usuarios de alto riesgo
@@ -295,10 +298,10 @@ df_gold_usuarios = df_silver \
     .filter(F.col("total_transacciones") >= 5) \  # solo usuarios con historial suficiente
     .orderBy(F.col("tasa_fraude_pct").desc())
 
-df_gold_usuarios.write.format("delta").mode("overwrite").saveAsTable("gold.usuarios_riesgo")
+df_gold_usuarios.write.format("delta").mode("overwrite").saveAsTable(f"gold.usuarios_riesgo_{MI_NOMBRE}")
 
 print("Tablas Gold disponibles:")
-spark.sql("SHOW TABLES IN gold").show()
+display(spark.sql("SHOW TABLES IN gold"))
 ```
 
 ---

@@ -5,6 +5,22 @@
 
 ---
 
+> **Convención obligatoria — entorno compartido**
+>
+> Todos los estudiantes del bootcamp trabajan sobre el mismo catálogo en Databricks.
+> Para no sobrescribir las tablas de otras personas, **sufija siempre tu nombre en cada tabla que crees**:
+>
+> ```
+> bronze_customers_<tu_nombre>
+> silver_customers_<tu_nombre>
+> gold_customers_by_country_<tu_nombre>
+> ```
+>
+> Esto aplica a toda tabla Delta que quede persistida. Si no lo haces, el `mode("overwrite")`
+> de otro estudiante borrará tu trabajo — o el tuyo borrará el de ellos.
+
+---
+
 ## Contenido
 
 | Carpeta | Descripción |

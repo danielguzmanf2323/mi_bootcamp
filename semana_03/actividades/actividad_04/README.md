@@ -263,14 +263,15 @@ QUALIFY RANK() OVER (PARTITION BY card_type ORDER BY amount DESC) <= 3;
 ### Set 5: Crear tabla desde query
 
 ```python
-# PySpark
+# PySpark — recuerda sufijarte tu nombre en la tabla (convención del entorno compartido)
+MI_NOMBRE = "<tu_nombre>"
 resumen = df.groupBy("card_type").agg(F.sum("is_fraud").alias("total_fraudes"))
-resumen.write.format("delta").mode("overwrite").saveAsTable("gold.resumen_por_tarjeta")
+resumen.write.format("delta").mode("overwrite").saveAsTable(f"gold.resumen_por_tarjeta_{MI_NOMBRE}")
 ```
 
 ```sql
--- SQL
-CREATE OR REPLACE TABLE gold.resumen_por_tarjeta AS
+-- SQL — sufija tu nombre para no pisar tablas de otros estudiantes
+CREATE OR REPLACE TABLE gold.resumen_por_tarjeta_<tu_nombre> AS
 SELECT card_type, SUM(is_fraud) AS total_fraudes
 FROM silver.transactions
 GROUP BY card_type;

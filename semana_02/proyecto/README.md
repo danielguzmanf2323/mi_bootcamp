@@ -58,17 +58,17 @@ Reutiliza y mejora lo que construiste en la Actividad 04. Requisitos adicionales
 ### Bronze
 - Los 5 archivos ingestados como tablas Delta sin transformaciones.
 - **Crear los schemas al inicio del notebook:** `spark.sql("CREATE SCHEMA IF NOT EXISTS bronze")` (y lo mismo para `silver` y `gold`).
-- Guarda cada tabla con nombre calificado: `saveAsTable("bronze.transactions")`, `saveAsTable("bronze.users")`, etc.
+- Define `MI_NOMBRE = "<tu_nombre>"` al inicio del notebook y úsalo en cada tabla: `saveAsTable(f"bronze.transactions_{MI_NOMBRE}")`, `saveAsTable(f"bronze.users_{MI_NOMBRE}")`, etc.
 - Agrega una columna `_ingested_at` con el timestamp de ingesta usando `F.current_timestamp()`.
 - Documenta el conteo de filas de cada tabla.
 
 ### Silver
-- Reads desde Bronze exclusivamente (`spark.table("bronze.transactions")`, etc.).
+- Reads desde Bronze exclusivamente (`spark.table(f"bronze.transactions_{MI_NOMBRE}")`, etc.).
 - Limpieza completa: tipos, nombres estandarizados, nulls documentados.
-- JOIN de las 5 tablas → `silver.transactions` con todas las dimensiones.
+- JOIN de las 5 tablas → `silver.transactions_{MI_NOMBRE}` con todas las dimensiones.
 - Columnas derivadas de fecha: `hora`, `dia_semana`, `es_fin_de_semana`, `mes`, `anio`.
 - Columna `amount_abs` para manejar montos negativos.
-- Guarda con `saveAsTable("silver.transactions")`.
+- Guarda con `saveAsTable(f"silver.transactions_{MI_NOMBRE}")`.
 - Documenta: ¿cuántos registros se pierden en cada JOIN? ¿Por qué?
 
 Commit esperado:
@@ -97,7 +97,7 @@ df_resumen = df_silver.agg(
         F.sum(F.when(F.col("is_fraud") == 1, F.col("amount_abs"))) / F.sum("amount_abs") * 100, 4
     ).alias("pct_monto_fraudulento")
 )
-df_resumen.write.format("delta").mode("overwrite").saveAsTable("gold.resumen_fraude")
+df_resumen.write.format("delta").mode("overwrite").saveAsTable(f"gold.resumen_fraude_{MI_NOMBRE}")
 ```
 
 ---
@@ -143,7 +143,7 @@ df_gold_monto = df_silver_buckets.groupBy("rango_monto") \
         F.avg("amount_abs").alias("monto_promedio")
     )
 
-df_gold_monto.write.format("delta").mode("overwrite").saveAsTable("gold.fraude_por_monto")
+df_gold_monto.write.format("delta").mode("overwrite").saveAsTable(f"gold.fraude_por_monto_{MI_NOMBRE}")
 ```
 
 ---
