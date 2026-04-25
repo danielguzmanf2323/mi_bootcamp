@@ -186,3 +186,73 @@ Clientes agregados por país con ranking
 - Gold responde una pregunta de negocio concreta.
 - Cada capa lee desde la capa anterior.
 - No se modifica Bronze después de haber sido creado.
+
+
+---
+
+## Reflexión
+
+### ¿Qué cambió entre Bronze y Silver?
+
+Entre Bronze y Silver se aplicaron transformaciones de limpieza y estandarización.
+
+En Bronze se conservaron los datos crudos tal como llegaron desde el archivo `customers-2000000.csv`, sin modificar nombres de columnas, sin eliminar nulos y sin eliminar duplicados.
+
+En Silver se realizaron las siguientes acciones:
+
+- Se renombraron las columnas a formato `snake_case`.
+- Se eliminaron registros sin `customer_id`, porque esta columna identifica al cliente.
+- Se eliminaron registros sin `country`, porque la tabla Gold agrupa la información por país.
+- Se reemplazaron ciudades nulas o vacías por `unknown`.
+- Se aplicó limpieza de espacios en columnas de texto.
+- Se estandarizó `country` en mayúsculas.
+- Se convirtió `subscription_date` a tipo fecha.
+- Se eliminaron duplicados por `customer_id`.
+- Se descartó la columna técnica `index`.
+
+Registros en Bronze: 2000000 
+Registros en Silver: 2000000  
+Registros eliminados entre Bronze y Silver: 0  
+
+### ¿Qué pregunta de negocio responde tu tabla Gold?
+
+La tabla Gold responde la pregunta:
+
+¿Cuáles son los países con mayor cantidad de clientes registrados?
+
+Para responderla, se agruparon los clientes por país, se calculó el total de clientes por cada país y se generó un ranking de mayor a menor cantidad de clientes.
+
+La tabla creada fue:
+
+`gold_customers_by_country`
+
+con las columnas:
+
+- `country`
+- `total_customers`
+- `ranking`
+
+### ¿Qué pasaría si alguien modifica Bronze directamente?
+
+Si alguien modifica Bronze directamente, se perdería la trazabilidad del dato original.
+
+Bronze debe conservarse como la fuente cruda e histórica de la información. Si se modifica, ya no sería posible saber cómo llegó realmente el dato desde la fuente. Además, cualquier error en Bronze afectaría a Silver y Gold, porque las capas posteriores dependen de ella.
+
+Por eso Bronze no se debe limpiar, filtrar ni editar directamente.
+
+### ¿Qué agregarías a Silver o Gold si tuvieras más tiempo?
+
+En Silver agregaría más validaciones de calidad de datos, por ejemplo:
+
+- Validar formato de correos electrónicos.
+- Validar fechas de suscripción.
+- Detectar países mal escritos o con variaciones.
+- Validar teléfonos.
+- Crear reglas para empresas o nombres vacíos.
+
+En Gold agregaría nuevas tablas agregadas, por ejemplo:
+
+- Clientes por país y ciudad.
+- Clientes por fecha de suscripción.
+- Top 10 empresas con más clientes.
+- Top nombres más frecuentes.
