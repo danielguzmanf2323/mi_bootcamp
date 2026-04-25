@@ -5,6 +5,43 @@
 
 ---
 
+> **Convención obligatoria — entorno compartido**
+>
+> Todos los estudiantes del bootcamp trabajan sobre el mismo catálogo `default` en Databricks Enterprise.
+> Para no sobrescribir las tablas de otras personas, **sufija siempre tu nombre en cada tabla que crees**:
+>
+> ```
+> default.bronze.transactions_<tu_nombre>
+> default.silver.transactions_<tu_nombre>
+> default.gold.fraude_por_categoria_<tu_nombre>
+> ```
+>
+> Esto aplica a toda tabla Delta persistida en el catálogo. Si usas `mode("overwrite")` sin el sufijo,
+> sobrescribirás el trabajo de otro estudiante — o el de ellos borrará el tuyo.
+
+---
+
+## Material obligatorio — Databricks Academy
+
+Esta semana arrancas con Databricks. Antes de cerrar la semana debes completar los **12 videos**
+del path **"Data Engineering"** en Databricks Free Edition (Home → Learn → Data Engineering).
+
+| Módulo | Videos | Tiempo |
+|--------|--------|--------|
+| Data Engineering Basics | 2 videos | ~10 min |
+| Ingestion and Transformation | 5 videos | ~41 min |
+| Pipelines | 3 videos | ~23 min |
+| Orchestration | 2 videos | ~14 min |
+
+**Tiempo total: ~88 minutos**
+
+Los videos de Pipelines y Orchestration los usarás en semanas 04 y 05 — por ahora velos una vez para tener contexto.
+
+**Entrega:** copia, completa y sube el archivo de evidencia a tu PR de la semana:  
+→ [documentos/databricks_academy_data_engineering.md](documentos/databricks_academy_data_engineering.md)
+
+---
+
 ## Contenido
 
 | Carpeta | Descripción |

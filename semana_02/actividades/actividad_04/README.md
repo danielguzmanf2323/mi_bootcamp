@@ -23,7 +23,9 @@ La diferencia entre un Data Analyst y un Data Engineer está aquí: no basta con
 
 ## Dataset
 
-**[data_engineering_files/semana_02_actividad_01](https://drive.google.com/drive/folders/1NPcvkwEyU5t9euXay3Uzxo02LqY_Ptb9)**
+**[inetum_data_engineer_bootcamp / semana_02 / financial_transaction_dataset](https://gfi1.sharepoint.com/sites/JUNIORDATAENGINEERSDEVTEAM/Documents%20partages/Forms/AllItems.aspx?id=%2Fsites%2FJUNIORDATAENGINEERSDEVTEAM%2FDocuments%20partages%2FGeneral%2Finetum%5Fdata%5Fengineer%5Fbootcamp&viewid=532715df%2D69df%2D4d0e%2D8785%2Daf7a4ccf2983)**
+
+> Navega dentro del sitio a: `General / inetum_data_engineer_bootcamp / semana_02 / financial_transaction_dataset`
 
 Archivos:
 - `transactions_data.csv` — transacciones financieras
@@ -100,6 +102,8 @@ SILVER → GOLD
 
 from pyspark.sql import functions as F
 
+MI_NOMBRE = "<tu_nombre>"  # ej: "maria" — sin espacios, en minúsculas
+
 # Crear schemas si no existen (solo necesitas hacerlo una vez)
 spark.sql("CREATE SCHEMA IF NOT EXISTS bronze")
 spark.sql("CREATE SCHEMA IF NOT EXISTS silver")
@@ -108,42 +112,42 @@ spark.sql("CREATE SCHEMA IF NOT EXISTS gold")
 # 1. transactions
 df_bronze_tx = spark.read.format("csv") \
     .option("header", "true") \
-    .option("inferSchema", "true") \
+    .option("inferSchema", "false") \
     .load("/FileStore/transactions_data.csv")
 
-df_bronze_tx.write.format("delta").mode("overwrite").saveAsTable("bronze.transactions")
-print(f"bronze.transactions: {df_bronze_tx.count():,} filas | {len(df_bronze_tx.columns)} columnas")
+df_bronze_tx.write.format("delta").mode("overwrite").saveAsTable(f"bronze.transactions_{MI_NOMBRE}")
+print(f"bronze.transactions_{MI_NOMBRE}: {df_bronze_tx.count():,} filas | {len(df_bronze_tx.columns)} columnas")
 
 # 2. users
 df_bronze_users = spark.read.format("csv") \
     .option("header", "true") \
-    .option("inferSchema", "true") \
+    .option("inferSchema", "false") \
     .load("/FileStore/users_data.csv")
 
-df_bronze_users.write.format("delta").mode("overwrite").saveAsTable("bronze.users")
-print(f"bronze.users: {df_bronze_users.count():,} filas")
+df_bronze_users.write.format("delta").mode("overwrite").saveAsTable(f"bronze.users_{MI_NOMBRE}")
+print(f"bronze.users_{MI_NOMBRE}: {df_bronze_users.count():,} filas")
 
 # 3. cards
 df_bronze_cards = spark.read.format("csv") \
     .option("header", "true") \
-    .option("inferSchema", "true") \
+    .option("inferSchema", "false") \
     .load("/FileStore/cards_data.csv")
 
-df_bronze_cards.write.format("delta").mode("overwrite").saveAsTable("bronze.cards")
-print(f"bronze.cards: {df_bronze_cards.count():,} filas")
+df_bronze_cards.write.format("delta").mode("overwrite").saveAsTable(f"bronze.cards_{MI_NOMBRE}")
+print(f"bronze.cards_{MI_NOMBRE}: {df_bronze_cards.count():,} filas")
 
 # 4. mcc_codes (JSON)
 df_bronze_mcc = spark.read.option("multiLine", "true").json("/FileStore/mcc_codes.json")
-df_bronze_mcc.write.format("delta").mode("overwrite").saveAsTable("bronze.mcc_codes")
-print(f"bronze.mcc_codes: {df_bronze_mcc.count():,} filas")
+df_bronze_mcc.write.format("delta").mode("overwrite").saveAsTable(f"bronze.mcc_codes_{MI_NOMBRE}")
+print(f"bronze.mcc_codes_{MI_NOMBRE}: {df_bronze_mcc.count():,} filas")
 
 # 5. fraud_labels (JSON)
 df_bronze_fraud = spark.read.option("multiLine", "true").json("/FileStore/train_fraud_labels.json")
-df_bronze_fraud.write.format("delta").mode("overwrite").saveAsTable("bronze.fraud_labels")
-print(f"bronze.fraud_labels: {df_bronze_fraud.count():,} filas")
+df_bronze_fraud.write.format("delta").mode("overwrite").saveAsTable(f"bronze.fraud_labels_{MI_NOMBRE}")
+print(f"bronze.fraud_labels_{MI_NOMBRE}: {df_bronze_fraud.count():,} filas")
 
 print("\nBronze completo. Tablas disponibles:")
-spark.sql("SHOW TABLES IN bronze").show()
+display(spark.sql("SHOW TABLES IN bronze"))
 ```
 
 Commit esperado:
@@ -209,9 +213,9 @@ df_silver = df_tx_clean \
 dup_count = df_silver.groupBy("transaction_id").count().filter(F.col("count") > 1).count()
 print(f"Transacciones duplicadas tras JOIN: {dup_count}")
 
-# Guardar Silver
-df_silver.write.format("delta").mode("overwrite").saveAsTable("silver.transactions")
-print(f"silver.transactions: {df_silver.count():,} filas | {len(df_silver.columns)} columnas")
+# Guardar Silver — sufija tu nombre (MI_NOMBRE definido en el notebook Bronze)
+df_silver.write.format("delta").mode("overwrite").saveAsTable(f"silver.transactions_{MI_NOMBRE}")
+print(f"silver.transactions_{MI_NOMBRE}: {df_silver.count():,} filas | {len(df_silver.columns)} columnas")
 ```
 
 > **Obligatorio:** documenta en markdown qué columnas tenía Bronze y cuáles quedan en Silver. ¿Cuáles eliminaste? ¿Por qué?
@@ -229,9 +233,10 @@ git commit -m "feat: silver layer - clean types, joins, enriched transactions ta
 
 ```python
 # GOLD — Tablas analíticas para consumo
-# Lee SIEMPRE desde silver.transactions
+# Lee SIEMPRE desde tu tabla Silver (sufijada con tu nombre)
 
-df_silver = spark.table("silver.transactions")
+MI_NOMBRE = "<tu_nombre>"  # ej: "maria"
+df_silver = spark.table(f"silver.transactions_{MI_NOMBRE}")
 
 # ------------------------------------------------
 # GOLD 1: Fraude por categoría de comercio
@@ -247,7 +252,7 @@ df_gold_categoria = df_silver \
     ) \
     .orderBy(F.col("tasa_fraude_pct").desc())
 
-df_gold_categoria.write.format("delta").mode("overwrite").saveAsTable("gold.fraude_por_categoria")
+df_gold_categoria.write.format("delta").mode("overwrite").saveAsTable(f"gold.fraude_por_categoria_{MI_NOMBRE}")
 
 # ------------------------------------------------
 # GOLD 2: Fraude por tipo de tarjeta
@@ -262,7 +267,7 @@ df_gold_tarjeta = df_silver \
     ) \
     .orderBy(F.col("tasa_fraude_pct").desc())
 
-df_gold_tarjeta.write.format("delta").mode("overwrite").saveAsTable("gold.fraude_por_tarjeta")
+df_gold_tarjeta.write.format("delta").mode("overwrite").saveAsTable(f"gold.fraude_por_tarjeta_{MI_NOMBRE}")
 
 # ------------------------------------------------
 # GOLD 3: Fraude temporal — por hora, día y mes
@@ -276,7 +281,7 @@ df_gold_temporal = df_silver \
     ) \
     .orderBy("anio", "mes", "dia_semana", "hora")
 
-df_gold_temporal.write.format("delta").mode("overwrite").saveAsTable("gold.fraude_temporal")
+df_gold_temporal.write.format("delta").mode("overwrite").saveAsTable(f"gold.fraude_temporal_{MI_NOMBRE}")
 
 # ------------------------------------------------
 # GOLD 4: Usuarios de alto riesgo
@@ -293,10 +298,10 @@ df_gold_usuarios = df_silver \
     .filter(F.col("total_transacciones") >= 5) \  # solo usuarios con historial suficiente
     .orderBy(F.col("tasa_fraude_pct").desc())
 
-df_gold_usuarios.write.format("delta").mode("overwrite").saveAsTable("gold.usuarios_riesgo")
+df_gold_usuarios.write.format("delta").mode("overwrite").saveAsTable(f"gold.usuarios_riesgo_{MI_NOMBRE}")
 
 print("Tablas Gold disponibles:")
-spark.sql("SHOW TABLES IN gold").show()
+display(spark.sql("SHOW TABLES IN gold"))
 ```
 
 ---
@@ -363,11 +368,25 @@ Incluye en el PR:
 | Criterio | Descripción | Puntaje |
 |----------|-------------|---------|
 | Diseño documentado antes de codificar | Diagrama + descripción de cada tabla | 10% |
-| Bronze: 5 tablas ingestadas como Delta | Sin transformaciones en Bronze | 20% |
-| Silver: limpieza correcta + JOIN completo | Tipos correctos, sin errores de join | 30% |
-| Gold: 4 tablas analíticas de fraude | Con métricas correctas por dimensión | 30% |
+| Bronze: 5 tablas ingestadas como Delta | Sin transformaciones en Bronze, `inferSchema=false` | 20% |
+| Silver: limpieza correcta + JOIN completo | Tipos correctos, sin errores de join | 25% |
+| Gold: 4 tablas analíticas de fraude | Con métricas correctas por dimensión | 25% |
+| Dataset subido al Volumen en la ruta correcta | `/default/<tu_nombre>/semana_02/financial_transaction_dataset/` | 5% |
 | Validación SQL sobre tablas Gold | Al menos 3 consultas de negocio | 5% |
 | Commits descriptivos | Mínimo 3 commits, uno por capa | 5% |
+| Outputs visibles en el notebook | Resultados de `display()` / `show()` presentes en el `.ipynb` | 5% |
+
+---
+
+## Instrucciones de entrega en Databricks Volumes
+
+Carga los archivos del dataset financiero al Volumen del entorno Databricks en la siguiente ruta antes de hacer el PR:
+
+```
+/Volumes/main/default/<tu_nombre>/semana_02/financial_transaction_dataset/
+```
+
+El instructor verificará que los archivos estén en esa ruta para poder ejecutar tu notebook.
 
 ---
 

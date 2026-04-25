@@ -6,6 +6,39 @@
 
 ---
 
+> **Convención obligatoria — entorno compartido**
+>
+> Todos los estudiantes del bootcamp trabajan sobre el mismo catálogo `default` en Databricks Enterprise.
+> Para no sobrescribir las tablas de otras personas, **sufija siempre tu nombre en cada tabla que crees**:
+>
+> ```
+> default.bronze.transactions_<tu_nombre>
+> default.silver.users_scd2_<tu_nombre>
+> ```
+>
+> En pipelines DLT, el nombre del pipeline y el target schema deben incluir tu nombre.
+> Si usas `mode("overwrite")` o `apply_changes` sin el sufijo, sobrescribirás el trabajo de otro estudiante.
+
+---
+
+## Material obligatorio — Databricks Academy
+
+Esta semana debes completar los **3 videos** del path **"Build a data pipeline"**
+en Databricks Free Edition (Home → Learn → Build a data pipeline).
+
+| # | Video | Tipo | Tiempo |
+|---|-------|------|--------|
+| 1 | What is a pipeline? | Video | 4 min |
+| 2 | Explore a sample pipeline | Video + demo | 7 min |
+| 3 | Build your own pipeline | Video + tutorial | 5 min |
+
+**Tiempo total: ~16 minutos**
+
+**Entrega:** copia, completa y sube el archivo de evidencia a tu PR de la semana:  
+→ [documentos/databricks_academy_build_pipeline.md](documentos/databricks_academy_build_pipeline.md)
+
+---
+
 ## Contenido
 
 | Carpeta | Descripción |

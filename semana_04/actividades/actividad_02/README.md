@@ -239,13 +239,17 @@ Verificar que la tabla quedó bien:
 ```python
 df_verificado = spark.table(full_table)
 print(f"Filas en {full_table}: {df_verificado.count():,}")
-df_verificado.show(5, truncate=True)
+
+# En Databricks: display() es preferible a show() — tabla interactiva, paginado, exportable
+display(df_verificado)
+# Alternativa portable: df_verificado.show(5, truncate=True)
 ```
 
 Ver el historial de cambios Delta:
 
 ```python
-spark.sql(f"DESCRIBE HISTORY {full_table}").show(5, truncate=False)
+display(spark.sql(f"DESCRIBE HISTORY {full_table}"))
+# Alternativa portable: spark.sql(f"DESCRIBE HISTORY {full_table}").show(5, truncate=False)
 ```
 
 Documentar qué campos aparecen en `DESCRIBE HISTORY`. ¿Cuántas versiones hay después de correr el notebook dos veces con `overwrite`?
@@ -278,16 +282,37 @@ Ejecuta el notebook **manualmente** desde la interfaz de Databricks, cambiando l
 | `/Volumes/main/landing/raw/transactions_data.csv` | csv | bronze | transactions | overwrite |
 | `/Volumes/main/landing/raw/users_data.csv` | csv | bronze | users | overwrite |
 | `/Volumes/main/landing/raw/cards_data.csv` | csv | bronze | cards | overwrite |
-| `/Volumes/main/landing/raw/mcc_codes.json` | json | bronze | mcc_codes | overwrite |
+| `/Volumes/main/landing/raw/mcc_codes.json` | json | bronze | mcc_codes_raw | overwrite |
 | `/Volumes/main/landing/raw/train_fraud_labels.json` | json | bronze | fraud_labels | overwrite |
+
+> **Tarea adicional obligatoria — Pivotear `mcc_codes`:**
+>
+> El archivo `mcc_codes.json` tiene una estructura de objeto plano (clave = código MCC, valor = descripción de la categoría). Cuando Spark lo lee, el resultado **no es una tabla usable** directamente — las columnas son los propios códigos MCC, lo que hace imposible hacer JOINs con la tabla de transacciones.
+>
+> Tu tarea es transformar esa tabla cruda en una tabla con esta estructura:
+>
+> | mcc_code | description |
+> |----------|-------------|
+> | 0742     | Veterinary Services |
+> | 0763     | Agricultural Supplies |
+> | ...      | ... |
+>
+> **No se te da el código** — investiga cómo transformar un DataFrame con columnas dinámicas en filas. Pistas: busca funciones de Spark que trabajen con schemas dinámicos, `stack()`, o cómo transponer/despivotar un DataFrame en PySpark.
+>
+> Guarda el resultado como tabla `bronze.mcc_codes` (sin el sufijo `_raw`). Este será el formato que se usará en actividades posteriores para hacer JOIN con las transacciones.
 
 Para cada ejecución, guarda en tu notebook de pruebas:
 
 ```python
 # Verificación post-ingesta
-tablas_bronze = spark.sql("SHOW TABLES IN bronze").toPandas()
-print(tablas_bronze)
+# En Databricks usa display() para ver resultados en tabla interactiva
+display(spark.sql("SHOW TABLES IN bronze"))
+
+# Alternativa portable (cualquier entorno Spark):
+# spark.sql("SHOW TABLES IN bronze").show(truncate=False)
 ```
+
+> **Nota:** `toPandas()` convierte el resultado a un DataFrame de pandas — esto trae todos los datos al driver y rompe el modelo distribuido. Desde semana 01 pandas quedó fuera del stack. En Databricks usa `display()` para una vista interactiva; si el notebook puede ejecutarse fuera de Databricks usa `show()`. Nunca uses `toPandas()` en pipelines de producción.
 
 ---
 
@@ -321,10 +346,23 @@ Antes de enviar este notebook a producción, necesitas entender qué cluster est
 
 ```python
 # Ver el tipo de cluster donde corre este notebook
-print(spark.conf.get("spark.databricks.clusterUsageTags.clusterNodeType", "no disponible"))
-print(f"Cores disponibles: {spark.sparkContext.defaultParallelism}")
+# ⚠️  ADVERTENCIA: spark.databricks.clusterUsageTags.clusterNodeType NO está disponible
+#     en Serverless Compute — lanzará un error si lo intentas en ese tipo de cluster.
+#     Usa la alternativa de abajo si no estás seguro del tipo de compute:
+try:
+    node_type = spark.conf.get("spark.databricks.clusterUsageTags.clusterNodeType")
+    print(f"Tipo de nodo: {node_type}")
+except Exception:
+    print("Tipo de nodo: no disponible (probablemente Serverless Compute)")
+
 print(f"Versión Spark:    {spark.version}")
+print(f"Particiones SQL:  {spark.conf.get('spark.sql.shuffle.partitions')}")
+
+# spark.sparkContext.defaultParallelism también falla en Serverless:
+# En Serverless, el JVM del driver no es accesible directamente.
 ```
+
+> **Serverless vs cluster dedicado:** si estás en Serverless Compute, `spark.databricks.clusterUsageTags.clusterNodeType` y `spark.sparkContext.*` lanzarán errores porque el driver JVM no es accesible. Usa `spark.version` y `spark.conf.get(...)` como alternativas seguras en cualquier tipo de compute.
 
 ### All-Purpose vs Job Cluster
 
@@ -381,12 +419,38 @@ PR hacia `develop`:
 | Criterio | Descripción | Puntaje |
 |----------|-------------|---------|
 | Encabezado de documentación | Parámetros, retorno y propósito documentados | 10% |
-| Función `leer_fuente()` implementada | Soporta csv, json, parquet, delta con sus opciones | 25% |
-| Metadatos de auditoría | Columnas `_ingested_at`, `_source_path`, `_source_format` | 20% |
+| Función `leer_fuente()` implementada | Soporta csv, json, parquet, delta con sus opciones | 20% |
+| Metadatos de auditoría | Columnas `_ingested_at`, `_source_path`, `_source_format` | 15% |
 | Schema creado con `IF NOT EXISTS` | Sin errores si corre dos veces | 10% |
-| `dbutils.notebook.exit()` con mensaje informativo | Incluye tabla, filas y modo | 15% |
-| Las 5 fuentes procesadas exitosamente | Tablas verificadas con `.show()` | 15% |
+| `dbutils.notebook.exit()` con mensaje informativo | Incluye tabla, filas y modo | 10% |
+| Las 5 fuentes procesadas exitosamente | Tablas verificadas con `display()` o `.show()` | 15% |
+| Pivot de `mcc_codes` implementado | Tabla `bronze.mcc_codes` con columnas `mcc_code` y `description` | 10% |
+| Dataset subido al Volumen en la ruta correcta | `/default/<tu_nombre>/semana_04/<nombre_dataset>/` | 5% |
 | Reflexión respondida | Reflexión con respuestas técnicas | 5% |
+
+---
+
+## Instrucciones de entrega en Databricks Volumes
+
+Antes de hacer el PR, carga los archivos de datos que usaste al Volumen del entorno Databricks en la siguiente ruta:
+
+```
+/Volumes/main/default/<tu_nombre>/semana_04/<nombre_dataset>/
+```
+
+Ejemplo:
+```
+/Volumes/main/default/maria/semana_04/financial_transaction_dataset/
+```
+
+Esto forma parte de la calificación. El instructor verificará que los archivos estén accesibles desde esa ruta antes de correr tu notebook.
+
+---
+
+## Notas sobre la entrega en `.ipynb`
+
+- **¿Debo dejar los resultados de `display()` y `show()` en el notebook?** Sí. Los outputs de las celdas (tablas, conteos, schemas) deben quedar visibles en el `.ipynb` que subes al repositorio. El instructor los revisa sin necesidad de ejecutar el notebook.
+- **¿Puedo usar imágenes en archivos `.md`?** Sí. Puedes tomar capturas de pantalla de Databricks (por ejemplo, del Spark UI o del Catalog) y adjuntarlas en tu archivo `.md` de reflexión. Usa la sintaxis estándar de Markdown: `![descripción](ruta_imagen.png)`.
 
 ---
 

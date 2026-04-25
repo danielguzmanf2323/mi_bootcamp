@@ -7,6 +7,22 @@
 
 ---
 
+> **Convención obligatoria — entorno compartido**
+>
+> Todos los estudiantes del proyecto final trabajan sobre el mismo catálogo `default` en Databricks Enterprise.
+> Para no sobrescribir las tablas de otras personas, **sufija siempre tu nombre en cada tabla que crees**:
+>
+> ```
+> default.bronze.olist_orders_<tu_nombre>
+> default.silver.olist_orders_<tu_nombre>
+> default.gold.ventas_por_categoria_<tu_nombre>
+> ```
+>
+> Esto aplica a las 9 tablas Bronze, todas las tablas Silver y todas las tablas Gold del proyecto.
+> Si usas `mode("overwrite")` sin el sufijo, sobrescribirás el trabajo de otro estudiante.
+
+---
+
 ## Contexto del proyecto final
 
 El proyecto final integra todo el stack del bootcamp en un pipeline real end-to-end:
@@ -35,9 +51,16 @@ las métricas de la capa Gold y el report de Fabric son decisiones propias.
 
 ## Dataset: Olist Brazilian E-Commerce
 
-**Fuente:** [kaggle.com/datasets/olistbr/brazilian-ecommerce](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)  
 **Tamaño:** ~130 MB comprimido, ~450 MB descomprimido  
 **Formato:** 9 archivos CSV
+
+> ⚠️ **Nota:** la versión del dataset que se usa en el bootcamp es una copia con errores introducidos intencionalmente para que los debuguees durante el proyecto. No descargues el dataset directamente de Kaggle — usa la versión oficial del bootcamp en SharePoint.
+
+**Descarga desde el sitio de Teams del bootcamp (SharePoint):**
+
+**[inetum_data_engineer_bootcamp / semana_11 / Brazilian E-Commerce](https://gfi1.sharepoint.com/sites/JUNIORDATAENGINEERSDEVTEAM/Documents%20partages/Forms/AllItems.aspx?id=%2Fsites%2FJUNIORDATAENGINEERSDEVTEAM%2FDocuments%20partages%2FGeneral%2Finetum%5Fdata%5Fengineer%5Fbootcamp&viewid=532715df%2D69df%2D4d0e%2D8785%2Daf7a4ccf2983)**
+
+> Navega dentro del sitio a: `General / inetum_data_engineer_bootcamp / semana_11 / Brazilian E-Commerce`
 
 | Archivo | Descripción | Filas aprox. |
 |---------|-------------|-------------|
@@ -51,13 +74,7 @@ las métricas de la capa Gold y el report de Fabric son decisiones propias.
 | `olist_geolocation_dataset.csv` | Coordenadas por código postal | 1.000.163 |
 | `product_category_name_translation.csv` | Categorías PT → EN | 71 |
 
-**Descarga:** desde Kaggle con la Kaggle API:
-```bash
-kaggle datasets download -d olistbr/brazilian-ecommerce
-unzip brazilian-ecommerce.zip -d olist/
-```
-
-O directamente desde la UI de Kaggle. Subir los CSV a:
+Una vez descargado, sube los CSV a:
 ```
 ADLS Gen2: landing/raw/olist/
 ```

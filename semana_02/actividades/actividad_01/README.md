@@ -18,9 +18,13 @@ El dataset de esta semana es real: transacciones financieras de una institución
 
 ## Dataset
 
-Descarga los archivos desde Google Drive:
+Descarga los archivos desde el sitio de Teams del bootcamp (SharePoint):
 
-**[data_engineering_files/semana_02_actividad_01](https://drive.google.com/drive/folders/1NPcvkwEyU5t9euXay3Uzxo02LqY_Ptb9)**
+**[inetum_data_engineer_bootcamp / semana_02 / financial_transaction_dataset](https://gfi1.sharepoint.com/sites/JUNIORDATAENGINEERSDEVTEAM/Documents%20partages/Forms/AllItems.aspx?id=%2Fsites%2FJUNIORDATAENGINEERSDEVTEAM%2FDocuments%20partages%2FGeneral%2Finetum%5Fdata%5Fengineer%5Fbootcamp&viewid=532715df%2D69df%2D4d0e%2D8785%2Daf7a4ccf2983)**
+
+> Navega dentro del sitio a: `General / inetum_data_engineer_bootcamp / semana_02 / financial_transaction_dataset`
+>
+> Este mismo dataset se reutilizará en las demás actividades de la semana 02.
 
 | Archivo | Formato | Descripción |
 |---------|---------|-------------|
@@ -31,6 +35,8 @@ Descarga los archivos desde Google Drive:
 | `train_fraud_labels.json` | JSON | Etiquetas de fraude por transacción (0/1) |
 
 > Esta actividad trabaja principalmente con `transactions_data.csv`. Las demás tablas las usarás a partir de la Actividad 02.
+>
+> **Nota:** el dataset incluye valores nulos en algunas columnas de forma intencionada — sirve como ejemplo real de datos incompletos que encontrarás en producción. Documenta qué columnas tienen nulos y cómo los manejarías.
 
 ---
 

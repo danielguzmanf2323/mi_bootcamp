@@ -15,9 +15,11 @@ Leer cuatro archivos del mismo dataset en distintos formatos (CSV, JSON, Parquet
 
 ## Dataset
 
-Los archivos están disponibles en Google Drive:
+Los archivos están disponibles en el sitio de Teams del bootcamp (SharePoint):
 
-**[Descargar archivos — data_engineering_files/semana_01_actividad_03/customers_files](https://drive.google.com/drive/folders/1NPcvkwEyU5t9euXay3Uzxo02LqY_Ptb9)**
+**[Descargar archivos — inetum_data_engineer_bootcamp / semana_01 / customers_files](https://gfi1.sharepoint.com/sites/JUNIORDATAENGINEERSDEVTEAM/Documents%20partages/Forms/AllItems.aspx?id=%2Fsites%2FJUNIORDATAENGINEERSDEVTEAM%2FDocuments%20partages%2FGeneral%2Finetum%5Fdata%5Fengineer%5Fbootcamp&viewid=532715df%2D69df%2D4d0e%2D8785%2Daf7a4ccf2983)**
+
+> Navega dentro del sitio a: `General / inetum_data_engineer_bootcamp / semana_01 / customers_files`
 
 Encontrarás 4 archivos, todos con el mismo dataset de clientes:
 
@@ -52,11 +54,7 @@ Encontrarás 4 archivos, todos con el mismo dataset de clientes:
 ### Opción B: Google Colab
 
 1. Ve a [https://colab.research.google.com](https://colab.research.google.com)
-2. Sube los archivos directamente al entorno de Colab o léelos desde Google Drive montando la unidad:
-   ```python
-   from google.colab import drive
-   drive.mount('/content/drive')
-   ```
+2. Descarga los archivos desde el sitio de Teams (SharePoint) y súbelos directamente al entorno de Colab.
 3. Para subir tu trabajo al repo, usa la terminal integrada de Colab:
    ```bash
    !git clone https://github.com/jobrrerac/inetum_data_engineer_bootcamp.git
@@ -237,7 +235,7 @@ Registra el DataFrame como tabla temporal y usa `spark.sql()` directamente:
 
 ```python
 # Leer el archivo (usa el formato que prefieras)
-df = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load("/FileStore/customers.csv")
+df = spark.read.format("csv").option("header", "true").option("inferSchema", "false").load("/FileStore/customers.csv")
 
 # Registrar como vista temporal para usar SQL
 df.createOrReplaceTempView("customers")

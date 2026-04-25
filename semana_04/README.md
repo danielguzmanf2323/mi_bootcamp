@@ -6,6 +6,22 @@
 
 ---
 
+> **Convención obligatoria — entorno compartido**
+>
+> Todos los estudiantes del bootcamp trabajan sobre el mismo catálogo `default` en Databricks Enterprise.
+> Para no sobrescribir las tablas de otras personas, **sufija siempre tu nombre en cada tabla que crees**:
+>
+> ```
+> default.bronze.transactions_<tu_nombre>
+> default.silver.transactions_<tu_nombre>
+> ```
+>
+> En el notebook genérico de la semana, el sufijo va en el widget `table_name`.
+> En el YAML de configuración, va en cada campo `table:` de tu copia personal del archivo.
+> Si usas `mode("overwrite")` sin el sufijo, sobrescribirás el trabajo de otro estudiante.
+
+---
+
 ## Contenido
 
 | Carpeta | Descripción |

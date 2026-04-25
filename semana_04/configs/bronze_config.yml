@@ -2,9 +2,16 @@
 # Configuración de la pipeline de ingesta Bronze
 # Inetum Data Engineer Bootcamp — Semana 04
 #
-# Este archivo define TODAS las fuentes que la pipeline Bronze debe ingestar.
-# El notebook de ingesta lee este archivo y procesa cada fuente sin código quemado.
-# Para añadir una nueva fuente: añadir un bloque bajo "sources" y nada más.
+# IMPORTANTE: No edites este archivo directamente.
+# Copia este archivo a tu carpeta de trabajo:
+#   semana_04/actividades/actividad_03/<tu_nombre>/bronze_config_<tu_nombre>.yml
+#
+# En tu copia, sufija tu nombre en cada campo "table:" para no pisar tablas de otros:
+#   table: transactions_<tu_nombre>
+#   table: users_<tu_nombre>
+#   ...etc
+#
+# Este archivo es la referencia de producción — es de solo lectura para el ejercicio.
 
 pipeline:
   name: financial_transactions_bronze
